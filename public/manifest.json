@@ -2,5 +2,22 @@
   "name": "Github review enhancer",
   "description": "Github review enhancer",
   "version": "0.1.0",
-  "manifest_version": 3
+  "manifest_version": 3,
+  "homepage_url": "https://github.com/shinenic/github-review-enhancer",
+  "author": "",
+  "minimum_chrome_version": "60",
+  "permissions": [
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "run_at": "document_idle",
+      "matches": [
+        "https://github.com/*"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ]
 }
