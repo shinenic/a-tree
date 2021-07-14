@@ -4,6 +4,7 @@ const CopyPlugin = require('copy-webpack-plugin')
 const config = {
   entry: {
     content: path.join(__dirname, 'src/index.js'),
+    background: path.join(__dirname, 'src/background.js'),
   },
   output: { path: path.join(__dirname, 'build'), filename: '[name].js' },
   module: {
