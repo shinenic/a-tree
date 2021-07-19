@@ -18,13 +18,13 @@ export const useQueryCommits = ({ owner, repo, PR, ...rest }) => {
 
 export const useQueryCommit = ({ owner, repo, commit, ...rest }) => {
   return useGithubQuery({
-    url: '/repos/{owner}/{repo}/pulls/commit/{commits}',
+    url: '/repos/{owner}/{repo}/commit/{commit}',
     placeholders: { owner, repo, commit },
     ...rest,
   })
 }
 
-export const useQueryPR = ({ owner, repo, PR, perPage = 100, ...rest }) => {
+export const useQueryPR = ({ owner, repo, pr: PR, perPage = 100, ...rest }) => {
   return useGithubQuery({
     url: '/repos/{owner}/{repo}/pulls/{PR}/files',
     placeholders: { owner, repo, PR },
