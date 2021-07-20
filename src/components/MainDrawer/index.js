@@ -68,7 +68,7 @@ const MainDrawer = ({
       default:
         return <CodePage owner={owner} repo={repo} branch={branch} />
       case PAGE_TYPE.PR:
-        return <PRPage owner={owner} repo={repo} pr={commit} />
+        return <PRPage owner={owner} repo={repo} pull={commit} />
     }
   }
 

@@ -3,12 +3,10 @@ import PropTypes from 'prop-types'
 import { useQueryPR } from 'hooks/api/useGithubQueries'
 import Tree from 'components/Tree'
 
-const PR = ({ owner, pr, repo }) => {
-  const { data, loading } = useQueryPR({ owner, pr, repo })
+const PR = ({ owner, pull, repo }) => {
+  const { data, loading } = useQueryPR({ owner, pull, repo })
 
   if (loading) return null
-
-  console.log('data', data)
 
   return <Tree tree={data} repo={repo} />
 }
