@@ -1,7 +1,7 @@
 import { PAGE_TYPE } from 'constants'
 import { isEmpty } from 'lodash'
 
-const { CODE, PR, COMMIT, PR_COMMIT } = PAGE_TYPE
+const { CODE, PULL, COMMIT, PULL_COMMIT } = PAGE_TYPE
 
 /**
  * @returns {object}   pageInfo - contains the below information,
@@ -44,7 +44,7 @@ export const getPageInfo = (pathname = '', defaultInfo = {}) => {
   ) {
     return {
       ...basicInfo,
-      pageType: PR_COMMIT,
+      pageType: PULL_COMMIT,
       commit: restPaths[2],
       pull: restPaths[0],
     }
@@ -67,7 +67,7 @@ export const getPageInfo = (pathname = '', defaultInfo = {}) => {
   if (decisivePath === 'pull' && !isEmpty(restPaths[0])) {
     return {
       ...basicInfo,
-      pageType: PR,
+      pageType: PULL,
       commit: restPaths[0],
     }
   }

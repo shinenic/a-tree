@@ -8,10 +8,10 @@ export const useQueryRepoInfo = ({ owner, repo, ...rest }) => {
   })
 }
 
-export const useQueryCommits = ({ owner, repo, PR, ...rest }) => {
+export const useQueryCommits = ({ owner, repo, pull, ...rest }) => {
   return useGithubQuery({
-    url: '/repos/{owner}/{repo}/pulls/{PR}/commits',
-    placeholders: { owner, repo, PR },
+    url: '/repos/{owner}/{repo}/pulls/{pull}/commits',
+    placeholders: { owner, repo, pull },
     ...rest,
   })
 }
@@ -24,16 +24,16 @@ export const useQueryCommit = ({ owner, repo, commit, ...rest }) => {
   })
 }
 
-export const useQueryPR = ({ owner, repo, PR, perPage = 100, ...rest }) => {
+export const useQueryPull = ({ owner, repo, pull, perPage = 100, ...rest }) => {
   return useGithubQuery({
-    url: '/repos/{owner}/{repo}/pulls/{PR}/files',
-    placeholders: { owner, repo, PR },
+    url: '/repos/{owner}/{repo}/pulls/{pull}/files',
+    placeholders: { owner, repo, pull },
     params: { per_page: perPage },
     ...rest,
   })
 }
 
-export const useQueryPRs = ({
+export const useQueryPulls = ({
   owner,
   repo,
   perPage = 30,
