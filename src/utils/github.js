@@ -68,7 +68,7 @@ export const getPageInfo = (pathname = '', defaultInfo = {}) => {
     return {
       ...basicInfo,
       pageType: PULL,
-      commit: restPaths[0],
+      pull: restPaths[0],
     }
   }
 
