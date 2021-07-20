@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Drawer from '@material-ui/core/Drawer'
-import usePageInfo from 'hooks/usePageInfo'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
 import { PAGE_TYPE } from 'constants'
@@ -20,18 +19,17 @@ const useStyles = makeStyles({
   },
 })
 
-const MainDrawer = () => {
+const MainDrawer = ({
+  pageType,
+  owner,
+  repo,
+  commit,
+  pull,
+  branch: branchFromUrl,
+  filePath,
+}) => {
   const classes = useStyles()
 
-  const {
-    pageType,
-    owner,
-    repo,
-    commit,
-    pull,
-    branch: branchFromUrl,
-    filePath,
-  } = usePageInfo()
   const { data, loading, error } = useQueryRepoInfo({ owner, repo })
 
   if (loading || isEmpty(data)) return null
