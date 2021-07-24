@@ -1,9 +1,9 @@
 import React from 'react'
-import { useQueryPR } from 'hooks/api/useGithubQueries'
+import { useQueryPull } from 'hooks/api/useGithubQueries'
 import Tree from 'components/Tree'
 
 const PR = ({ owner, pull, repo }) => {
-  const { data, loading } = useQueryPR({ owner, pull, repo })
+  const { data, loading } = useQueryPull({ owner, pull, repo })
 
   if (loading) return null
 

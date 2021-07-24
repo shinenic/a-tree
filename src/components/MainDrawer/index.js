@@ -50,7 +50,7 @@ const MainDrawer = ({
       breadcrumb.push(commit)
     }
 
-    if (pageType === PAGE_TYPE.PR) {
+    if (pageType === PAGE_TYPE.PULL) {
       breadcrumb.push(pull)
     }
 
@@ -67,8 +67,8 @@ const MainDrawer = ({
       case PAGE_TYPE.CODE:
       default:
         return <CodePage owner={owner} repo={repo} branch={branch} />
-      case PAGE_TYPE.PR:
-        return <PRPage owner={owner} repo={repo} pull={commit} />
+      case PAGE_TYPE.PULL:
+        return <PRPage owner={owner} repo={repo} pull={pull} />
     }
   }
 
