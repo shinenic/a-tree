@@ -18,7 +18,7 @@ export const useQueryCommits = ({ owner, repo, pull, ...rest }) => {
 
 export const useQueryCommit = ({ owner, repo, commit, ...rest }) => {
   return useGithubQuery({
-    url: '/repos/{owner}/{repo}/pulls/commit/{commits}',
+    url: '/repos/{owner}/{repo}/commit/{commit}',
     placeholders: { owner, repo, commit },
     ...rest,
   })
