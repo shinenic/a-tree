@@ -14,8 +14,10 @@ const DEFAULT_PAGE_INFO = {
 }
 
 const usePageInfo = () => {
-  const [pageInfo, setPageInfo] = useState(DEFAULT_PAGE_INFO)
   const { pathname } = useListenLocation()
+  const [pageInfo, setPageInfo] = useState(() =>
+    getPageInfo(pathname, DEFAULT_PAGE_INFO)
+  )
 
   useEffect(() => {
     setPageInfo(getPageInfo(pathname, DEFAULT_PAGE_INFO))
