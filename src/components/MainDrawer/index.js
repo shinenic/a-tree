@@ -7,7 +7,7 @@ import { PAGE_TYPE } from 'constants'
 
 import { useQueryRepoInfo } from 'hooks/api/useGithubQueries'
 import CodePage from 'components/pages/Code'
-import PRPage from 'components/pages/PR'
+import PullPage from 'components/pages/Pull'
 
 import { isEmpty, compact } from 'lodash'
 import * as Style from './style'
@@ -54,7 +54,7 @@ const MainDrawer = ({
       breadcrumb.push(pull)
     }
 
-    if (pageType === PAGE_TYPE.PR_COMMIT) {
+    if (pageType === PAGE_TYPE.PULL_COMMIT) {
       breadcrumb.push(pull)
       breadcrumb.push(commit)
     }
@@ -68,7 +68,7 @@ const MainDrawer = ({
       default:
         return <CodePage owner={owner} repo={repo} branch={branch} />
       case PAGE_TYPE.PULL:
-        return <PRPage owner={owner} repo={repo} pull={pull} />
+        return <PullPage owner={owner} repo={repo} pull={pull} />
     }
   }
 
