@@ -1,35 +1,45 @@
 import { PAGE_TYPE } from 'constants'
+import { TITLE_MATCHER } from 'constants/github'
 import { isEmpty } from 'lodash'
+import { DEFAULT_PAGE_INFO } from 'constants'
 
-const { CODE, PULL, COMMIT, PULL_COMMIT } = PAGE_TYPE
+const { CODE, PULL, COMMIT, PULL_COMMIT, UNKNOWN } = PAGE_TYPE
 
 /**
- * @returns {object}   pageInfo - contains the below information,
- *                                field will be empty if the data can't be gotten from pathname
- * @returns {string}   pageInfo.pageType - one of `PAGE_TYPE`
- * @returns {string}   pageInfo.owner    - repository owner
- * @returns {string}   pageInfo.repo     - repository name
- * @returns {string}   pageInfo.commit   - commit hash
- * @returns {string}   pageInfo.pull     - pull request's number
- * @returns {string}   pageInfo.branch   - branch name
- * @returns {string[]} pageInfo.filePath - file's path
+ * This function only parse pageInfo from `pathname` and `title`,
+ * please be aware that it won't check is it a valid repo page,
+ * so still need to check the repo info by request API.
+ *
+ * @return {PageInfo}
  */
-export const getPageInfo = (pathname = '', defaultInfo = {}) => {
-  const [_, owner, repo, decisivePath, ...restPaths] = pathname.split('/')
-  const basicInfo = { ...defaultInfo, owner, repo }
+export const getPageInfo = (pathname = '', defaultBranch, title) => {
+  const [_, first, second, third, ...restPaths] = pathname.split('/')
+
+  if (!first || !second) {
+    return DEFAULT_PAGE_INFO
+  }
+
+  const branch = matchBranchFromTitle(defaultBranch, title)
+
+  const basicInfo = {
+    ...DEFAULT_PAGE_INFO,
+    owner: first,
+    repo: second,
+    branch,
+    pageType: UNKNOWN,
+  }
 
   /**
    * {user}/{repo}
    * {user}/{repo}/tree/{branch}/{filePath}
    * {user}/{repo}/blob/{branch}/{filePath}
    */
-  if (isEmpty(decisivePath) || ['tree', 'blob'].includes(decisivePath)) {
+  if (isEmpty(third) || ['tree', 'blob'].includes(third)) {
     return {
       ...basicInfo,
       pageType: CODE,
-      ...(!isEmpty(decisivePath) && {
-        branch: restPaths[0],
-        filePath: restPaths.slice(1),
+      ...(!isEmpty(third) && branch && {
+        filePath: restPaths.join('').split(branch)[1],
       }),
     }
   }
@@ -38,7 +48,7 @@ export const getPageInfo = (pathname = '', defaultInfo = {}) => {
    * {user}/{repo}/pull/{pull}/commits/{commit}
    */
   if (
-    decisivePath === 'pull' &&
+    third === 'pull' &&
     restPaths[1] === 'commits' &&
     !isEmpty(restPaths[2])
   ) {
@@ -53,7 +63,7 @@ export const getPageInfo = (pathname = '', defaultInfo = {}) => {
   /**
    * {user}/{repo}/commit/{commit}
    */
-  if (decisivePath === 'commit' && !isEmpty(restPaths[0])) {
+  if (third === 'commit' && !isEmpty(restPaths[0])) {
     return {
       ...basicInfo,
       pageType: COMMIT,
@@ -64,7 +74,7 @@ export const getPageInfo = (pathname = '', defaultInfo = {}) => {
   /**
    * {user}/{repo}/pull/{pull}/*
    */
-  if (decisivePath === 'pull' && !isEmpty(restPaths[0])) {
+  if (third === 'pull' && !isEmpty(restPaths[0])) {
     return {
       ...basicInfo,
       pageType: PULL,
@@ -73,4 +83,24 @@ export const getPageInfo = (pathname = '', defaultInfo = {}) => {
   }
 
   return basicInfo
+}
+
+/**
+ * @param {*} defaultBranch default branch of the repo (from repo api)
+ * @param {*} title page title
+ * @returns {string} branch name
+ */
+export const matchBranchFromTitle = (defaultBranch, title) => {
+  if (!defaultBranch || !title) return null
+
+  let result = null
+
+  for (let key in TITLE_MATCHER) {
+    if (title.match(TITLE_MATCHER[key].regex)) {
+      result = TITLE_MATCHER[key].resolver(defaultBranch, title)
+      break
+    }
+  }
+
+  return result
 }

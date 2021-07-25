@@ -1,13 +1,23 @@
 import GlobalStyle from './GlobalStyle'
 import MainDrawer from 'components/MainDrawer'
-import usePageInfo from 'hooks/usePageInfo'
 import { PAGE_TYPE } from 'constants'
+import usePageInfo from 'hooks/pageInfo/usePageInfo'
+
+const { UNKNOWN, UNSUPPORTED } = PAGE_TYPE
 
 function App() {
-  const pageInfo = usePageInfo()
+  const { error, loading, pageInfo } = usePageInfo()
 
-  console.log('pageInfo', pageInfo)
-  if (pageInfo.pageType === PAGE_TYPE.UNKNOWN) return null
+  console.log({ error, loading, pageInfo })
+
+  if (
+    pageInfo.pageType === UNKNOWN ||
+    pageInfo.pageType === UNSUPPORTED ||
+    error ||
+    loading
+  ) {
+    return null
+  }
 
   return (
     <>
