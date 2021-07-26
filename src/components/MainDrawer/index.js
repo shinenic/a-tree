@@ -15,6 +15,8 @@ import * as Style from './style'
 const useStyles = makeStyles({
   paper: {
     width: 400,
+    display: 'flex',
+    flexDirection: 'column',
     // borderRightColor: 'black',
   },
 })
