@@ -9,6 +9,7 @@ import { useQueryRepoInfo } from 'hooks/api/useGithubQueries'
 import CodePage from 'components/pages/Code'
 import PullPage from 'components/pages/Pull'
 import PullCommit from 'components/pages/PullCommit'
+import PullCommitMenu from 'components/Menu/PullCommit'
 
 import { isEmpty, compact } from 'lodash'
 import * as Style from './style'
@@ -80,6 +81,7 @@ const MainDrawer = ({
   return (
     <Drawer anchor="left" open variant="permanent" classes={classes}>
       <Style.DrawerHeader>{renderHeader()}</Style.DrawerHeader>
+      <PullCommitMenu owner={owner} repo={repo} pull={pull} commit={commit} />
       <Style.DrawerContent>{renderContent()}</Style.DrawerContent>
     </Drawer>
   )
