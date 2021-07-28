@@ -1,4 +1,4 @@
-import { PJAX_LINK_ID } from 'constants/github'
+import { PJAX_ID } from 'constants/github'
 
 const getHrefPathname = (href = '') => {
   try {
@@ -24,6 +24,7 @@ const GithubLink = ({
   skipIfSamePathname = true,
   onClick,
   children,
+  pjaxId = PJAX_ID.CODE,
   ...rest
 }) => {
   const handleClick = (e) => {
@@ -40,7 +41,7 @@ const GithubLink = ({
     <a
       href={href}
       onClick={handleClick}
-      {...(!disableSPA && { 'data-pjax': PJAX_LINK_ID })}
+      {...(!disableSPA && { 'data-pjax': pjaxId })}
       {...rest}
     >
       {children}
