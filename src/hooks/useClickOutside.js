@@ -1,8 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-const defaultEvents = ['mousedown', 'touchstart']
-
-const useClickAway = (onClickAway, events = defaultEvents) => {
+const useClickOutside = (onClickAway) => {
   const containerRef = useRef(null)
   const savedCallback = useRef(onClickAway)
 
@@ -16,18 +14,13 @@ const useClickAway = (onClickAway, events = defaultEvents) => {
       el && !el.contains(event.target) && savedCallback.current(event)
     }
 
-    for (const eventName of events) {
-      document.addEventListener(eventName, handler)
-    }
-
+    document.addEventListener('mousedown', handler, { capture: false })
     return () => {
-      for (const eventName of events) {
-        document.removeEventListener(eventName, handler)
-      }
+      document.removeEventListener('mousedown', handler, { capture: false })
     }
-  }, [events, containerRef])
+  }, [containerRef])
 
   return containerRef
 }
 
-export default useClickAway
+export default useClickOutside

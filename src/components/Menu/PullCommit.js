@@ -7,7 +7,7 @@ import * as Style from './style'
 
 import { PJAX_ID } from 'constants/github'
 
-import useClickAway from 'hooks/useClickAway'
+import useClickOutside from 'hooks/useClickOutside'
 import usePullCommitMenu from 'hooks/usePullCommitMenu'
 
 const AnimatedMenuContainer = animated(Style.MenuContainer)
@@ -85,7 +85,7 @@ export default function PullCommitMenu({
     menuStyles,
   } = usePullCommitMenu({ owner, repo, pull, commit: currentCommit })
 
-  const menuRef = useClickAway(handleClose)
+  const menuRef = useClickOutside(handleClose)
 
   // Calculate the fixed position of commits menu based on button's position
   useEffect(() => {
