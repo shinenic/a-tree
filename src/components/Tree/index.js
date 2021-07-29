@@ -70,7 +70,7 @@ const isProxyNode = (node) => {
   return true
 }
 
-const renderTree = (tree) => {
+const renderTree = (tree, onItemClick) => {
   if (isEmpty(tree)) return null
 
   return sortBy(Object.keys(tree), [
@@ -85,6 +85,10 @@ const renderTree = (tree) => {
     const hasChildren = !isEmpty(node.children)
     const status = node.status || 'normal'
 
+    const handleClick = () => {
+      if (onItemClick) onItemClick(node)
+    }
+
     if (hasChildren) {
       while (isProxyNode(node)) {
         const childKey = Object.keys(node.children)[0]
@@ -97,28 +101,34 @@ const renderTree = (tree) => {
       }
 
       return (
-        <TreeItem nodeId={node.nodeId} label={label}>
-          {renderTree(node.children)}
-        </TreeItem>
+        <div onClick={handleClick}>
+          <TreeItem key={node.nodeId} nodeId={node.nodeId} label={label}>
+            {renderTree(node.children, onItemClick)}
+          </TreeItem>
+        </div>
       )
     }
 
     return (
-      <TreeItem
-        nodeId={node.nodeId}
-        label={key}
-        icon={<LabelIcon status={status} />}
-      />
+      <div onClick={handleClick}>
+        <TreeItem
+          key={node.nodeId}
+          nodeId={node.nodeId}
+          label={key}
+          icon={<LabelIcon status={status} />}
+        />
+      </div>
     )
   })
 }
 
-export default function CustomizedTreeView({ tree, isExpandedAll }) {
+export default function CustomizedTreeView({
+  tree,
+  isExpandedAll = false,
+  onItemClick,
+}) {
   const classes = useStyles()
-  const [objectTree, expandedNodeIds] = useMemo(
-    () => generateTree(tree),
-    [tree]
-  )
+  const [objectTree, expandedNodeIds] = generateTree(tree)
 
   return (
     <TreeView
@@ -128,7 +138,7 @@ export default function CustomizedTreeView({ tree, isExpandedAll }) {
       defaultExpandIcon={<AiFillFolder color={MAIN_COLOR} />}
       defaultEndIcon={<AiOutlineFileText color={MAIN_COLOR} />}
     >
-      {renderTree(objectTree)}
+      {renderTree(objectTree, onItemClick)}
     </TreeView>
   )
 }
