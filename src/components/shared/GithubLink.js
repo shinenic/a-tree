@@ -27,7 +27,10 @@ const GithubLink = ({
   ...rest
 }) => {
   const handleClick = (e) => {
-    if (skipIfSamePathname && getHrefPathname(href) === location.pathname) {
+    if (
+      skipIfSamePathname &&
+      getHrefPathname(href) === window.location.pathname
+    ) {
       e.preventDefault()
     }
 
