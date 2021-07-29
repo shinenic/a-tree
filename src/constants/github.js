@@ -1,4 +1,7 @@
-export const PJAX_LINK_ID = '#repo-content-pjax-container'
+export const PJAX_ID = {
+  CODE: '#repo-content-pjax-container',
+  PULL: '#js-repo-pjax-container',
+}
 
 /**
  * @note The title can be organized in the below cases
