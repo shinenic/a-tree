@@ -16,7 +16,8 @@ const usePullCommitMenu = ({ owner, repo, pull, commit }) => {
   const [buttonText, setButtonText] = useState(DEFAULT_BUTTON_TEXT)
 
   const menuProps = useSpring({
-    transform: menuOpened ? 'translate3D(0,0,0)' : 'translate3D(-20px,0,0)',
+    transform: menuOpened ? 'scale(1)' : 'scale(0.9)',
+    transformOrigin: 'top',
     opacity: menuOpened ? 1 : 0,
     reset: true,
   })

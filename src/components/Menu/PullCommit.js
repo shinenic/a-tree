@@ -92,7 +92,10 @@ export default function PullCommitMenu({
     if (!menuRef.current) return
 
     const buttonRect = menuRef.current.getBoundingClientRect()
-    setMenuPositionStyle({ top: buttonRect.top, left: buttonRect.right })
+    setMenuPositionStyle({
+      top: buttonRect.bottom,
+      left: buttonRect.left + 20,
+    })
   }, [menuRef.current])
 
   if (!pull || !data) return null

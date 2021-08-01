@@ -27,12 +27,14 @@ export const MenuContainer = styled.div`
   z-index: 10;
   position: fixed;
 
-  max-width: 460px;
+  max-width: 540px;
+  min-width: 440px;
   max-height: 50vh;
   overflow-x: hidden;
   overflow-y: auto;
 
-  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 8%);
+  box-shadow: rgb(15 15 15 / 5%) 0px 0px 0px 1px,
+    rgb(15 15 15 / 10%) 0px 3px 6px, rgb(15 15 15 / 20%) 0px 9px 24px;
 
   /* width */
   ::-webkit-scrollbar {
