@@ -15,7 +15,7 @@ import useListenTitle from 'hooks/pageInfo/useListenTitle'
  * 3. title    - from dom listener
  * @typedef {Object} PageInfoHook
  * @property {PageInfo} pageInfo
- * @property {boolean} loading
+ * @property {boolean} isLoading
  * @property {boolean} error
  *
  * @returns {PageInfoHook}
@@ -24,7 +24,7 @@ const usePageInfo = () => {
   const { pathname } = useListenLocation()
   const title = useListenTitle()
   const [_, firstPath, secondPath] = pathname.split('/')
-  const { data, loading, error } = useQueryRepoInfo({
+  const { data, isLoading, error } = useQueryRepoInfo({
     owner: firstPath,
     repo: secondPath,
   })
@@ -38,13 +38,13 @@ const usePageInfo = () => {
     }
   }, [pathname, validRepoId, title])
 
-  if (loading) return { error: false, loading: true, pageInfo: {} }
+  if (isLoading) return { error: null, isLoading: true, pageInfo: {} }
 
   if (!validRepoId || error) {
-    return { error: true, loading: false, pageInfo: {} }
+    return { error, isLoading: false, pageInfo: {} }
   }
 
-  return { error: false, loading: false, pageInfo }
+  return { error: null, isLoading: false, pageInfo }
 }
 
 export default usePageInfo

@@ -34,9 +34,9 @@ const MainDrawer = ({
 }) => {
   const classes = useStyles()
 
-  const { data, loading, error } = useQueryRepoInfo({ owner, repo })
+  const { data, isLoading, error } = useQueryRepoInfo({ owner, repo })
 
-  if (loading || isEmpty(data)) return null
+  if (isLoading || isEmpty(data) || error) return null
 
   const { default_branch: defaultBranch } = data
   const branch = branchFromUrl || defaultBranch

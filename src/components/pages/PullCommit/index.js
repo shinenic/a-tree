@@ -3,9 +3,9 @@ import { useQueryCommit } from 'hooks/api/useGithubQueries'
 import Tree from 'components/Tree'
 
 const PullCommit = ({ owner, commit, repo }) => {
-  const { data, loading, error } = useQueryCommit({ owner, commit, repo })
+  const { data, isLoading, error } = useQueryCommit({ owner, commit, repo })
 
-  if (loading || error) return null
+  if (isLoading || error) return null
 
   return <Tree tree={data.files} repo={repo} isExpandedAll />
 }

@@ -22,7 +22,7 @@ const usePullCommitMenu = ({ owner, repo, pull, commit }) => {
     reset: true,
   })
 
-  const { data, loading, error } = useQueryCommits({
+  const { data, isLoading, error } = useQueryCommits({
     owner,
     repo,
     pull,
@@ -47,7 +47,7 @@ const usePullCommitMenu = ({ owner, repo, pull, commit }) => {
   }, [commit, hasData])
 
   const handleButtonClick = () => {
-    if (loading) return
+    if (isLoading) return
 
     setMenuOpened((prev) => !prev)
   }
@@ -64,8 +64,8 @@ const usePullCommitMenu = ({ owner, repo, pull, commit }) => {
 
   return {
     data,
-    loading,
-    disabled: error || loading,
+    isLoading,
+    disabled: error || isLoading,
     handleClose,
     handleButtonClick,
     buttonText,

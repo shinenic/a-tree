@@ -4,9 +4,9 @@ import Tree from 'components/Tree'
 import { linkGithubPage, getFileLink } from 'utils/link'
 
 const Code = ({ owner, branch, repo }) => {
-  const { data, loading } = useQueryFiles({ owner, branch, repo })
+  const { data, isLoading } = useQueryFiles({ owner, branch, repo })
 
-  if (loading) return null
+  if (isLoading) return null
 
   const onItemClick = ({ path, type }) => {
     if (type === 'tree') return

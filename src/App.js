@@ -6,15 +6,15 @@ import usePageInfo from 'hooks/pageInfo/usePageInfo'
 const { UNKNOWN, UNSUPPORTED } = PAGE_TYPE
 
 function App() {
-  const { error, loading, pageInfo } = usePageInfo()
+  const { error, isLoading, pageInfo } = usePageInfo()
 
-  console.log({ error, loading, pageInfo })
+  console.log({ error, isLoading, pageInfo })
 
   if (
     pageInfo.pageType === UNKNOWN ||
     pageInfo.pageType === UNSUPPORTED ||
     error ||
-    loading
+    isLoading
   ) {
     return null
   }

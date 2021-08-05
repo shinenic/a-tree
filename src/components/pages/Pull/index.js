@@ -3,9 +3,9 @@ import { useQueryPull } from 'hooks/api/useGithubQueries'
 import Tree from 'components/Tree'
 
 const Pull = ({ owner, pull, repo }) => {
-  const { data, loading } = useQueryPull({ owner, pull, repo })
+  const { data, isLoading } = useQueryPull({ owner, pull, repo })
 
-  if (loading) return null
+  if (isLoading) return null
 
   return <Tree tree={data} repo={repo} isExpandedAll />
 }
