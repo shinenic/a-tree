@@ -25,3 +25,8 @@ export const DEFAULT_PAGE_INFO = {
   filePath: null,
   defaultBranch: null,
 }
+
+export const DRAWER_POSITION = {
+  LEFT: 'Left',
+  RIGHT: 'Right',
+}

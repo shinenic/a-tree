@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import App from './App'
 import { CONTAINER_ID } from 'constants'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import SettingProvider from 'components/Setting/Context/Provider'
 
 const queryClient = new QueryClient()
 
@@ -17,7 +18,9 @@ createContainer()
 ReactDOM.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <SettingProvider>
+        <App />
+      </SettingProvider>
     </QueryClientProvider>
   </React.StrictMode>,
   document.getElementById(CONTAINER_ID)
