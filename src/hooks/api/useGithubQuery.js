@@ -13,6 +13,7 @@ function useGithubQuery(queryKeys, variables = {}, useQueryOptions = {}) {
     },
     {
       enabled: enabled && isValidQuery(url, placeholders),
+      refetchOnWindowFocus: false,
       ...useQueryOptions,
     }
   )
