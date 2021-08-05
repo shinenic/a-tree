@@ -7,6 +7,7 @@ import CodePage from 'components/pages/Code'
 import PullPage from 'components/pages/Pull'
 import PullCommit from 'components/pages/PullCommit'
 import PullCommitMenu from 'components/Menu/PullCommit'
+import Setting from 'components/Setting'
 
 import { compact } from 'lodash'
 import * as Style from './style'
@@ -74,6 +75,9 @@ const MainDrawer = ({
       <Style.DrawerHeader>{renderHeader()}</Style.DrawerHeader>
       <PullCommitMenu owner={owner} repo={repo} pull={pull} commit={commit} />
       <Style.DrawerContent>{renderContent()}</Style.DrawerContent>
+      <Style.DrawerFooter>
+        <Setting />
+      </Style.DrawerFooter>
     </Drawer>
   )
 }

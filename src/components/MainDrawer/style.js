@@ -10,6 +10,14 @@ export const DrawerHeader = styled.div`
   padding-left: 20px;
 `
 
+export const DrawerFooter = styled.div`
+  width: 100%;
+  background: white;
+  height: 44px;
+  display: flex;
+  align-items: center;
+`
+
 export const DrawerContent = styled.div`
   padding: 14px;
   flex: 1;
