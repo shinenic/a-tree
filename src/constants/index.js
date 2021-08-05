@@ -23,4 +23,5 @@ export const DEFAULT_PAGE_INFO = {
   pull: null,
   branch: null,
   filePath: null,
+  defaultBranch: null,
 }

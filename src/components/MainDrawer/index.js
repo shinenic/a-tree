@@ -1,17 +1,14 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import Drawer from '@material-ui/core/Drawer'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
 import { PAGE_TYPE } from 'constants'
 
-import { useQueryRepoInfo } from 'hooks/api/useGithubQueries'
 import CodePage from 'components/pages/Code'
 import PullPage from 'components/pages/Pull'
 import PullCommit from 'components/pages/PullCommit'
 import PullCommitMenu from 'components/Menu/PullCommit'
 
-import { isEmpty, compact } from 'lodash'
+import { compact } from 'lodash'
 import * as Style from './style'
 
 const useStyles = makeStyles({
@@ -19,7 +16,6 @@ const useStyles = makeStyles({
     width: 400,
     display: 'flex',
     flexDirection: 'column',
-    // borderRightColor: 'black',
   },
 })
 
@@ -31,14 +27,9 @@ const MainDrawer = ({
   pull,
   branch: branchFromUrl,
   filePath,
+  defaultBranch,
 }) => {
   const classes = useStyles()
-
-  const { data, isLoading, error } = useQueryRepoInfo({ owner, repo })
-
-  if (isLoading || isEmpty(data) || error) return null
-
-  const { default_branch: defaultBranch } = data
   const branch = branchFromUrl || defaultBranch
 
   const renderHeader = () => {

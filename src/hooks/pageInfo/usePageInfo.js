@@ -24,23 +24,29 @@ const usePageInfo = () => {
   const { pathname } = useListenLocation()
   const title = useListenTitle()
   const [_, firstPath, secondPath] = pathname.split('/')
-  const { data, isLoading, error } = useQueryRepoInfo({
-    owner: firstPath,
-    repo: secondPath,
-  })
+  const { data, isLoading, error } = useQueryRepoInfo(
+    {
+      owner: firstPath,
+      repo: secondPath,
+    },
+    {
+      onSuccess: (data) => {
+        setPageInfo(getPageInfo(pathname, data?.default_branch, title))
+      },
+    }
+  )
   const [pageInfo, setPageInfo] = useState(() => getPageInfo(pathname))
 
-  const validRepoId = data?.id
-
+  // This effect handle SPA by listening `pathname`, `data` is used to get default branch only
   useEffect(() => {
-    if (validRepoId && title) {
+    if (data) {
       setPageInfo(getPageInfo(pathname, data?.default_branch, title))
     }
-  }, [pathname, validRepoId, title])
+  }, [pathname])
 
   if (isLoading) return { error: null, isLoading: true, pageInfo: {} }
 
-  if (!validRepoId || error) {
+  if (!data?.id || error) {
     return { error, isLoading: false, pageInfo: {} }
   }
 
