@@ -85,8 +85,8 @@ const renderTree = (tree, onItemClick) => {
     const hasChildren = !isEmpty(node.children)
     const status = node.status || 'normal'
 
-    const handleClick = () => {
-      if (onItemClick) onItemClick(node)
+    const handleClick = (e) => {
+      if (onItemClick) onItemClick(node, e)
     }
 
     if (hasChildren) {
