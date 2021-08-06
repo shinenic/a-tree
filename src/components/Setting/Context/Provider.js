@@ -9,11 +9,7 @@ const SettingContext = createContext(initialState)
 const SettingDispatchContext = createContext()
 
 const Provider = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, initialState)
-
-  useEffect(() => {
-    getSettingFromLocalStorage(dispatch)
-  }, [])
+  const [state, dispatch] = useReducer(reducer, getSettingFromLocalStorage())
 
   useEffect(() => {
     storeSettingIntoLocalStorage(state)
