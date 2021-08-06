@@ -101,8 +101,8 @@ const renderTree = (tree, onItemClick) => {
       }
 
       return (
-        <div onClick={handleClick}>
-          <TreeItem key={node.nodeId} nodeId={node.nodeId} label={label}>
+        <div key={node.nodeId} onClick={handleClick}>
+          <TreeItem nodeId={node.nodeId} label={label}>
             {renderTree(node.children, onItemClick)}
           </TreeItem>
         </div>
@@ -110,9 +110,8 @@ const renderTree = (tree, onItemClick) => {
     }
 
     return (
-      <div onClick={handleClick}>
+      <div key={node.nodeId} onClick={handleClick}>
         <TreeItem
-          key={node.nodeId}
           nodeId={node.nodeId}
           label={key}
           icon={<LabelIcon status={status} />}
@@ -126,19 +125,25 @@ export default function CustomizedTreeView({
   tree,
   isExpandedAll = false,
   onItemClick,
+  treeId,
 }) {
   const classes = useStyles()
-  const [objectTree, expandedNodeIds] = generateTree(tree)
 
-  return (
-    <TreeView
-      className={classes.root}
-      defaultExpanded={isExpandedAll ? expandedNodeIds : []}
-      defaultCollapseIcon={<AiFillFolderOpen color={MAIN_COLOR} />}
-      defaultExpandIcon={<AiFillFolder color={MAIN_COLOR} />}
-      defaultEndIcon={<AiOutlineFileText color={MAIN_COLOR} />}
-    >
-      {renderTree(objectTree, onItemClick)}
-    </TreeView>
-  )
+  const treeView = useMemo(() => {
+    const [objectTree, expandedNodeIds] = generateTree(tree)
+
+    return (
+      <TreeView
+        className={classes.root}
+        defaultExpanded={isExpandedAll ? expandedNodeIds : []}
+        defaultCollapseIcon={<AiFillFolderOpen color={MAIN_COLOR} />}
+        defaultExpandIcon={<AiFillFolder color={MAIN_COLOR} />}
+        defaultEndIcon={<AiOutlineFileText color={MAIN_COLOR} />}
+      >
+        {renderTree(objectTree, onItemClick)}
+      </TreeView>
+    )
+  }, [treeId])
+
+  return treeView
 }

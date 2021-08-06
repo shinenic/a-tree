@@ -7,7 +7,13 @@ const PullCommit = ({ owner, commit, repo }) => {
 
   if (loading || error) return null
 
-  return <Tree tree={data.files} repo={repo} isExpandedAll />
+  return (
+    <Tree
+      tree={data.files}
+      isExpandedAll
+      treeId={`${owner}-${repo}-${commit}`}
+    />
+  )
 }
 
 PullCommit.propTypes = {}
