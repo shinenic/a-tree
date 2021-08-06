@@ -17,15 +17,14 @@ const usePullFocusMode = () => {
   }, [isFocusMode])
 
   const onItemClick = useCallback(
-    (node, e) => {
-      if (!node?.blob_url) return
+    ({ filename }, e) => {
+      if (!filename) return
 
-      const filePath = node.blob_url.split('/').slice(7).join('/')
-      previousClickedFile.current = filePath
+      previousClickedFile.current = filename
       if (isFocusMode) {
-        focusFile(filePath)
+        focusFile(filename)
       } else {
-        scrollToFile(filePath)
+        scrollToFile(filename)
       }
       e.stopPropagation()
     },
