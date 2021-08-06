@@ -1,6 +1,7 @@
-import { useEffect, useCallback, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import { focusFile, scrollToFile, resetFocusFiles } from 'utils/pullPage'
 import { useSettingCtx } from 'components/Setting/Context/Provider'
+import useUpdateEffect from 'hooks/useUpdateEffect'
 
 const usePullFocusMode = () => {
   const { isFocusMode } = useSettingCtx()
@@ -10,7 +11,7 @@ const usePullFocusMode = () => {
    * When `isFocusMode` off,
    * restore all files' visibility and scroll to the last file that user clicked.
    */
-  useEffect(() => {
+  useUpdateEffect(() => {
     if (!isFocusMode) {
       resetFocusFiles(previousClickedFile.current)
     }
