@@ -22,7 +22,13 @@ const Code = ({ owner, branch, repo }) => {
     )
   }
 
-  return <Tree tree={data.tree} onItemClick={onItemClick} />
+  return (
+    <Tree
+      tree={data.tree}
+      onItemClick={onItemClick}
+      treeId={`${owner}-${repo}-${branch}`}
+    />
+  )
 }
 
 Code.propTypes = {}

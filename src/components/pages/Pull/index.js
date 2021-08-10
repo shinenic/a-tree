@@ -7,7 +7,7 @@ const Pull = ({ owner, pull, repo }) => {
 
   if (loading) return null
 
-  return <Tree tree={data} repo={repo} isExpandedAll />
+  return <Tree tree={data} isExpandedAll treeId={`${owner}-${repo}-${pull}`} />
 }
 
 Pull.propTypes = {}
