@@ -96,7 +96,7 @@ export default function PullCommitMenu({
       top: buttonRect.bottom,
       left: buttonRect.left + 20,
     })
-  }, [menuRef.current])
+  }, [data, pull])
 
   if (!pull || !data) return null
 
