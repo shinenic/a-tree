@@ -3,6 +3,7 @@ import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
 import { animated } from 'react-spring'
 import Avatar from '@material-ui/core/Avatar'
+import moment from 'moment'
 import * as Style from './style'
 
 import { PJAX_ID } from 'constants/github'
@@ -37,6 +38,7 @@ const Commit = ({
   commit,
   sha,
   author,
+  date,
   avatarClassName,
   link,
   selected,
@@ -61,8 +63,9 @@ const Commit = ({
           src={author?.avatar_url ?? ''}
           alt={authorName}
         />
-        <div>{shortedSha}</div>
+        <Style.Sha>{shortedSha}</Style.Sha>
         <div>{`${authorName} (${loginName})`}</div>
+        <div>{moment(date).fromNow()}</div>
       </Style.CommitDetail>
     </Style.StyledGithubLink>
   )
@@ -124,6 +127,7 @@ export default function PullCommitMenu({
             <Commit
               key={sha}
               commit={commit}
+              date={commit?.committer?.date}
               sha={sha}
               author={author}
               link={`/${owner}/${repo}/pull/${pull}/commits/${sha}`}

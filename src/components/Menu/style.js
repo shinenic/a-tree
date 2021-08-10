@@ -103,3 +103,8 @@ export const CommitDetail = styled.div`
     margin-left: 0;
   }
 `
+
+export const Sha = styled.div`
+  width: 54px;
+  text-align: center;
+`
