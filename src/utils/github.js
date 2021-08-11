@@ -27,6 +27,7 @@ export const getPageInfo = (pathname = '', defaultBranch, title) => {
     repo: second,
     branch,
     pageType: UNKNOWN,
+    defaultBranch,
   }
 
   /**
