@@ -22,11 +22,15 @@ const usePullCommitMenu = ({ owner, repo, pull, commit }) => {
     reset: true,
   })
 
-  const { data, isLoading, error } = useQueryCommits({
+  const query = useQueryCommits({
     owner,
     repo,
     pull,
   })
+
+  console.log('query', query)
+
+  const { data, isLoading, error } = query
 
   const hasData = !isEmpty(data)
   useEffect(() => {

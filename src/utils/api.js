@@ -23,7 +23,7 @@ export const isValidQuery = (url, placeholders) => {
  */
 export const createGithubQuery = ({
   url,
-  token,
+  token = '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',
   placeholders = {},
   params = {},
   options = {},

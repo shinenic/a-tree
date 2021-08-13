@@ -1,4 +1,4 @@
-import useGithubQuery from './useGithubQuery'
+import useGithubQuery, { useInfiniteGithubQuery } from './useGithubQuery'
 
 export const useQueryRepoInfo = (
   { owner, repo, ...rest },
@@ -19,11 +19,12 @@ export const useQueryCommits = (
   { owner, repo, pull, ...rest },
   useQueryOptions = {}
 ) => {
-  return useGithubQuery(
+  return useInfiniteGithubQuery(
     ['commits', { owner, repo, pull }],
     {
       url: '/repos/{owner}/{repo}/pulls/{pull}/commits',
       placeholders: { owner, repo, pull },
+      params: { page: 2, per_page: 3 },
       ...rest,
     },
     useQueryOptions
