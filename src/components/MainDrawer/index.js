@@ -3,9 +3,9 @@ import Drawer from '@material-ui/core/Drawer'
 import { makeStyles } from '@material-ui/core/styles'
 import { PAGE_TYPE } from 'constants'
 
-import CodePage from 'components/pages/Code'
-import PullPage from 'components/pages/Pull'
-import PullCommit from 'components/pages/PullCommit'
+import CodePage from 'components/MainDrawer/Tabs/Code'
+import PullPage from 'components/MainDrawer/Tabs/Pull'
+import PullCommit from 'components/MainDrawer/Tabs/PullCommit'
 import PullCommitMenu from 'components/Menu/PullCommit'
 
 import { compact } from 'lodash'
