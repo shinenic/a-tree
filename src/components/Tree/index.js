@@ -143,7 +143,7 @@ export default function CustomizedTreeView({
         {renderTree(objectTree, onItemClick)}
       </TreeView>
     )
-  }, [treeId])
+  }, [treeId, onItemClick])
 
   return treeView
 }
