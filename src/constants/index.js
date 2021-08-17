@@ -25,3 +25,17 @@ export const DEFAULT_PAGE_INFO = {
   filePath: null,
   defaultBranch: null,
 }
+
+export const DRAWER_POSITION = {
+  LEFT: 'Left',
+  RIGHT: 'Right',
+}
+
+export const ERROR_MESSAGE = {
+  NOT_FOUND_PAGE: 'NOT_FOUND_PAGE',
+  TOKEN_INVALID: 'TOKEN_INVALID',
+  NO_PERMISSION: 'NO_PERMISSION',
+  RESERVED_USER_NAME: 'RESERVED_USER_NAME',
+  NOT_SUPPORTED_PAGE: 'NOT_SUPPORTED_PAGE',
+  UNKNOWN: 'UNKNOWN',
+}

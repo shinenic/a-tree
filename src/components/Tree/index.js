@@ -85,8 +85,8 @@ const renderTree = (tree, onItemClick) => {
     const hasChildren = !isEmpty(node.children)
     const status = node.status || 'normal'
 
-    const handleClick = () => {
-      if (onItemClick) onItemClick(node)
+    const handleClick = (e) => {
+      if (onItemClick) onItemClick(node, e)
     }
 
     if (hasChildren) {
@@ -143,7 +143,7 @@ export default function CustomizedTreeView({
         {renderTree(objectTree, onItemClick)}
       </TreeView>
     )
-  }, [treeId])
+  }, [treeId, onItemClick])
 
   return treeView
 }

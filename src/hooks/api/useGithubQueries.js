@@ -1,20 +1,5 @@
 import useGithubQuery from './useGithubQuery'
 
-export const useQueryRepoInfo = (
-  { owner, repo, ...rest },
-  useQueryOptions = {}
-) => {
-  return useGithubQuery(
-    ['repoInfo', { owner, repo }],
-    {
-      url: '/repos/{owner}/{repo}',
-      placeholders: { owner, repo },
-      ...rest,
-    },
-    useQueryOptions
-  )
-}
-
 export const useQueryCommits = (
   { owner, repo, pull, ...rest },
   useQueryOptions = {}

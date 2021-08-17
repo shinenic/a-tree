@@ -3,10 +3,12 @@ import Drawer from '@material-ui/core/Drawer'
 import { makeStyles } from '@material-ui/core/styles'
 import { PAGE_TYPE } from 'constants'
 
-import CodePage from 'components/MainDrawer/Tabs/Code'
-import PullPage from 'components/MainDrawer/Tabs/Pull'
-import PullCommit from 'components/MainDrawer/Tabs/PullCommit'
+import CodePage from './Tabs/Code'
+import PullPage from './Tabs/Pull'
+import PullCommit from './Tabs/PullCommit'
+import Error from './Tabs/Error'
 import PullCommitMenu from 'components/Menu/PullCommit'
+import Setting from 'components/Setting'
 
 import { compact } from 'lodash'
 import * as Style from './style'
@@ -28,6 +30,7 @@ const MainDrawer = ({
   branch: branchFromUrl,
   filePath,
   defaultBranch,
+  error,
 }) => {
   const classes = useStyles()
   const branch = branchFromUrl || defaultBranch
@@ -58,6 +61,10 @@ const MainDrawer = ({
   }
 
   const renderContent = () => {
+    if (error) {
+      return <Error errorMessage={error?.message} />
+    }
+
     switch (pageType) {
       case PAGE_TYPE.CODE:
       default:
@@ -74,6 +81,9 @@ const MainDrawer = ({
       <Style.DrawerHeader>{renderHeader()}</Style.DrawerHeader>
       <PullCommitMenu owner={owner} repo={repo} pull={pull} commit={commit} />
       <Style.DrawerContent>{renderContent()}</Style.DrawerContent>
+      <Style.DrawerFooter>
+        <Setting />
+      </Style.DrawerFooter>
     </Drawer>
   )
 }
