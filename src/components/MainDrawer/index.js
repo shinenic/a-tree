@@ -7,6 +7,7 @@ import CodePage from 'components/pages/Code'
 import PullPage from 'components/pages/Pull'
 import PullCommit from 'components/pages/PullCommit'
 import PullCommitMenu from 'components/Menu/PullCommit'
+import Error from 'components/pages/Error'
 import Setting from 'components/Setting'
 
 import { compact } from 'lodash'
@@ -29,6 +30,7 @@ const MainDrawer = ({
   branch: branchFromUrl,
   filePath,
   defaultBranch,
+  error,
 }) => {
   const classes = useStyles()
   const branch = branchFromUrl || defaultBranch
@@ -59,6 +61,10 @@ const MainDrawer = ({
   }
 
   const renderContent = () => {
+    if (error) {
+      return <Error errorMessage={error?.message} />
+    }
+
     switch (pageType) {
       case PAGE_TYPE.CODE:
       default:

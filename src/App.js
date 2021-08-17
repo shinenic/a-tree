@@ -2,8 +2,13 @@ import GlobalStyle from './GlobalStyle'
 import MainDrawer from 'components/MainDrawer'
 import { PAGE_TYPE } from 'constants'
 import usePageInfo from 'hooks/pageInfo/usePageInfo'
+import { ERROR_MESSAGE } from 'constants'
 
 const { UNKNOWN, UNSUPPORTED } = PAGE_TYPE
+const HANDLED_ERRORS = [
+  ERROR_MESSAGE.TOKEN_INVALID,
+  ERROR_MESSAGE.NO_PERMISSION,
+]
 
 function App() {
   const { error, isLoading, pageInfo } = usePageInfo()
@@ -13,8 +18,8 @@ function App() {
   if (
     pageInfo.pageType === UNKNOWN ||
     pageInfo.pageType === UNSUPPORTED ||
-    error ||
-    isLoading
+    isLoading ||
+    (error && !HANDLED_ERRORS.includes(error?.message))
   ) {
     return null
   }
@@ -22,7 +27,7 @@ function App() {
   return (
     <>
       <GlobalStyle />
-      <MainDrawer {...pageInfo} />
+      <MainDrawer {...pageInfo} error={error} />
     </>
   )
 }
