@@ -21,6 +21,8 @@ const Modal = ({
   onClose,
   children,
   modalStyle = {},
+  overLayStyle = {},
+  overlayClasses,
   from = { opacity: 0, transform: 'translateY(-40px)' },
   to = { opacity: 1, transform: 'translateY(0px)' },
   ...rest
@@ -36,8 +38,16 @@ const Modal = ({
   return transition(
     (style, item) =>
       item && (
-        <AnimatedOverlay style={{ opacity: style.opacity }}>
-          <a.div ref={modalRef} {...rest} style={{ ...style, ...modalStyle }}>
+        <AnimatedOverlay
+          style={{ opacity: style.opacity, ...overLayStyle }}
+          onClick={onClose}
+        >
+          <a.div
+            ref={modalRef}
+            onClick={(e) => e.stopPropagation()}
+            {...rest}
+            style={{ ...style, ...modalStyle }}
+          >
             {children}
           </a.div>
         </AnimatedOverlay>
