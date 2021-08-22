@@ -6,12 +6,21 @@ import { ERROR_MESSAGE } from 'constants'
 
 import useListenLocation from 'hooks/pageInfo/useListenLocation'
 import useListenTitle from 'hooks/pageInfo/useListenTitle'
+import { useSettingDispatchCtx } from 'components/Setting/Context/Provider'
 import { useQuery } from 'react-query'
 import { isEmpty } from 'lodash'
 
 const NOT_FOUND_STATUS = 404
 const INVALID_TOKEN_STATUS = 401
 const OK_STATUS = 200
+
+const isGithubPage = (host) => {
+  return host.toLowerCase().includes('github')
+}
+
+const isEnterpriseGithub = (host) => {
+  return isGithubPage(host) && host !== 'github.com'
+}
 
 /**
  * This hook return pageInfo if the page is supported,
@@ -35,8 +44,9 @@ const OK_STATUS = 200
  */
 const usePageInfo = () => {
   const { token } = useSettingCtx()
-  const { pathname } = useListenLocation()
-  const [_, firstPath, secondPath] = pathname.split('/')
+  const { pathname, host } = useListenLocation()
+  const [, firstPath, secondPath] = pathname.split('/')
+  const dispatch = useSettingDispatchCtx()
   const title = useListenTitle()
   const [pageInfo, setPageInfo] = useState({})
 
@@ -47,15 +57,23 @@ const usePageInfo = () => {
   } = useQuery(
     ['pageInfo', { owner: firstPath, repo: secondPath, token }],
     async () => {
-      if (!secondPath || !firstPath) {
+      if (!secondPath || !firstPath || !isGithubPage(host)) {
         throw new Error(ERROR_MESSAGE.NOT_SUPPORTED_PAGE)
       }
       try {
+        const baseUrl = isEnterpriseGithub(host)
+          ? `${window.location.origin}/api/v3`
+          : null
+
         const repoResponse = await createGithubQuery({
           url: '/repos/{owner}/{repo}',
           placeholders: { owner: firstPath, repo: secondPath },
           token,
+          baseUrl,
         })
+
+        dispatch({ type: 'UPDATE_BASE_URL', payload: baseUrl })
+
         return repoResponse.data.default_branch
       } catch (repoError) {
         try {
