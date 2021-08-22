@@ -28,10 +28,12 @@ export const createGithubQuery = ({
   params = {},
   options = {},
   method = 'GET',
+  baseUrl,
 } = {}) => {
   const controller = new AbortController()
 
   const promise = request({
+    ...(baseUrl && { baseUrl }),
     method,
     url,
     ...placeholders,
