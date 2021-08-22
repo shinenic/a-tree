@@ -84,7 +84,7 @@ const usePageInfo = () => {
           })
         } catch (userError) {
           if (userError.status === NOT_FOUND_STATUS) {
-            throw new Error(ERROR_MESSAGE.RESERVED_USER_NAME)
+            throw new Error(ERROR_MESSAGE.NO_PERMISSION)
           }
         }
 
