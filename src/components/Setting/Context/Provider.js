@@ -46,4 +46,11 @@ export const useSettingDispatchCtx = () => {
   return dispatch
 }
 
+export const useSettingContext = () => {
+  const state = useSettingCtx()
+  const dispatch = useSettingDispatchCtx()
+
+  return [state, dispatch]
+}
+
 export default Provider
