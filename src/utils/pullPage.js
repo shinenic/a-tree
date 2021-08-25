@@ -52,8 +52,8 @@ const loopFileNodes = ({ filePath, focusFile, showAllFiles } = {}) => {
 
   let target = null
 
-  fileLinks.forEach(({ hash, outerText }) => {
-    if (outerText.includes(filePath)) {
+  fileLinks.forEach(({ hash, title }) => {
+    if (title.includes(filePath)) {
       target = document.getElementById(hash.substr(1))
 
       if (focusFile || showAllFiles) {
