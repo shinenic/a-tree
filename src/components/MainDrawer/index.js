@@ -20,6 +20,7 @@ const useStyles = makeStyles({
     boxShadow:
       '0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -2px rgb(0 0 0 / 5%)',
     borderRight: 'none',
+    overflowX: 'hidden',
   },
 })
 
