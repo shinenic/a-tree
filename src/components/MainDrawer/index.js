@@ -13,7 +13,7 @@ import { Resizable } from 're-resizable'
 
 import { compact, throttle } from 'lodash'
 import * as Style from './style'
-import { useSettingContext } from 'components/Setting/Context/Provider'
+import { useSettingCtx } from 'components/Setting/Context/Provider'
 
 const useStyles = makeStyles({
   paper: {
@@ -34,7 +34,7 @@ const MainDrawer = ({
   defaultBranch,
   error,
 }) => {
-  const [{ drawerWidth }, dispatch] = useSettingContext()
+  const [{ drawerWidth }, dispatch] = useSettingCtx()
   const classes = useStyles()
   const branch = branchFromUrl || defaultBranch
 

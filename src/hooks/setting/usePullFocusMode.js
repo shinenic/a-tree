@@ -1,10 +1,10 @@
 import { useCallback, useRef } from 'react'
 import { focusFile, scrollToFile, resetFocusFiles } from 'utils/pullPage'
-import { useSettingCtx } from 'components/Setting/Context/Provider'
+import { useSettingStateCtx } from 'components/Setting/Context/Provider'
 import useUpdateEffect from 'hooks/useUpdateEffect'
 
 const usePullFocusMode = () => {
-  const { isFocusMode } = useSettingCtx()
+  const { isFocusMode } = useSettingStateCtx()
   const previousClickedFile = useRef()
 
   /**
