@@ -3,6 +3,7 @@ import MainDrawer from 'components/MainDrawer'
 import { PAGE_TYPE } from 'constants'
 import usePageInfo from 'hooks/pageInfo/usePageInfo'
 import { ERROR_MESSAGE } from 'constants'
+import FileSearchModal from 'components/FileSearchModal'
 import { useSettingStateCtx } from 'components/Setting/Context/Provider'
 
 const { UNKNOWN, UNSUPPORTED } = PAGE_TYPE
@@ -28,6 +29,7 @@ function App() {
     <>
       <GlobalStyle pl={drawerWidth} />
       <MainDrawer {...pageInfo} error={error} />
+      <FileSearchModal {...pageInfo} />
     </>
   )
 }
