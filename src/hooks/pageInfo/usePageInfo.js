@@ -13,6 +13,14 @@ const NOT_FOUND_STATUS = 404
 const INVALID_TOKEN_STATUS = 401
 const OK_STATUS = 200
 
+const isGithubPage = (host) => {
+  return host.toLowerCase().includes('github')
+}
+
+const isEnterpriseGithub = (host) => {
+  return isGithubPage(host) && host !== 'github.com'
+}
+
 /**
  * This hook return pageInfo if the page is supported,
  * to get the necessary data, we need 3 thing to ensure the full page info.
@@ -34,9 +42,9 @@ const OK_STATUS = 200
  * @returns {PageInfoHook}
  */
 const usePageInfo = () => {
-  const { token } = useSettingCtx()
-  const { pathname } = useListenLocation()
-  const [_, firstPath, secondPath] = pathname.split('/')
+  const [{ token }, dispatch] = useSettingCtx()
+  const { pathname, host } = useListenLocation()
+  const [, firstPath, secondPath] = pathname.split('/')
   const title = useListenTitle()
   const [pageInfo, setPageInfo] = useState({})
 
@@ -47,15 +55,23 @@ const usePageInfo = () => {
   } = useQuery(
     ['pageInfo', { owner: firstPath, repo: secondPath, token }],
     async () => {
-      if (!secondPath || !firstPath) {
+      if (!secondPath || !firstPath || !isGithubPage(host)) {
         throw new Error(ERROR_MESSAGE.NOT_SUPPORTED_PAGE)
       }
       try {
+        const baseUrl = isEnterpriseGithub(host)
+          ? `${window.location.origin}/api/v3`
+          : null
+
         const repoResponse = await createGithubQuery({
           url: '/repos/{owner}/{repo}',
           placeholders: { owner: firstPath, repo: secondPath },
           token,
+          baseUrl,
         })
+
+        dispatch({ type: 'UPDATE_BASE_URL', payload: baseUrl })
+
         return repoResponse.data.default_branch
       } catch (repoError) {
         try {
@@ -66,7 +82,7 @@ const usePageInfo = () => {
           })
         } catch (userError) {
           if (userError.status === NOT_FOUND_STATUS) {
-            throw new Error(ERROR_MESSAGE.RESERVED_USER_NAME)
+            throw new Error(ERROR_MESSAGE.NO_PERMISSION)
           }
         }
 

@@ -3,7 +3,8 @@ import { TITLE_MATCHER } from 'constants/github'
 import { isEmpty } from 'lodash'
 import { DEFAULT_PAGE_INFO } from 'constants'
 
-const { CODE, PULL, COMMIT, PULL_COMMIT, PULL_COMMITS, UNKNOWN } = PAGE_TYPE
+const { CODE, PULL, COMMIT, PULL_COMMIT, PULL_COMMITS, PULL_FILES, UNKNOWN } =
+  PAGE_TYPE
 
 /**
  * This function only parse pageInfo from `pathname` and `title`,
@@ -86,6 +87,17 @@ export const getPageInfo = (pathname = '', defaultBranch, title) => {
       pageType: PULL_COMMITS,
       pull: restPaths[0],
       commit: restPaths[2].split('..'),
+    }
+  }
+
+  /**
+   * {user}/{repo}/pull/{pull}/files
+   */
+  if (third === 'pull' && restPaths[1] === 'files' && !restPaths[2]) {
+    return {
+      ...basicInfo,
+      pageType: PULL_FILES,
+      pull: restPaths[0],
     }
   }
 

@@ -4,6 +4,7 @@ import { PAGE_TYPE } from 'constants'
 import usePageInfo from 'hooks/pageInfo/usePageInfo'
 import { ERROR_MESSAGE } from 'constants'
 import FileSearchModal from 'components/FileSearchModal'
+import { useSettingStateCtx } from 'components/Setting/Context/Provider'
 
 const { UNKNOWN, UNSUPPORTED } = PAGE_TYPE
 const HANDLED_ERRORS = [
@@ -13,8 +14,7 @@ const HANDLED_ERRORS = [
 
 function App() {
   const { error, isLoading, pageInfo } = usePageInfo()
-
-  console.log({ error, isLoading, pageInfo })
+  const { drawerWidth } = useSettingStateCtx()
 
   if (
     pageInfo.pageType === UNKNOWN ||
@@ -27,7 +27,7 @@ function App() {
 
   return (
     <>
-      <GlobalStyle />
+      <GlobalStyle pl={drawerWidth} />
       <MainDrawer {...pageInfo} error={error} />
       <FileSearchModal {...pageInfo} />
     </>

@@ -38,24 +38,6 @@ const generateTree = (tree) => {
   return [objTree, folderNodeIds]
 }
 
-const setNodeIds = (tree, parentNodeId = '', folderNodeIds) => {
-  return Object.keys(tree).map((key) => {
-    let node = tree[key]
-
-    const hasChildren = !isEmpty(node.children)
-    const nodeId = compact([parentNodeId, key]).join('/')
-
-    node.nodeId = nodeId
-
-    if (hasChildren) {
-      folderNodeIds.push(nodeId)
-      return setNodeIds(node.children, nodeId, folderNodeIds)
-    }
-
-    return nodeId
-  })
-}
-
 const isProxyNode = (node) => {
   const hasChildNoSiblings = Object.keys(node.children).length === 1
 
@@ -65,12 +47,44 @@ const isProxyNode = (node) => {
   const child = node.children[childKey]
   const isChildLeaf = isEmpty(child.children)
 
-  if (isChildLeaf) return false
-
-  return true
+  return !isChildLeaf
 }
 
-const renderTree = (tree, onItemClick) => {
+const setNodeIds = (tree, parentNodeId = '', folderNodeIds) => {
+  return Object.keys(tree).map((key) => {
+    let node = tree[key]
+    let label = key
+
+    const hasChildren = !isEmpty(node.children)
+    let nodeId = compact([parentNodeId, key]).join('/')
+
+    node.nodeId = nodeId
+
+    if (hasChildren) {
+      while (isProxyNode(node)) {
+        const childKey = Object.keys(node.children)[0]
+        const child = node.children[childKey]
+
+        delete tree[label]
+
+        label = `${label}/${childKey}`
+
+        tree[label] = child
+        node = tree[label]
+
+        nodeId = compact([parentNodeId, label]).join('/')
+        node.nodeId = nodeId
+      }
+
+      folderNodeIds.push(nodeId)
+      return setNodeIds(node.children, nodeId, folderNodeIds)
+    }
+
+    return nodeId
+  })
+}
+
+const Tree = ({ tree, onItemClick }) => {
   if (isEmpty(tree)) return null
 
   return sortBy(Object.keys(tree), [
@@ -79,31 +93,22 @@ const renderTree = (tree, onItemClick) => {
       else return 1
     },
   ]).map((key) => {
-    let node = tree[key]
-    let label = key
-
+    const node = tree[key]
+    const label = key
     const hasChildren = !isEmpty(node.children)
     const status = node.status || 'normal'
 
     const handleClick = (e) => {
+      e.stopPropagation()
+
       if (onItemClick) onItemClick(node, e)
     }
 
     if (hasChildren) {
-      while (isProxyNode(node)) {
-        const childKey = Object.keys(node.children)[0]
-        const child = node.children[childKey]
-
-        label = `${label}/${childKey}`
-
-        tree[label] = child
-        node = tree[label]
-      }
-
       return (
         <div key={node.nodeId} onClick={handleClick}>
           <TreeItem nodeId={node.nodeId} label={label}>
-            {renderTree(node.children, onItemClick)}
+            <Tree tree={node.children} onItemClick={onItemClick} />
           </TreeItem>
         </div>
       )
@@ -113,7 +118,7 @@ const renderTree = (tree, onItemClick) => {
       <div key={node.nodeId} onClick={handleClick}>
         <TreeItem
           nodeId={node.nodeId}
-          label={key}
+          label={label}
           icon={<LabelIcon status={status} />}
         />
       </div>
@@ -131,16 +136,19 @@ export default function CustomizedTreeView({
 
   const treeView = useMemo(() => {
     const [objectTree, expandedNodeIds] = generateTree(tree)
+    const defaultExpandedIds = isExpandedAll
+      ? [...expandedNodeIds, treeId]
+      : [treeId]
 
     return (
       <TreeView
         className={classes.root}
-        defaultExpanded={isExpandedAll ? expandedNodeIds : []}
+        defaultExpanded={defaultExpandedIds}
         defaultCollapseIcon={<AiFillFolderOpen color={MAIN_COLOR} />}
         defaultExpandIcon={<AiFillFolder color={MAIN_COLOR} />}
         defaultEndIcon={<AiOutlineFileText color={MAIN_COLOR} />}
       >
-        {renderTree(objectTree, onItemClick)}
+        <Tree tree={objectTree} onItemClick={onItemClick} />
       </TreeView>
     )
   }, [treeId, onItemClick])
