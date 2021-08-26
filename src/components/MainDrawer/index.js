@@ -74,7 +74,10 @@ const MainDrawer = ({
       default:
         return <CodePage owner={owner} repo={repo} branch={branch} />
       case PAGE_TYPE.PULL:
-        return <PullPage owner={owner} repo={repo} pull={pull} />
+      case PAGE_TYPE.PULL_FILES:
+        return (
+          <PullPage owner={owner} repo={repo} pull={pull} pageType={pageType} />
+        )
       case PAGE_TYPE.PULL_COMMIT:
         return <PullCommit owner={owner} repo={repo} commit={commit} />
     }

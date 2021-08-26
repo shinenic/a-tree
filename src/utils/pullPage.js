@@ -72,7 +72,11 @@ const loopFileNodes = ({ filePath, focusFile, showAllFiles } = {}) => {
 }
 
 export const focusFile = (filePath, { scrollToNav = true } = {}) => {
-  loopFileNodes({ filePath, focusFile: true })
+  const target = loopFileNodes({ filePath, focusFile: true })
+
+  if (!target) {
+    return false
+  }
 
   if (scrollToNav) {
     document.querySelector('nav[class*="tabnav-tabs"]')?.scrollIntoView()
