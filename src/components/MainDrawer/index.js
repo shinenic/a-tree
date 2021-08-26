@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import Drawer from '@material-ui/core/Drawer'
 import { makeStyles } from '@material-ui/core/styles'
 import { PAGE_TYPE } from 'constants'
@@ -9,15 +9,17 @@ import PullCommit from './Tabs/PullCommit'
 import Error from './Tabs/Error'
 import PullCommitMenu from 'components/Menu/PullCommit'
 import Setting from 'components/Setting'
+import { Resizable } from 're-resizable'
 
-import { compact } from 'lodash'
+import { compact, throttle } from 'lodash'
 import * as Style from './style'
+import { useSettingContext } from 'components/Setting/Context/Provider'
 
 const useStyles = makeStyles({
   paper: {
-    width: 400,
-    display: 'flex',
-    flexDirection: 'column',
+    boxShadow:
+      '0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -2px rgb(0 0 0 / 5%)',
+    borderRight: 'none',
   },
 })
 
@@ -32,6 +34,7 @@ const MainDrawer = ({
   defaultBranch,
   error,
 }) => {
+  const [{ drawerWidth }, dispatch] = useSettingContext()
   const classes = useStyles()
   const branch = branchFromUrl || defaultBranch
 
@@ -76,14 +79,49 @@ const MainDrawer = ({
     }
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleOnResize = useCallback(
+    throttle((_, __, element) => {
+      dispatch({
+        type: 'UPDATE_DRAWER_WIDTH',
+        payload: element.clientWidth,
+      })
+    }, 100),
+    []
+  )
+
   return (
     <Drawer anchor="left" open variant="permanent" classes={classes}>
-      <Style.DrawerHeader>{renderHeader()}</Style.DrawerHeader>
-      <PullCommitMenu owner={owner} repo={repo} pull={pull} commit={commit} />
-      <Style.DrawerContent>{renderContent()}</Style.DrawerContent>
-      <Style.DrawerFooter>
-        <Setting />
-      </Style.DrawerFooter>
+      <Resizable
+        size={{
+          width: drawerWidth,
+          height: '100%',
+        }}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+        onResize={handleOnResize}
+        enable={{
+          top: false,
+          right: true,
+          bottom: false,
+          left: false,
+          topRight: false,
+          bottomRight: false,
+          bottomLeft: false,
+          topLeft: false,
+        }}
+        maxWidth="40vw"
+        minWidth={350}
+      >
+        <Style.DrawerHeader>{renderHeader()}</Style.DrawerHeader>
+        <PullCommitMenu owner={owner} repo={repo} pull={pull} commit={commit} />
+        <Style.DrawerContent>{renderContent()}</Style.DrawerContent>
+        <Style.DrawerFooter>
+          <Setting />
+        </Style.DrawerFooter>
+      </Resizable>
     </Drawer>
   )
 }

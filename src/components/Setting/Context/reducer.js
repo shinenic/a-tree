@@ -35,6 +35,8 @@ export const reducer = (state, action) => {
       return { ...state, isFocusMode: !state.isFocusMode }
     case 'UPDATE_DRAWER_WIDTH':
       return { ...state, drawerWidth: action.payload }
+    case 'UPDATE_BASE_URL':
+      return { ...state, baseUrl: action.payload }
     default:
       throw new Error(`Unknown Type: ${action.type}`)
   }
