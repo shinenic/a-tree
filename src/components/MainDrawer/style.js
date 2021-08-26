@@ -26,21 +26,22 @@ export const DrawerContent = styled.div`
   /* width */
   ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
   }
 
   /* Track */
   ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: #f1f1f188;
   }
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: #bbb;
+    background: #bbb8;
   }
 
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    background: #888;
+    background: #8888;
   }
 `
 

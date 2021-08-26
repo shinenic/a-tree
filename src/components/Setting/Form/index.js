@@ -30,7 +30,7 @@ export default function SettingForm() {
     <FormControl component="fieldset" className={classes.paper}>
       <FormGroup aria-label="setting" className={classes.formGroup}>
         <FocusCheckBox classes={{ label: classes.label }} />
-        <PositionSelect classes={{ label: classes.label }} />
+        {/* <PositionSelect classes={{ label: classes.label }} /> */}
         <TokenTextField classes={{ label: classes.label }} />
       </FormGroup>
     </FormControl>
