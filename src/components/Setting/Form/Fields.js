@@ -8,17 +8,13 @@ import TextField from '@material-ui/core/TextField'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Button from '@material-ui/core/Button'
 
-import {
-  useSettingDispatchCtx,
-  useSettingCtx,
-} from 'components/Setting/Context/Provider'
+import { useSettingCtx } from 'components/Setting/Context/Provider'
 import { isEmpty } from 'lodash'
 
 const { LEFT, RIGHT } = DRAWER_POSITION
 
 export const FocusCheckBox = (props) => {
-  const { isFocusMode } = useSettingCtx()
-  const dispatch = useSettingDispatchCtx()
+  const [{ isFocusMode }, dispatch] = useSettingCtx()
 
   const handleChange = () => {
     dispatch({ type: 'TOGGLE_FOCUS_MODE' })
@@ -42,8 +38,7 @@ export const FocusCheckBox = (props) => {
 }
 
 export const PositionSelect = (props) => {
-  const { position } = useSettingCtx()
-  const dispatch = useSettingDispatchCtx()
+  const [{ position }, dispatch] = useSettingCtx()
 
   const handleChange = (event) => {
     event.target.value === LEFT
@@ -70,10 +65,8 @@ export const PositionSelect = (props) => {
  * @TODO Verify whether the token is invalid and show hint.
  */
 export const TokenTextField = (props) => {
-  const { token } = useSettingCtx()
+  const [{ token }, dispatch] = useSettingCtx()
   const [input, setInput] = useState(token)
-
-  const dispatch = useSettingDispatchCtx()
 
   const handleButtonClick = () => {
     if (input === token) {
