@@ -5,15 +5,15 @@ import useUpdateEffect from 'hooks/useUpdateEffect'
 
 const usePullFocusMode = () => {
   const { isFocusMode } = useSettingStateCtx()
-  const previousClickedFile = useRef()
+  const previousLockedFile = useRef(null)
 
   /**
    * When `isFocusMode` off,
    * restore all files' visibility and scroll to the last file that user clicked.
    */
   useUpdateEffect(() => {
-    if (!isFocusMode) {
-      resetFocusFiles(previousClickedFile.current)
+    if (!isFocusMode && previousLockedFile.current) {
+      resetFocusFiles(previousLockedFile.current)
     }
   }, [isFocusMode])
 
@@ -21,13 +21,19 @@ const usePullFocusMode = () => {
     ({ filename }, e) => {
       if (!filename) return
 
-      previousClickedFile.current = filename
-      if (isFocusMode) {
-        focusFile(filename)
-      } else {
+      if (!isFocusMode) {
         scrollToFile(filename)
+      } else if (previousLockedFile.current === filename) {
+        resetFocusFiles(filename)
+        previousLockedFile.current = null
+      } else {
+        focusFile(filename)
+        previousLockedFile.current = filename
       }
-      e.stopPropagation()
+
+      if (e) {
+        e.stopPropagation()
+      }
     },
     [isFocusMode]
   )
