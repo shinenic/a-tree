@@ -1,11 +1,11 @@
 import React from 'react'
 import { ERROR_MESSAGE } from 'constants'
-import { useSettingStateCtx } from 'components/Setting/Context/Provider'
+import { useSettingCtx } from 'components/Setting/Context/Provider'
 
 import * as Style from './style'
 
 const Error = ({ errorMessage }) => {
-  const { token } = useSettingStateCtx()
+  const { token } = useSettingCtx()
 
   return (
     <Style.ErrorContainer>

@@ -6,6 +6,7 @@ import { ERROR_MESSAGE } from 'constants'
 
 import useListenLocation from 'hooks/pageInfo/useListenLocation'
 import useListenTitle from 'hooks/pageInfo/useListenTitle'
+import { useSettingDispatchCtx } from 'components/Setting/Context/Provider'
 import { useQuery } from 'react-query'
 import { isEmpty } from 'lodash'
 
@@ -42,9 +43,10 @@ const isEnterpriseGithub = (host) => {
  * @returns {PageInfoHook}
  */
 const usePageInfo = () => {
-  const [{ token }, dispatch] = useSettingCtx()
+  const { token } = useSettingCtx()
   const { pathname, host } = useListenLocation()
   const [, firstPath, secondPath] = pathname.split('/')
+  const dispatch = useSettingDispatchCtx()
   const title = useListenTitle()
   const [pageInfo, setPageInfo] = useState({})
 

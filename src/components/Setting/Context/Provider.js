@@ -24,11 +24,11 @@ const Provider = ({ children }) => {
   )
 }
 
-export const useSettingStateCtx = () => {
+export const useSettingCtx = () => {
   const state = useContext(SettingContext)
   if (!state) {
     throw new Error(
-      'useSettingStateCtx must be used within a SettingContext.Provider'
+      'useSettingCtx must be used within a SettingContext.Provider'
     )
   }
 
@@ -46,8 +46,8 @@ export const useSettingDispatchCtx = () => {
   return dispatch
 }
 
-export const useSettingCtx = () => {
-  const state = useSettingStateCtx()
+export const useSettingContext = () => {
+  const state = useSettingCtx()
   const dispatch = useSettingDispatchCtx()
 
   return [state, dispatch]

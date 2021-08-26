@@ -52,8 +52,8 @@ const loopFileNodes = ({ filePath, focusFile, showAllFiles } = {}) => {
 
   let target = null
 
-  fileLinks.forEach(({ hash, title }) => {
-    if (title.includes(filePath)) {
+  fileLinks.forEach(({ hash, outerText }) => {
+    if (outerText.includes(filePath)) {
       target = document.getElementById(hash.substr(1))
 
       if (focusFile || showAllFiles) {
@@ -72,11 +72,7 @@ const loopFileNodes = ({ filePath, focusFile, showAllFiles } = {}) => {
 }
 
 export const focusFile = (filePath, { scrollToNav = true } = {}) => {
-  const target = loopFileNodes({ filePath, focusFile: true })
-
-  if (!target) {
-    return false
-  }
+  loopFileNodes({ filePath, focusFile: true })
 
   if (scrollToNav) {
     document.querySelector('nav[class*="tabnav-tabs"]')?.scrollIntoView()

@@ -1,9 +1,9 @@
 import { useQuery } from 'react-query'
 import { isValidQuery, createGithubQuery } from 'utils/api'
-import { useSettingStateCtx } from 'components/Setting/Context/Provider'
+import { useSettingCtx } from 'components/Setting/Context/Provider'
 
 function useGithubQuery(queryKeys, variables = {}, useQueryOptions = {}) {
-  const { token, baseUrl } = useSettingStateCtx()
+  const { token, baseUrl } = useSettingCtx()
   const { url, placeholders = {} } = variables
   const { enabled = true } = useQueryOptions
 
