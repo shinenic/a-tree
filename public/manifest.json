@@ -13,7 +13,7 @@
   "content_scripts": [
     {
       "run_at": "document_idle",
-      "matches": ["https://github.com/*"],
+      "matches": ["<all_urls>"],
       "js": ["content.js"]
     }
   ]
