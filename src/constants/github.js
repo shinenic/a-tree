@@ -1,3 +1,5 @@
+export const GITHUB_PAGE_CONTAINER_ID = 'js-repo-pjax-container'
+
 export const PJAX_ID = {
   CODE: '#repo-content-pjax-container',
   PULL: '#js-repo-pjax-container',
