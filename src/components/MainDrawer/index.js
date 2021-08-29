@@ -117,7 +117,7 @@ const MainDrawer = ({
           topLeft: false,
         }}
         maxWidth="40vw"
-        minWidth={350}
+        minWidth={300}
       >
         <Style.DrawerHeader>{renderHeader()}</Style.DrawerHeader>
         <PullCommitMenu owner={owner} repo={repo} pull={pull} commit={commit} />
