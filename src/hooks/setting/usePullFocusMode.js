@@ -1,9 +1,18 @@
 import { useCallback, useRef } from 'react'
+import sha256 from 'crypto-js/sha256'
+
 import { focusFile, scrollToFile, resetFocusFiles } from 'utils/pullPage'
 import { useSettingStateCtx } from 'components/Setting/Context/Provider'
 import useUpdateEffect from 'hooks/useUpdateEffect'
+import { PAGE_TYPE } from 'constants'
+import { scrollToTabsNav } from 'utils/scroll'
+import { linkGithubPage } from 'utils/link'
 
-const usePullFocusMode = () => {
+const getFileHash = (filename) => `diff-${sha256(filename)}`
+
+const getFileLink = (baseUrl, filename) => `${baseUrl}#${getFileHash(filename)}`
+
+const usePullFocusMode = ({ basePathname, pageType }) => {
   const { isFocusMode } = useSettingStateCtx()
   const previousLockedFile = useRef(null)
 
@@ -13,7 +22,9 @@ const usePullFocusMode = () => {
    */
   useUpdateEffect(() => {
     if (!isFocusMode && previousLockedFile.current) {
-      resetFocusFiles(previousLockedFile.current)
+      resetFocusFiles()
+      scrollToFile(getFileHash(previousLockedFile.current))
+      previousLockedFile.current = null
     }
   }, [isFocusMode])
 
@@ -21,15 +32,30 @@ const usePullFocusMode = () => {
     ({ filename }, e) => {
       if (!filename) return
 
+      /**
+       * For page which is need to do SPA,
+       * navigate to the specified file node via link instead of `scrollTo`
+       * (navigate via hash will cause screen tremble)
+       */
+      if (
+        pageType !== PAGE_TYPE.PULL_FILES &&
+        pageType !== PAGE_TYPE.PULL_COMMIT
+      ) {
+        linkGithubPage(getFileLink(basePathname, filename))
+        return
+      }
+
+      scrollToFile(getFileHash(filename))
+
+      if (!isFocusMode) return
+
       try {
-        if (!isFocusMode) {
-          scrollToFile(filename)
-        } else if (previousLockedFile.current === filename) {
-          resetFocusFiles(filename)
-          previousLockedFile.current = null
-        } else {
-          focusFile(filename)
+        if (previousLockedFile.current !== filename) {
+          focusFile(getFileHash(filename))
+          scrollToTabsNav()
           previousLockedFile.current = filename
+        } else {
+          resetFocusFiles()
         }
       } catch (error) {
         console.error(error)
@@ -39,7 +65,7 @@ const usePullFocusMode = () => {
         e.stopPropagation()
       }
     },
-    [isFocusMode]
+    [isFocusMode, pageType, basePathname]
   )
 
   return onItemClick

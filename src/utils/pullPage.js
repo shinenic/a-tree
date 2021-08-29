@@ -1,4 +1,4 @@
-import { scrollTo, scrollToTabsNav } from 'utils/scroll'
+import { scrollTo } from 'utils/scroll'
 import { GITHUB_PAGE_CONTAINER_ID } from 'constants/github'
 import { noop } from 'lodash'
 
@@ -22,9 +22,7 @@ const getFileNodes = () => {
     throw new Error(`Can't find diff container DOM (id="files")`)
   }
 
-  const elementList = diffContainer.querySelectorAll(
-    'a[href^="#diff"]:not([title*="Expand"])'
-  )
+  const elementList = diffContainer.querySelectorAll('div[id*="diff-"]')
 
   if (!elementList.length) {
     throw new Error(`Can't find any file block nodes`)
@@ -48,68 +46,52 @@ const getFileNodes = () => {
  * @param {boolean} option.showAllFiles if true, all of the nodes will be visible
  * @returns {HTMLElement} return the node of `filePath` if specified
  */
-const loopFileNodes = ({ filePath, focusFile, showAllFiles } = {}) => {
+const loopFileNodes = ({ fileHash, focusFile, showAllFiles } = {}) => {
   if (focusFile && showAllFiles) {
     throw new Error(`"focusFile" and "showAllFiles" can't be used together`)
   }
 
-  if (focusFile && !filePath) {
-    throw new Error(`"focusFile" and "filePath" should be used together`)
+  if (focusFile && !fileHash) {
+    throw new Error(`"focusFile" and "fileHash" should be used together`)
   }
 
-  const fileLinks = getFileNodes()
+  const fileNodes = getFileNodes()
 
   let target = null
 
-  fileLinks.some(({ hash, title }) => {
-    if (title.includes(filePath)) {
-      target = document.getElementById(hash.substr(1))
+  fileNodes.forEach((node) => {
+    if (node.id === fileHash) {
+      target = node
 
       if (focusFile || showAllFiles) {
-        document.getElementById(hash.substr(1)).style.display = null
+        node.style.display = null
       }
-
-      if (!focusFile && !showAllFiles) return true
     } else {
       if (showAllFiles) {
-        document.getElementById(hash.substr(1)).style.display = null
+        node.style.display = null
       } else if (focusFile) {
-        document.getElementById(hash.substr(1)).style.display = 'none'
+        node.style.display = 'none'
       }
     }
-
-    return false
   })
 
-  if (filePath && !target) {
-    throw new Error(`Can't find HTML node for file path "${filePath}"`)
+  if (fileHash && !target) {
+    throw new Error(`Can't find HTML node for file path "${fileHash}"`)
   }
 
   return target
 }
 
-export const focusFile = (filePath, { scrollToNav = true } = {}) => {
-  loopFileNodes({ filePath, focusFile: true })
-
-  if (scrollToNav) {
-    scrollToTabsNav()
-  }
+export const focusFile = (fileHash) => {
+  loopFileNodes({ fileHash, focusFile: true })
 }
 
-export const resetFocusFiles = (scrollToFilePath) => {
-  const target = loopFileNodes({
-    filePath: scrollToFilePath,
-    showAllFiles: true,
-  })
-
-  if (scrollToFilePath) {
-    scrollTo(target)
-  }
+export const resetFocusFiles = () => {
+  loopFileNodes({ showAllFiles: true })
 }
 
-export const scrollToFile = (filePath) => {
-  const fileNodes = loopFileNodes({ filePath })
-  scrollTo(fileNodes)
+export const scrollToFile = (fileHash, options) => {
+  scrollTo(document.getElementById(fileHash), options)
 }
 
 export const generateReviewCheckListener = (callback = noop) => {
