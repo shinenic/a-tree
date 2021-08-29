@@ -16,7 +16,7 @@ export const initialState = {
   token: '',
   position: LEFT,
   isFocusMode: false,
-  drawerWidth: 400,
+  drawerWidth: 300,
 }
 
 /**

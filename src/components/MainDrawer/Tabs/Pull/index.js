@@ -10,7 +10,6 @@ const linkToFileChangeTab = ({ owner, repo, pull }) => {
   const target = document.querySelector(
     `a[href="/${owner}/${repo}/pull/${pull}/files"]`
   )
-  console.log(target)
   target.click()
 }
 

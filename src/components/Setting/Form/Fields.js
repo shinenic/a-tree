@@ -68,21 +68,18 @@ export const TokenTextField = (props) => {
   const [{ token }, dispatch] = useSettingCtx()
   const [input, setInput] = useState(token)
 
-  const handleButtonClick = () => {
-    if (input === token) {
-      setInput('')
-      dispatch({ type: 'UPDATE_TOKEN', payload: '' })
-    } else {
-      dispatch({ type: 'UPDATE_TOKEN', payload: input })
-    }
+  const handleSave = () => {
+    dispatch({ type: 'UPDATE_TOKEN', payload: input })
+  }
+
+  const handleClear = () => {
+    setInput('')
+    dispatch({ type: 'UPDATE_TOKEN', payload: '' })
   }
 
   const handleInputChange = (event) => {
     setInput(event.target.value)
   }
-
-  const buttonText = input === token ? 'Clear Token' : 'Save Token'
-  const isButtonDisabled = isEmpty(input) && isEmpty(token)
 
   return (
     <>
@@ -98,15 +95,26 @@ export const TokenTextField = (props) => {
         }
         {...props}
       />
-      <Button
-        variant="outlined"
-        color={input === token ? 'secondary' : 'primary'}
-        disabled={isButtonDisabled}
-        onClick={handleButtonClick}
-        style={{ margin: '8px 0 0 16px' }}
-      >
-        {buttonText}
-      </Button>
+      <div style={{ display: 'flex', margin: '4px 0 0 8px' }}>
+        <Button
+          variant="outlined"
+          color={'secondary'}
+          disabled={isEmpty(input) && isEmpty(token)}
+          onClick={handleClear}
+          style={{ marginRight: '8px' }}
+        >
+          Clear Token
+        </Button>
+        <Button
+          variant="outlined"
+          color={'primary'}
+          disabled={input === token}
+          onClick={handleSave}
+          style={{ marginRight: '8px' }}
+        >
+          Save Token
+        </Button>
+      </div>
     </>
   )
 }
