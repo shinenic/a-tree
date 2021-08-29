@@ -33,6 +33,11 @@ Quick extension reload for development: [Extensions Reloader](https://chrome.goo
 
 ### F&Q
 
+- Why the extension shows in some unexpected pages
+
+  If you encounter this problem, please help us improve our extension via creating `issues`,
+  it will be nice to have the `url` included.
+
 - How to create personal access token
   
   1. Follow this [offcial guide](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
