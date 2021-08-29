@@ -44,8 +44,6 @@ function GenerateTokenGuide() {
     const shouldOpenTour = localStorage.getItem(TOKEN_GUIDE_LOCAL_STORAGE_KEY)
     if (pathname !== NEW_TOKEN_PATHNAME || !shouldOpenTour) return
 
-    localStorage.removeItem(TOKEN_GUIDE_LOCAL_STORAGE_KEY)
-
     const areNodesExisting = STEPS.every(({ selector }) => {
       if (!document.querySelector(selector)) {
         console.log(selector)
@@ -56,9 +54,9 @@ function GenerateTokenGuide() {
     if (areNodesExisting) {
       document.querySelector(NOTE_INPUT_SELECTOR).value = DEFAULT_NOTE
       document.querySelector(TOKEN_SCOPE_SELECTOR).click()
-    }
-
+      localStorage.removeItem(TOKEN_GUIDE_LOCAL_STORAGE_KEY)
     setIsTourOpen(areNodesExisting)
+    }
   }, [pathname])
 
   return (
