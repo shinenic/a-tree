@@ -1,10 +1,14 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useReducer, useMemo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQueryFiles } from 'hooks/api/useGithubQueries'
 
-import { createFileSearchMachine } from 'machines/fileSearch'
-import { useMachine, useActor } from '@xstate/react'
-import { getFileLink } from 'utils/link'
+import {
+  buildUsedLetterMap,
+  highlightText,
+  generateHotkeyListener,
+} from 'utils/fileSearch'
+import { initialState, reducer } from './reducer'
+import { isEmpty } from 'lodash'
 import * as Style from './style'
 
 import Modal from 'components/shared/Modal'
@@ -22,86 +26,71 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const buildUsedLetterMap = (keyword) => {
-  return [...keyword].reduce(
-    (map, letter) =>
-      /[a-zA-Z]/.test(letter)
-        ? { ...map, [letter.toLowerCase()]: true, [letter.toUpperCase()]: true }
-        : map,
-    {}
-  )
-}
+/**
+ * @TODO Handle loading status
+ */
+const FileSearchModal = ({ owner, repo, branch }) => {
+  const classes = useStyles()
+  const inputRef = useRef(null)
 
-const highlightText = (text, highlightLetterMap) => {
-  return [...text]
-    .map((letter) => (highlightLetterMap[letter] ? `<b>${letter}</b>` : letter))
-    .join('')
-}
+  const [{ result = [], keyword = '', selectedIndex = 0, isOpened }, dispatch] =
+    useReducer(reducer, {
+      ...initialState,
+      pageInfo: { owner, repo, branch },
+    })
 
-const FileSearchContainer = ({ owner, repo, branch }) => {
   const { data, isLoading, error } = useQueryFiles({ owner, repo, branch })
 
-  const getFilePathLink = useCallback(
-    (filePath) => getFileLink({ filePath, type: 'blob', owner, repo, branch }),
-    [owner, repo, branch]
-  )
-
-  const [_, send, service] = useMachine(
-    createFileSearchMachine({
-      getFilePathLink,
-      files: [],
-    })
-  )
-
   useEffect(() => {
-    if (!isLoading && data) {
-      send({
-        type: 'ON_FILES_UPDATE',
-        getFilePathLink,
-        files: data?.tree?.filter(({ type }) => type !== 'tree') ?? [],
+    dispatch({ type: 'SET_IS_LOADING', payload: { isLoading } })
+
+    if (!isLoading && !isEmpty(data)) {
+      dispatch({
+        type: 'UPDATE_SOURCE_DATA',
+        payload: {
+          files: data?.tree?.filter(({ type }) => type !== 'tree') ?? [],
+        },
       })
     }
   }, [isLoading, data])
 
-  if (error) return null
-
-  return <FileSearchModal service={service} isLoading={isLoading} />
-}
-
-export default FileSearchContainer
-
-/**
- * @TODO Handle loading status
- */
-function FileSearchModal({ service, isLoading }) {
-  const [state, send] = useActor(service)
-
-  const classes = useStyles()
-  const inputRef = useRef(null)
-  const { result = [], keyword = '', selectedIndex = 0 } = state.context
-  const isOpened = state.matches('opened')
-
+  /**
+   * Auto focus input when modal opened
+   */
   useEffect(() => {
     if (inputRef.current && isOpened) {
       inputRef.current.focus()
     }
-  }, [inputRef, isOpened])
+  }, [isOpened])
 
-  const handleClose = () => send('CLOSE')
-  const handleInputChange = (e) => {
+  /**
+   * Handle shortcuts
+   */
+  useEffect(() => {
+    const unlisten = generateHotkeyListener(dispatch, isOpened)
+
+    return () => unlisten()
+  }, [isOpened])
+
+  const handleInputChange = useCallback((e) => {
     e.preventDefault()
-    send({ type: 'UPDATE_KEYWORD', input: e.target.value })
-  }
-  const handleOptionClick = (index) => () => {
-    send({ type: 'SELECT_INDEX', index })
-  }
+    dispatch({ type: 'UPDATE_KEYWORD', payload: { keyword: e.target.value } })
+  }, [])
 
-  const highlightMap = buildUsedLetterMap(keyword)
+  const handleOptionClick = useCallback(
+    (selectedIndex) => () => {
+      dispatch({ type: 'SELECT_INDEX', payload: { selectedIndex } })
+    },
+    []
+  )
+  const highlightMap = useMemo(() => buildUsedLetterMap(keyword), [keyword])
+
+  if (error) return null
 
   return (
     <Modal
       isOpened={isOpened}
-      onClose={handleClose}
+      onClose={() => dispatch({ type: 'CLOSE' })}
       overLayStyle={{ alignItems: 'start', paddingTop: '15vh' }}
     >
       <div className={classes.paper}>
@@ -140,3 +129,5 @@ function FileSearchModal({ service, isLoading }) {
     </Modal>
   )
 }
+
+export default FileSearchModal
