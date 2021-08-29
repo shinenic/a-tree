@@ -21,14 +21,18 @@ const usePullFocusMode = () => {
     ({ filename }, e) => {
       if (!filename) return
 
-      if (!isFocusMode) {
-        scrollToFile(filename)
-      } else if (previousLockedFile.current === filename) {
-        resetFocusFiles(filename)
-        previousLockedFile.current = null
-      } else {
-        focusFile(filename)
-        previousLockedFile.current = filename
+      try {
+        if (!isFocusMode) {
+          scrollToFile(filename)
+        } else if (previousLockedFile.current === filename) {
+          resetFocusFiles(filename)
+          previousLockedFile.current = null
+        } else {
+          focusFile(filename)
+          previousLockedFile.current = filename
+        }
+      } catch (error) {
+        console.error(error)
       }
 
       if (e) {
