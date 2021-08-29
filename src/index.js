@@ -4,6 +4,7 @@ import App from './App'
 import { CONTAINER_ID } from 'constants'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import SettingProvider from 'components/Setting/Context/Provider'
+import GenerateTokenGuide from 'components/Tour/GenerateTokenGuide'
 
 const queryClient = new QueryClient()
 
@@ -19,6 +20,7 @@ ReactDOM.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <SettingProvider>
+        <GenerateTokenGuide />
         <App />
       </SettingProvider>
     </QueryClientProvider>

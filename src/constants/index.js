@@ -1,5 +1,7 @@
 export const CONTAINER_ID = 'github-review-enhancer'
 
+export const LOCAL_STORAGE_KEY_PREFIX = '[github-review-enhancer] '
+
 export const PAGE_TYPE = {
   CODE: 'CODE',
   PULL: 'PULL',
@@ -33,7 +35,7 @@ export const DRAWER_POSITION = {
 }
 
 export const ERROR_MESSAGE = {
-  NOT_FOUND_PAGE: 'NOT_FOUND_PAGE',
+  NOT_FOUND_PAGE: 'NOT_FOUND_PAGE', // NOT_FOUND_REPO
   TOKEN_INVALID: 'TOKEN_INVALID',
   NO_PERMISSION: 'NO_PERMISSION',
   RESERVED_USER_NAME: 'RESERVED_USER_NAME',
