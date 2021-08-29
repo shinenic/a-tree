@@ -1,4 +1,6 @@
 import { scrollTo, scrollToTabsNav } from 'utils/scroll'
+import { GITHUB_PAGE_CONTAINER_ID } from 'constants/github'
+import { noop } from 'lodash'
 
 /**
  * DOM structure
@@ -108,4 +110,49 @@ export const resetFocusFiles = (scrollToFilePath) => {
 export const scrollToFile = (filePath) => {
   const fileNodes = loopFileNodes({ filePath })
   scrollTo(fileNodes)
+}
+
+export const generateReviewCheckListener = (callback = noop) => {
+  const getViewedFilesMap = () => {
+    const fileNodeContainers = document.querySelectorAll(`div[id^="diff"]`)
+
+    const viewedFileMap = Array.from(fileNodeContainers).reduce(
+      (result, fileNode) => {
+        const link = fileNode.querySelector(
+          'a[href^="#diff"]:not([title*="Expand"])'
+        )
+        const checkBox = fileNode.querySelector('input[type="checkbox"]')
+
+        if (!link || !checkBox) return result
+
+        const filename = link.title.includes(' → ')
+          ? link.title.split(' → ')[1]
+          : link.title
+
+        return {
+          ...result,
+          [filename]: checkBox.checked,
+        }
+      },
+      {}
+    )
+
+    callback(viewedFileMap)
+  }
+
+  const handler = (e) => {
+    if (e.target.type === 'checkbox') {
+      getViewedFilesMap()
+    }
+  }
+
+  const pageContainer = document.getElementById(GITHUB_PAGE_CONTAINER_ID)
+  if (!pageContainer) return noop
+
+  getViewedFilesMap(callback)
+  pageContainer.addEventListener('click', handler)
+
+  return () => {
+    pageContainer.removeEventListener('click', handler)
+  }
 }
