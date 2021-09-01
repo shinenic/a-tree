@@ -8,18 +8,15 @@ import useListenLocation from 'hooks/pageInfo/useListenLocation'
 import useListenTitle from 'hooks/pageInfo/useListenTitle'
 import { useQuery } from 'react-query'
 import { isEmpty } from 'lodash'
+import isReserved from 'github-reserved-names'
 
 const NOT_FOUND_STATUS = 404
 const INVALID_TOKEN_STATUS = 401
 const OK_STATUS = 200
 
-const isGithubPage = (host) => {
-  return host.toLowerCase().includes('github')
-}
+const isGithubReservedUsername = (owner) => isReserved.check(owner)
 
-const isEnterpriseGithub = (host) => {
-  return isGithubPage(host) && host !== 'github.com'
-}
+const isGithubPage = (host) => host === 'github.com'
 
 /**
  * This hook return pageInfo if the page is supported,
@@ -55,13 +52,14 @@ const usePageInfo = () => {
   } = useQuery(
     ['pageInfo', { owner: firstPath, repo: secondPath, token }],
     async () => {
-      if (!secondPath || !firstPath || !isGithubPage(host)) {
+      if (!secondPath || !firstPath || isGithubReservedUsername(firstPath)) {
         throw new Error(ERROR_MESSAGE.NOT_SUPPORTED_PAGE)
       }
+
       try {
-        const baseUrl = isEnterpriseGithub(host)
-          ? `${window.location.origin}/api/v3`
-          : null
+        const baseUrl = isGithubPage(host)
+          ? null
+          : `${window.location.origin}/api/v3`
 
         const repoResponse = await createGithubQuery({
           url: '/repos/{owner}/{repo}',
@@ -74,18 +72,6 @@ const usePageInfo = () => {
 
         return repoResponse.data.default_branch
       } catch (repoError) {
-        try {
-          await createGithubQuery({
-            url: '/users/{owner}',
-            placeholders: { owner: firstPath },
-            token,
-          })
-        } catch (userError) {
-          if (userError.status === NOT_FOUND_STATUS) {
-            throw new Error(ERROR_MESSAGE.NO_PERMISSION)
-          }
-        }
-
         if (repoError.status === INVALID_TOKEN_STATUS) {
           throw new Error(ERROR_MESSAGE.TOKEN_INVALID)
         }

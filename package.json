@@ -14,6 +14,7 @@
     "@testing-library/user-event": "^12.8.3",
     "@xstate/react": "^1.5.1",
     "crypto-js": "^4.1.1",
+    "github-reserved-names": "^2.0.4",
     "lodash": "^4.17.21",
     "match-sorter": "^6.3.0",
     "moment": "^2.29.1",

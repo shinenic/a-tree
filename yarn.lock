@@ -5898,6 +5898,11 @@ get-value@^2.0.3, get-value@^2.0.6:
   resolved "https://registry.yarnpkg.com/get-value/-/get-value-2.0.6.tgz#dc15ca1c672387ca76bd37ac0a395ba2042a2c28"
   integrity sha1-3BXKHGcjh8p2vTesCjlbogQqLCg=
 
+github-reserved-names@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/github-reserved-names/-/github-reserved-names-2.0.4.tgz#ad4fca01488442e6ec3eae1a0d9425225362fb2c"
+  integrity sha512-T2azXbRJTJGQc28G6x89LpzQmuVjzl0hzJXPRD2t9yMh7URYUW8Opqr5ptHvjAVDJ+hwhBtoYmVx3VyFawRoFg==
+
 glob-parent@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-3.1.0.tgz#9e6af6299d8d3bd2bd40430832bd113df906c5ae"
