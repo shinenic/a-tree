@@ -1,10 +1,8 @@
 import React from 'react'
 import { ERROR_MESSAGE } from 'constants'
 import { useSettingStateCtx } from 'components/Setting/Context/Provider'
-import {
-  TOKEN_GUIDE_LOCAL_STORAGE_KEY,
-  NEW_TOKEN_PATHNAME,
-} from 'constants/tokenPage'
+import { NEW_TOKEN_PATHNAME } from 'constants/tokenPage'
+import { PHASE, storePhase } from 'components/Tour/GenerateTokenGuide'
 
 import * as Style from './style'
 
@@ -12,7 +10,7 @@ const Error = ({ errorMessage }) => {
   const { token } = useSettingStateCtx()
 
   const handleHintClick = () => {
-    localStorage.setItem(TOKEN_GUIDE_LOCAL_STORAGE_KEY, 'true')
+    storePhase(PHASE.START_TOUR)
     window.location.href = NEW_TOKEN_PATHNAME
   }
 
