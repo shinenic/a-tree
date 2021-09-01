@@ -14,16 +14,23 @@ const createContainer = () => {
   document.body.appendChild(container)
 }
 
-createContainer()
+const renderExtension = () => {
+  createContainer()
 
-ReactDOM.render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <SettingProvider>
-        <GenerateTokenGuide />
-        <App />
-      </SettingProvider>
-    </QueryClientProvider>
-  </React.StrictMode>,
-  document.getElementById(CONTAINER_ID)
-)
+  ReactDOM.render(
+    <React.StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <SettingProvider>
+          <GenerateTokenGuide />
+          <App />
+        </SettingProvider>
+      </QueryClientProvider>
+    </React.StrictMode>,
+    document.getElementById(CONTAINER_ID)
+  )
+}
+
+/**
+ * @TODO Handle margin of `body` for width of drawer
+ */
+window.onload = renderExtension
