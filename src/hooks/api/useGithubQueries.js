@@ -1,14 +1,15 @@
 import useGithubQuery from './useGithubQuery'
 
 export const useQueryCommits = (
-  { owner, repo, pull, ...rest },
+  { owner, repo, pull, perPage = 100, ...rest },
   useQueryOptions = {}
 ) => {
   return useGithubQuery(
-    ['commits', { owner, repo, pull }],
+    ['commits', { owner, repo, pull, perPage }],
     {
       url: '/repos/{owner}/{repo}/pulls/{pull}/commits',
       placeholders: { owner, repo, pull },
+      params: { per_page: perPage },
       ...rest,
     },
     useQueryOptions
