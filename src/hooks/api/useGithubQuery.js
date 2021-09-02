@@ -1,8 +1,14 @@
 import { useQuery } from 'react-query'
 import { isValidQuery, createGithubQuery } from 'utils/api'
 import { useSettingStateCtx } from 'components/Setting/Context/Provider'
+import parseLink from 'parse-link-header'
 
-function useGithubQuery(queryKeys, variables = {}, useQueryOptions = {}) {
+function useGithubQuery(
+  queryKeys,
+  variables = {},
+  useQueryOptions = {},
+  getFullPages = false
+) {
   const { token, baseUrl } = useSettingStateCtx()
   const { url, placeholders = {} } = variables
   const { enabled = true } = useQueryOptions
@@ -10,8 +16,36 @@ function useGithubQuery(queryKeys, variables = {}, useQueryOptions = {}) {
   return useQuery(
     [...queryKeys, { token }],
     async () => {
-      const { data } = await createGithubQuery({ ...variables, token, baseUrl })
-      return data
+      if (!getFullPages) {
+        const { data } = await createGithubQuery({
+          ...variables,
+          token,
+          baseUrl,
+        })
+
+        return data
+      }
+
+      let fullData = []
+      let page = 1
+      let link
+
+      do {
+        const params = { ...variables.params, page }
+        const res = await createGithubQuery({
+          ...variables,
+          params,
+          token,
+          baseUrl,
+          page,
+        })
+
+        fullData = [...fullData, ...res.data]
+        link = parseLink(res.headers.link)
+        page += 1
+      } while (link && link.last)
+
+      return fullData
     },
     {
       enabled: enabled && isValidQuery(url, placeholders),

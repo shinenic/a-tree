@@ -42,7 +42,8 @@ export const useQueryPull = (
       params: { per_page: perPage },
       ...rest,
     },
-    useQueryOptions
+    useQueryOptions,
+    true
   )
 }
 
