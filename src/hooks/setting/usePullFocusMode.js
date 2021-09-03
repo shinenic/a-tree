@@ -47,7 +47,10 @@ const usePullFocusMode = ({ basePathname, pageType }) => {
 
       scrollToFile(getFileHash(filename))
 
-      if (!isFocusMode) return
+      if (!isFocusMode) {
+        scrollToFile(getFileHash(filename))
+        return
+      }
 
       try {
         if (previousLockedFile.current !== filename) {
@@ -56,6 +59,8 @@ const usePullFocusMode = ({ basePathname, pageType }) => {
           previousLockedFile.current = filename
         } else {
           resetFocusFiles()
+          scrollToFile(getFileHash(filename))
+          previousLockedFile.current = null
         }
       } catch (error) {
         console.error(error)

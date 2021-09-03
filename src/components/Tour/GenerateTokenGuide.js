@@ -1,19 +1,30 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import ReactTour from 'reactour'
 
 import {
   NEW_TOKEN_PATHNAME,
   DEFAULT_NOTE,
+  TOKENS_PATHNAME,
+  TOKEN_VALUE_TTL,
   TOKEN_GUIDE_LOCAL_STORAGE_KEY,
 } from 'constants/tokenPage'
+import { toSafeInteger } from 'lodash'
 import useListenLocation from 'hooks/pageInfo/useListenLocation'
+import { useSettingDispatchCtx } from 'components/Setting/Context/Provider'
 
 const NOTE_INPUT_SELECTOR = '[id="oauth_access_description"]'
 const EXPIRATION_SELECTOR = '[id="oauth-token-expiration"]'
 const TOKEN_SCOPE_SELECTOR = '[class="token-scope"]' // First of the nodes should be `repo`
 const FINISH_BUTTON_SELECTOR = '[class^="btn-primary btn"]'
+const NEW_OAUTH_TOKEN_SELECTOR = '[id="new-oauth-token"]'
 
-const STEPS = [
+export const PHASE = {
+  NONE: 0,
+  START_TOUR: 1,
+  START_CREATING: 2,
+}
+
+const CREATING_STEPS = [
   {
     selector: NOTE_INPUT_SELECTOR,
     content: `Fill in the note for the extension.`,
@@ -32,39 +43,116 @@ const STEPS = [
   },
 ]
 
+const CREATED_STEPS = [
+  {
+    selector: NEW_OAUTH_TOKEN_SELECTOR,
+    content: (
+      <p>
+        Token created 🎉
+        <br /> It has been copied in our setting, enjoy it!
+      </p>
+    ),
+  },
+]
+
+const CREATED_TOUR_OPTIONS = {
+  showNumber: false,
+  showNavigation: false,
+  showNavigationNumber: false,
+  showButtons: false,
+  showCloseButton: false,
+}
+
+export const storePhase = (phase = 0) => {
+  if (!phase) {
+    localStorage.removeItem(TOKEN_GUIDE_LOCAL_STORAGE_KEY)
+  } else {
+    const value = { phase, timestamp: new Date().getTime() }
+    localStorage.setItem(TOKEN_GUIDE_LOCAL_STORAGE_KEY, JSON.stringify(value))
+  }
+}
+
+const getCurrentPhase = () => {
+  try {
+    const { phase, timestamp } = JSON.parse(
+      localStorage.getItem(TOKEN_GUIDE_LOCAL_STORAGE_KEY)
+    )
+
+    if (new Date().getTime() - toSafeInteger(timestamp) > TOKEN_VALUE_TTL) {
+      throw new Error('Timeout')
+    }
+
+    return toSafeInteger(phase)
+  } catch {
+    storePhase()
+    return 0
+  }
+}
+
 /**
- * This token generating guide will only show when the localStorage has matched key,
- * and the pathname is `/settings/tokens/new`
+ * This token generating guide will only show when the localStorage has matched phase
+ * and the pathname is `/settings/tokens/new` or `/settings/tokens`
  */
 function GenerateTokenGuide() {
   const { pathname } = useListenLocation()
   const [isTourOpen, setIsTourOpen] = useState(false)
+  const [steps, setSteps] = useState([])
+  const dispatch = useSettingDispatchCtx()
 
+  const phase = useMemo(() => getCurrentPhase(), [])
+
+  /**
+   * Handle token creating
+   */
   useEffect(() => {
-    const shouldOpenTour = localStorage.getItem(TOKEN_GUIDE_LOCAL_STORAGE_KEY)
-    if (pathname !== NEW_TOKEN_PATHNAME || !shouldOpenTour) return
+    if (phase !== PHASE.START_TOUR || pathname !== NEW_TOKEN_PATHNAME) {
+      return
+    }
 
-    const areNodesExisting = STEPS.every(({ selector }) => {
-      if (!document.querySelector(selector)) {
-        console.log(selector)
-      }
-      return document.querySelector(selector)
-    })
+    const areNodesExisting = CREATING_STEPS.every(({ selector }) =>
+      document.querySelector(selector)
+    )
 
     if (areNodesExisting) {
       document.querySelector(NOTE_INPUT_SELECTOR).value = DEFAULT_NOTE
       document.querySelector(TOKEN_SCOPE_SELECTOR).click()
-      localStorage.removeItem(TOKEN_GUIDE_LOCAL_STORAGE_KEY)
-    setIsTourOpen(areNodesExisting)
+      setSteps(CREATING_STEPS)
+      setIsTourOpen(areNodesExisting)
+      storePhase(PHASE.START_CREATING)
     }
-  }, [pathname])
+  }, [])
+
+  /**
+   * Handle token created
+   */
+  useEffect(() => {
+    if (phase !== PHASE.START_CREATING || pathname !== TOKENS_PATHNAME) {
+      return
+    }
+
+    const areNodesExisting = CREATED_STEPS.every(({ selector }) =>
+      document.querySelector(selector)
+    )
+
+    const newToken = document.querySelector(NEW_OAUTH_TOKEN_SELECTOR).innerText
+
+    if (areNodesExisting && newToken) {
+      setSteps(CREATED_STEPS)
+      setIsTourOpen(areNodesExisting)
+      storePhase()
+
+      dispatch({ type: 'UPDATE_TOKEN', payload: newToken })
+    }
+  }, [])
 
   return (
     <ReactTour
+      rounded={4}
       disableFocusLock={true}
-      steps={STEPS}
+      steps={steps}
       isOpen={isTourOpen}
       onRequestClose={() => setIsTourOpen(false)}
+      {...(phase === PHASE.START_CREATING && CREATED_TOUR_OPTIONS)}
     />
   )
 }

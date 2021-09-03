@@ -12,8 +12,8 @@
   },
   "content_scripts": [
     {
-      "run_at": "document_idle",
-      "matches": ["<all_urls>"],
+      "run_at": "document_start",
+      "matches": ["https://github.com/*"],
       "js": ["content.js"]
     }
   ]
