@@ -108,3 +108,33 @@ export const Sha = styled.div`
   width: 54px;
   text-align: center;
 `
+
+export const IconBox = styled.div`
+  position: relative;
+  cursor: pointer;
+  transition: background;
+  margin-left: 8px;
+
+  height: ${({ size = 24 }) => `${size}px`};
+  width: ${({ size = 24 }) => `${size}px`};
+
+  padding: 2px;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: #0003;
+  }
+
+  &:focus {
+    background-color: #0004;
+  }
+
+  & > * {
+    height: ${({ size = 24 }) => `${size - 4}px`};
+    width: ${({ size = 24 }) => `${size - 4}px`};
+
+    position: absolute;
+    left: 2px;
+    right: 2px;
+  }
+`
