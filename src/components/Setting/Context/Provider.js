@@ -4,6 +4,7 @@ import {
   getSettingFromLocalStorage,
   storeSettingIntoLocalStorage,
 } from 'utils/setting'
+import useStore from 'stores/setting'
 
 const SettingContext = createContext(initialState)
 const SettingDispatchContext = createContext()
