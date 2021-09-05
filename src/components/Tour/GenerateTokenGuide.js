@@ -109,9 +109,13 @@ function GenerateTokenGuide() {
       return
     }
 
-    const areNodesExisting = CREATING_STEPS.every(({ selector }) =>
-      document.querySelector(selector)
-    )
+    const areNodesExisting = CREATING_STEPS.every(({ selector }) => {
+      if (!document.querySelector(selector)) {
+        console.warning(`Node ${selector} not found`)
+      }
+
+      return document.querySelector(selector)
+    })
 
     if (areNodesExisting) {
       document.querySelector(NOTE_INPUT_SELECTOR).value = DEFAULT_NOTE
@@ -130,9 +134,13 @@ function GenerateTokenGuide() {
       return
     }
 
-    const areNodesExisting = CREATED_STEPS.every(({ selector }) =>
-      document.querySelector(selector)
-    )
+    const areNodesExisting = CREATED_STEPS.every(({ selector }) => {
+      if (!document.querySelector(selector)) {
+        console.warning(`Node ${selector} not found`)
+      }
+
+      return document.querySelector(selector)
+    })
 
     const newToken = document.querySelector(NEW_OAUTH_TOKEN_SELECTOR).innerText
 
