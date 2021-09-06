@@ -87,7 +87,7 @@ const CopyIcon = ({ targetText }) => {
 
   return (
     <CustomTooltip title={getTooltip(status)}>
-      <Style.IconBox onClick={handleClick}>
+      <Style.IconBox onClick={handleClick} isIdle={status === IDLE}>
         {transitions((style, status) => getIcon(status, style))}
       </Style.IconBox>
     </CustomTooltip>

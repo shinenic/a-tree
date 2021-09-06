@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import GithubLink from 'components/shared/GithubLink'
 
 const BUTTON_HEIGHT = 40
@@ -121,13 +121,17 @@ export const IconBox = styled.div`
   padding: 2px;
   border-radius: 4px;
 
-  &:hover {
-    background-color: #0003;
-  }
+  ${({ isIdle }) =>
+    isIdle &&
+    css`
+      &:hover {
+        background-color: #0002;
+      }
 
-  &:focus {
-    background-color: #0004;
-  }
+      &:active {
+        background-color: #0004;
+      }
+    `};
 
   & > * {
     height: ${({ size = 24 }) => `${size - 4}px`};
