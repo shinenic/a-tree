@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import GithubLink from 'components/shared/GithubLink'
 
 const BUTTON_HEIGHT = 40
@@ -107,4 +107,38 @@ export const CommitDetail = styled.div`
 export const Sha = styled.div`
   width: 54px;
   text-align: center;
+`
+
+export const IconBox = styled.div`
+  position: relative;
+  cursor: pointer;
+  transition: background;
+  margin-left: 8px;
+
+  height: ${({ size = 24 }) => `${size}px`};
+  width: ${({ size = 24 }) => `${size}px`};
+
+  padding: 2px;
+  border-radius: 4px;
+
+  ${({ isIdle }) =>
+    isIdle &&
+    css`
+      &:hover {
+        background-color: #0002;
+      }
+
+      &:active {
+        background-color: #0004;
+      }
+    `};
+
+  & > * {
+    height: ${({ size = 24 }) => `${size - 4}px`};
+    width: ${({ size = 24 }) => `${size - 4}px`};
+
+    position: absolute;
+    left: 2px;
+    right: 2px;
+  }
 `

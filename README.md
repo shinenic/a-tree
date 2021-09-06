@@ -1,18 +1,18 @@
-# Github review enhancer
+# A Tree - Github review helper
 
 ## :rocket: Quick Features
 - Tree view for both Github files and pull requests
 - Some handy tools for code review
 - Quick search files like VSCode does (*`command + k` or `ctrl + k`*)
-- Support SPA for Github Page
+- Support SPA for Github Pages
 - Support private and enterprise repositories
 
 ## :computer: Development
 
 ### Start project
 ```shell=
-git clone https://github.com/shinenic/github-review-enhancer.git
-cd github-review-enhancer
+git clone https://github.com/shinenic/a-tree.git
+cd a-tree
 yarn
 yarn run dev:watch
 ```
@@ -28,8 +28,16 @@ After the build finished, install the `/build` folder
 ### Helper
 
 Quick extension reload for development: [Extensions Reloader](https://chrome.google.com/webstore/detail/extensions-reloader/fimgfedafeadlieiabdeeaodndnlbhid)
+> Note. Still need to reinstall the unpacked folder manually if `manifest.json` changed
 
 ## :memo: Appendix
+
+### Permission requirements
+- webNavigation
+
+  We need to check whether the page navigated to support SPA,
+  for more detail, you can check the file `src/background.js`
+
 
 ### F&Q
 

@@ -5,6 +5,7 @@ import { animated } from 'react-spring'
 import Avatar from '@material-ui/core/Avatar'
 import moment from 'moment'
 import * as Style from './style'
+import CopyIcon from './CopyIcon'
 
 import { PJAX_ID } from 'constants/github'
 
@@ -66,6 +67,7 @@ const Commit = ({
         <Style.Sha>{shortedSha}</Style.Sha>
         <div>{`${authorName} (${loginName})`}</div>
         <div>{moment(date).fromNow()}</div>
+        <CopyIcon targetText={sha} />
       </Style.CommitDetail>
     </Style.StyledGithubLink>
   )
