@@ -15,7 +15,7 @@
   "content_scripts": [
     {
       "run_at": "document_start",
-      "matches": ["https://github.com/*"],
+      "matches": ["<all_urls>"],
       "js": ["content.js"]
     }
   ]
