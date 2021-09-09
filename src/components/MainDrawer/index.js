@@ -7,9 +7,10 @@ import CodePage from './Tabs/Code'
 import PullPage from './Tabs/Pull'
 import PullCommit from './Tabs/PullCommit'
 import Error from './Tabs/Error'
+import Loading from './Tabs/Loading'
 import PullCommitMenu from 'components/Menu/PullCommit'
 import Setting from 'components/Setting'
-import { Resizable } from 're-resizable'
+import ResizableWrapper from './ResizableWrapper'
 
 import { compact, throttle } from 'lodash'
 import * as Style from './style'
@@ -34,6 +35,7 @@ const MainDrawer = ({
   filePath,
   defaultBranch,
   error,
+  isLoading,
 }) => {
   const [{ drawerWidth }, dispatch] = useSettingCtx()
   const classes = useStyles()
@@ -65,6 +67,10 @@ const MainDrawer = ({
   }
 
   const renderContent = () => {
+    if (isLoading) {
+      return <Loading />
+    }
+
     if (error) {
       return <Error errorMessage={error?.message} />
     }
@@ -88,9 +94,11 @@ const MainDrawer = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleOnResize = useCallback(
     throttle((_, __, element) => {
+      const width = element.clientWidth < 200 ? 5 : element.clientWidth
+
       dispatch({
         type: 'UPDATE_DRAWER_WIDTH',
-        payload: element.clientWidth,
+        payload: width,
       })
     }, 100),
     []
@@ -98,28 +106,9 @@ const MainDrawer = ({
 
   return (
     <Drawer anchor="left" open variant="permanent" classes={classes}>
-      <Resizable
-        size={{
-          width: drawerWidth,
-          height: '100%',
-        }}
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-        onResize={handleOnResize}
-        enable={{
-          top: false,
-          right: true,
-          bottom: false,
-          left: false,
-          topRight: false,
-          bottomRight: false,
-          bottomLeft: false,
-          topLeft: false,
-        }}
-        maxWidth="40vw"
-        minWidth={300}
+      <ResizableWrapper
+        drawerWidth={drawerWidth}
+        handleOnResize={handleOnResize}
       >
         <Style.DrawerHeader>{renderHeader()}</Style.DrawerHeader>
         <PullCommitMenu owner={owner} repo={repo} pull={pull} commit={commit} />
@@ -127,7 +116,7 @@ const MainDrawer = ({
         <Style.DrawerFooter>
           <Setting />
         </Style.DrawerFooter>
-      </Resizable>
+      </ResizableWrapper>
     </Drawer>
   )
 }
