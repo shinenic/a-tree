@@ -41,3 +41,7 @@ export const ERROR_MESSAGE = {
   NOT_SUPPORTED_PAGE: 'NOT_SUPPORTED_PAGE',
   UNKNOWN: 'UNKNOWN',
 }
+
+export const isLocalMode = process.env.LOCAL_MODE === 'true'
+
+export const localAPIPort = process.env.API_PORT
