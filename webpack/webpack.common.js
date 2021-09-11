@@ -33,10 +33,7 @@ module.exports = (_, { mode }) => {
     },
     plugins: [
       new CopyPlugin({
-        patterns: [
-          { from: 'public/manifest.json', to: '.' },
-          { from: 'public/icon192.png', to: '.' },
-        ],
+        patterns: [{ from: 'extension', to: '.' }],
       }),
       new webpack.ProvidePlugin({
         process: 'process/browser',

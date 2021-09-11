@@ -32,7 +32,7 @@
     "build:prod": "webpack --config=webpack/webpack.common.js --mode=production",
     "dev": "LOCAL_MODE=false yarn run build:dev --watch",
     "dev:local": "LOCAL_MODE=true PORT=5566 API_PORT=5567 webpack-dev-server --config=webpack/webpack.local.js",
-    "mockoon:start": "mockoon-cli start --data ./mockAPI/mock-api.json -i 0",
+    "mockoon:start": "mockoon-cli start --data ./mockAPI/mockoon.json -i 0",
     "mockoon:stop": "mockoon-cli stop"
   },
   "eslintConfig": {
