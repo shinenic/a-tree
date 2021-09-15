@@ -10,9 +10,17 @@ module.exports = {
   devtool: 'inline-source-map',
   devServer: {
     port: port,
-    historyApiFallback: true,
+    historyApiFallback: {
+      index: 'index.html',
+    },
     open: true,
     hot: true,
+    proxy: {
+      '/api/v3': {
+        target: 'http://localhost:5567',
+        pathRewrite: { '^/api/v3': '' },
+      },
+    },
   },
   entry: {
     main: path.resolve(__dirname, '..', 'src/index.js'),
@@ -43,6 +51,7 @@ module.exports = {
   plugins: [
     new ReactRefreshWebpackPlugin({ overlay: false }),
     new HtmlWebPackPlugin({
+      // template: path.resolve(__dirname, '..', 'public/index.html'),
       template: path.resolve(__dirname, '..', 'public/code-page/index.html'),
     }),
     new webpack.DefinePlugin({

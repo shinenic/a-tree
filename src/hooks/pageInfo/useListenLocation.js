@@ -20,10 +20,27 @@ const useListenLocation = () => {
   return currentLocation
 }
 
-/**
- * @TODO Add dummy location listener for local development
- */
-const useDummyListenLocation = () => {
+const useNativeListenLocation = () => {
+  const [currentLocation, setCurrentLocation] = useState({ ...window.location })
+
+  useEffect(() => {
+    const callback = (event) => {
+      setCurrentLocation({
+        host: window.location.host,
+        pathname: event.detail.pathname,
+      })
+    }
+
+    window.addEventListener(GLOBAL_MESSAGE_TYPE.ON_HISTORY_UPDATED, callback)
+
+    return () =>
+      window.removeEventListener(
+        GLOBAL_MESSAGE_TYPE.ON_HISTORY_UPDATED,
+        callback
+      )
+  }, [])
+
+  // return currentLocation
   return {
     href: 'https://github.com/shinenic/a-tree',
     origin: 'https://github.com',
@@ -33,4 +50,4 @@ const useDummyListenLocation = () => {
   }
 }
 
-export default isLocalMode ? useDummyListenLocation : useListenLocation
+export default isLocalMode ? useNativeListenLocation : useListenLocation

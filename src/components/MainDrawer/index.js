@@ -8,6 +8,7 @@ import PullPage from './Tabs/Pull'
 import PullCommit from './Tabs/PullCommit'
 import Error from './Tabs/Error'
 import PullCommitMenu from 'components/Menu/PullCommit'
+import PullMenu from 'components/Menu/Pull'
 import Setting from 'components/Setting'
 import { Resizable } from 're-resizable'
 
@@ -122,6 +123,7 @@ const MainDrawer = ({
         minWidth={300}
       >
         <Style.DrawerHeader>{renderHeader()}</Style.DrawerHeader>
+        <PullMenu owner={owner} repo={repo} pull={pull} />
         <PullCommitMenu owner={owner} repo={repo} pull={pull} commit={commit} />
         <Style.DrawerContent>{renderContent()}</Style.DrawerContent>
         <Style.DrawerFooter>

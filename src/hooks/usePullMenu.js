@@ -1,17 +1,12 @@
 import { useState, useEffect } from 'react'
-import { useQueryCommits } from 'hooks/api/useGithubQueries'
 import { useSpring } from 'react-spring'
+import { useQueryPulls } from 'hooks/api/useGithubQueries'
 
 import { isEmpty } from 'lodash'
 
-const DEFAULT_BUTTON_TEXT = 'Select commit to see changes'
+const DEFAULT_BUTTON_TEXT = 'See all pull requests'
 
-/**
- * In case the page is in `PULL_COMMIT`,
- * which means we need to get the full commits in the beginning,
- * we query the commits in both `PULL` and `PULL_COMMIT` page.
- */
-const usePullCommitMenu = ({ owner, repo, pull, commit }) => {
+const usePullMenu = ({ owner, repo, pull }) => {
   const [menuOpened, setMenuOpened] = useState(false)
   const [buttonText, setButtonText] = useState(DEFAULT_BUTTON_TEXT)
 
@@ -22,7 +17,7 @@ const usePullCommitMenu = ({ owner, repo, pull, commit }) => {
     reset: true,
   })
 
-  const { data, isLoading, error } = useQueryCommits({
+  const { data, isLoading, error } = useQueryPulls({
     owner,
     repo,
     pull,
@@ -30,23 +25,16 @@ const usePullCommitMenu = ({ owner, repo, pull, commit }) => {
 
   const hasData = !isEmpty(data)
   useEffect(() => {
-    // @TODO: support multiple commits
-    if (Array.isArray(commit) || !hasData) return
+    if (!pull || !hasData) return
 
-    const selectCommitIndex = data.findIndex(({ sha }) => sha === commit)
+    const selectedPull = data.find(({ number }) => number === pull)
 
-    if (selectCommitIndex < 0) {
-      setButtonText(DEFAULT_BUTTON_TEXT)
+    if (selectedPull) {
+      setButtonText(`#${selectedPull.number} ${selectedPull.title}`)
     } else {
-      const selectedCommit = data[selectCommitIndex]
-      setButtonText(
-        `(${selectCommitIndex + 1}/${data.length}) ${selectedCommit.sha.slice(
-          0,
-          5
-        )} ${selectedCommit.commit.message}`
-      )
+      setButtonText(DEFAULT_BUTTON_TEXT)
     }
-  }, [commit, hasData])
+  }, [hasData, pull])
 
   const handleButtonClick = () => {
     if (isLoading) return
@@ -75,4 +63,4 @@ const usePullCommitMenu = ({ owner, repo, pull, commit }) => {
   }
 }
 
-export default usePullCommitMenu
+export default usePullMenu

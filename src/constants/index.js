@@ -34,6 +34,7 @@ export const DRAWER_POSITION = {
   RIGHT: 'Right',
 }
 
+// 支援 issue, pulls (跟repo有關的所有page)
 export const ERROR_MESSAGE = {
   NOT_FOUND_PAGE: 'NOT_FOUND_PAGE',
   TOKEN_INVALID: 'TOKEN_INVALID',

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <title>Testing Page</title>
+    <style>
+      .button-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        top: 300px;
+        left: 500px;
+      }
+
+      .button-container button {
+        margin: 24px;
+      }
+    </style>
+    <script>
+      function changePathname(pathname) {
+        const event = new CustomEvent("ON_HISTORY_UPDATED", {
+          detail: { pathname }
+        })
+        window.dispatchEvent(event)
+        document.getElementById('mock-pathname').innerText = `Mock pathname: ${pathname}`
+      }
+    </script>
+  </head>
+  <body>
+    <div class="button-container">
+      <span id="mock-pathname">Mock pathname: </span>
+      <button onclick="changePathname('/shinenic/a-tree')">/shinenic/a-tree</button>
+      <button onclick="changePathname('/shinenic/a-tree/pull/28/files')">/shinenic/a-tree/pull/28/files</button>
+    </div>
+
+    <script src="/main.js"></script>
+  </body>
+</html>

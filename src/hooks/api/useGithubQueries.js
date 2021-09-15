@@ -52,7 +52,7 @@ export const useQueryPulls = (
   {
     owner,
     repo,
-    perPage = 30,
+    perPage = 100,
     sort = 'created',
     direction = 'desc',
     state = 'open',
