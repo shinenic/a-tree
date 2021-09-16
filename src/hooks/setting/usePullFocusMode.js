@@ -41,7 +41,7 @@ const usePullFocusMode = ({ basePathname, pageType }) => {
         pageType !== PAGE_TYPE.PULL_FILES &&
         pageType !== PAGE_TYPE.PULL_COMMIT
       ) {
-        linkGithubPage(getFileLink(basePathname, filename))
+        linkGithubPage(getFileLink(basePathname, filename), '#js-repo-pjax-container')
         return
       }
 
