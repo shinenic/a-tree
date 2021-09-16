@@ -1,6 +1,4 @@
-import { GLOBAL_MESSAGE_TYPE } from 'constants'
-
-const activeTabUrlMemo = {}
+import { GLOBAL_MESSAGE_TYPE, CONTEXT_MENU_ITEM_ID } from 'constants'
 
 /**
  * To support Github SPA
@@ -20,4 +18,27 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   if (activeTabUrlMemo[tabId]) {
     delete activeTabUrlMemo[tabId]
   }
+})
+
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: CONTEXT_MENU_ITEM_ID.ENABLE_EXTENSION,
+    title: 'Enable a-tree in this domain',
+    contexts: ['all'],
+  })
+
+  chrome.contextMenus.create({
+    id: CONTEXT_MENU_ITEM_ID.DISABLE_EXTENSION,
+    title: 'Disable a-tree in this domain',
+    contexts: ['all'],
+  })
+})
+
+chrome.contextMenus.onClicked.addListener(({ menuItemId }, tabs) => {
+  chrome.tabs.sendMessage(tabs.id, {
+    type: GLOBAL_MESSAGE_TYPE.ON_CONTEXT_MENU_CLICKED,
+    payload: {
+      menuItemId,
+    },
+  })
 })

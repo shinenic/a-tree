@@ -17,6 +17,7 @@ export const initialState = {
   position: LEFT,
   isFocusMode: false,
   drawerWidth: 300,
+  domains: []
 }
 
 /**

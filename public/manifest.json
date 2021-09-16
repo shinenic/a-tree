@@ -5,7 +5,7 @@
   "manifest_version": 3,
   "homepage_url": "https://github.com/shinenic/a-tree",
   "minimum_chrome_version": "60",
-  "permissions": ["webNavigation"],
+  "permissions": ["webNavigation", "contextMenus"],
   "icons": {
     "192": "./icon192.png"
   },
