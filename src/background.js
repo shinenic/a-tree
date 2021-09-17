@@ -1,5 +1,7 @@
 import { GLOBAL_MESSAGE_TYPE, CONTEXT_MENU_ITEM_ID } from 'constants'
 
+const activeTabUrlMemo = {}
+
 /**
  * To support Github SPA
  * ref: https://developer.chrome.com/docs/extensions/reference/webNavigation/
