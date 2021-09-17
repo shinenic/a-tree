@@ -5,7 +5,7 @@
 - Some handy tools for code review
 - Quick search files like VSCode does (*`command + k` or `ctrl + k`*)
 - Support SPA for Github Pages
-- Support private and enterprise repositories
+- Support private and [Enterprise](https://github.com/shinenic/a-tree#fq) repositories
 
 ## :computer: Development
 
@@ -73,8 +73,10 @@ Quick extension reload for development: [Extensions Reloader](https://chrome.goo
 
 ### F&Q
 
-- How to enable extension for Github enterprise pages
+- How to enable extension for **Github Enterprise** pages
+
   After you install the extension, right-click on any Github Enterprise pages, then click the `Enable a-tree in this domain`.
+  <img src="https://github.com/shinenic/a-tree/blob/master/docs/contextmenu-enable-guide.jpg" width="450" />
   
 
 - Why the extension shows in some unexpected pages
