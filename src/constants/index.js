@@ -1,4 +1,4 @@
-export const CONTAINER_ID = 'github-review-enhancer'
+export const CONTAINER_ID = 'a-tree'
 
 export const LOCAL_STORAGE_KEY_PREFIX = '[a-tree] '
 
