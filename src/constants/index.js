@@ -1,6 +1,6 @@
 export const CONTAINER_ID = 'github-review-enhancer'
 
-export const LOCAL_STORAGE_KEY_PREFIX = '[github-review-enhancer] '
+export const LOCAL_STORAGE_KEY_PREFIX = '[a-tree] '
 
 export const PAGE_TYPE = {
   CODE: 'CODE',
