@@ -18,11 +18,11 @@ export const PJAX_ID = {
  *       (might only has `-` except english words)
  *
  * @example for the above cases
- * 1. shinenic/github-review-enhancer
- * 2. shinenic/github-review-enhancer: something about this repo
- * 3. github-review-enhancer/src/background.js at master · shinenic/github-review-enhancer
- * 4. shinenic/github-review-enhancer at feature/basic-tree-structure
- * 5. Issues · shinenic/github-review-enhancer
+ * 1. shinenic/a-tree
+ * 2. shinenic/a-tree: something about this repo
+ * 3. a-tree/src/background.js at master · shinenic/a-tree
+ * 4. shinenic/a-tree at feature/basic-tree-structure
+ * 5. Issues · shinenic/a-tree
  * 6. Your profile
  */
 export const TITLE_MATCHER = {
