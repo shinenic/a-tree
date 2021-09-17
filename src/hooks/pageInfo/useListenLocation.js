@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { GLOBAL_MESSAGE_TYPE } from 'constants'
+import { isLocalMode } from 'constants'
 
 const useListenLocation = () => {
   const [currentLocation, setCurrentLocation] = useState({ ...window.location })
@@ -19,4 +20,17 @@ const useListenLocation = () => {
   return currentLocation
 }
 
-export default useListenLocation
+/**
+ * @TODO Add dummy location listener for local development
+ */
+const useDummyListenLocation = () => {
+  return {
+    href: 'https://github.com/shinenic/a-tree',
+    origin: 'https://github.com',
+    host: 'github.com',
+    hostname: 'github.com',
+    pathname: '/shinenic/a-tree',
+  }
+}
+
+export default isLocalMode ? useDummyListenLocation : useListenLocation
