@@ -4,7 +4,7 @@ export const NEW_TOKEN_PATHNAME = '/settings/tokens/new'
 
 export const TOKENS_PATHNAME = '/settings/tokens'
 
-export const DEFAULT_NOTE = '[Chrome Extension] Github-review-enhancer'
+export const DEFAULT_NOTE = '[Chrome Extension] A-Tree'
 
 export const TOKEN_GUIDE_LOCAL_STORAGE_KEY = `${LOCAL_STORAGE_KEY_PREFIX}Token guide`
 

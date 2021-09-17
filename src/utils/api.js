@@ -1,4 +1,5 @@
 import { request } from '@octokit/request'
+import { isLocalMode, localAPIPort } from 'constants'
 
 export const isValidQuery = (url, placeholders) => {
   if (!url || url.length === 0) return false
@@ -34,6 +35,7 @@ export const createGithubQuery = ({
 
   const promise = request({
     ...(baseUrl && { baseUrl }),
+    ...(isLocalMode && { baseUrl: `http://localhost:${localAPIPort}` }),
     method,
     url,
     ...placeholders,

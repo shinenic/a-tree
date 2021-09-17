@@ -9,21 +9,50 @@
 
 ## :computer: Development
 
-### Start project
+### Setup
 ```shell=
 git clone https://github.com/shinenic/a-tree.git
 cd a-tree
 yarn
-yarn run dev:watch
+```
+
+### Develop with real online Github pages
+```shell=
+yarn dev
 ```
 After the build finished, install the `/build` folder
 
+
+### Develop in the local and dummy pages
+1. Start webpack server
+    ```shell=
+    yarn dev:local
+    ```
+
+2. Start mock API server via `Mockoon`
+
+    a. With GUI
+      Download [Mockoon](https://mockoon.com) and import the json for necessary APIs
+
+    b. With command lines
+      ```shell
+        npm install -g @mockoon/cli
+
+        yarn mockoon:start
+
+        yarn mockoon:stop
+      ```
+      Default settings
+        - port: `5567`
+        - cors: `enable` (https://mockoon.com/docs/latest/cors/)
 
 ### Deploy
 > TBD
 
 ### Build extension
-> TBD
+```shell=
+yarn build:prod
+```
 
 ### Helper
 

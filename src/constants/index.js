@@ -1,6 +1,6 @@
-export const CONTAINER_ID = 'github-review-enhancer'
+export const CONTAINER_ID = 'a-tree'
 
-export const LOCAL_STORAGE_KEY_PREFIX = '[github-review-enhancer] '
+export const LOCAL_STORAGE_KEY_PREFIX = '[a-tree] '
 
 export const PAGE_TYPE = {
   CODE: 'CODE',
@@ -47,3 +47,7 @@ export const ERROR_MESSAGE = {
   NOT_SUPPORTED_PAGE: 'NOT_SUPPORTED_PAGE',
   UNKNOWN: 'UNKNOWN',
 }
+
+export const isLocalMode = process.env.LOCAL_MODE === 'true'
+
+export const localAPIPort = process.env.API_PORT
