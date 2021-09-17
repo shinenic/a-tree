@@ -1,7 +1,7 @@
 import { createGlobalStyle } from 'styled-components'
 
 const GlobalStyle = createGlobalStyle`
-  body {
+  html {
     margin-left: ${(props) => props.pl}px !important;
   }
 `

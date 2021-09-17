@@ -48,7 +48,7 @@ const checkDomainMatched = (domains) => {
 const applyStyleFromLocalStorage = (drawerWidth) => {
   const style = document.createElement('style')
   style.innerHTML = `
-    body {
+    html {
       margin-left: ${drawerWidth}px;
     }
   `
