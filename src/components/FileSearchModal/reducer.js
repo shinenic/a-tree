@@ -32,6 +32,7 @@ export const ACTION_TYPE = {
   SET_IS_LOADING: 'SET_IS_LOADING',
   UPDATE_SOURCE_DATA: 'UPDATE_SOURCE_DATA',
   UPDATE_KEYWORD: 'UPDATE_KEYWORD',
+  UPDATE_PAGE_INFO: 'UPDATE_PAGE_INFO',
   SELECT_PREV: 'SELECT_PREV',
   SELECT_NEXT: 'SELECT_NEXT',
   SELECT_INDEX: 'SELECT_INDEX',
@@ -42,6 +43,7 @@ const {
   CLOSE,
   SET_IS_LOADING,
   UPDATE_SOURCE_DATA,
+  UPDATE_PAGE_INFO,
   SELECT_PREV,
   SELECT_NEXT,
   UPDATE_KEYWORD,
@@ -93,6 +95,15 @@ export const reducer = (state, action) => {
               maxResultCount
             )
           : files.slice(0, maxResultCount),
+      }
+    }
+    case UPDATE_PAGE_INFO: {
+      return {
+        ...state,
+        pageInfo: {
+          ...state.pageInfo,
+          ...action.payload.pageInfo,
+        },
       }
     }
     case SELECT_PREV: {

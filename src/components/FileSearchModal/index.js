@@ -54,6 +54,13 @@ const FileSearchModal = ({ owner, repo, branch }) => {
     }
   }, [isLoading, data])
 
+  useEffect(() => {
+    dispatch({
+      type: 'UPDATE_PAGE_INFO',
+      payload: { pageInfo: { owner, repo, branch } },
+    })
+  }, [owner, repo, branch])
+
   /**
    * Auto focus input when modal opened
    */
@@ -85,7 +92,7 @@ const FileSearchModal = ({ owner, repo, branch }) => {
   )
   const highlightMap = useMemo(() => buildUsedLetterMap(keyword), [keyword])
 
-  if (error) return null
+  if (error || !owner || !repo) return null
 
   return (
     <Modal
