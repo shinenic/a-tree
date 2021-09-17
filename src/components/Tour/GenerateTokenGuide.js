@@ -12,8 +12,8 @@ import { toSafeInteger } from 'lodash'
 import useListenLocation from 'hooks/pageInfo/useListenLocation'
 import { useSettingDispatchCtx } from 'components/Setting/Context/Provider'
 
-const NOTE_INPUT_SELECTOR = '[id="oauth_access_description"]'
-const EXPIRATION_SELECTOR = '[id="oauth-token-expiration"]'
+const NOTE_INPUT_SELECTOR = 'input[id*="description"]'
+const EXPIRATION_SELECTOR = 'select[class*="expiration"]'
 const TOKEN_SCOPE_SELECTOR = '[class="token-scope"]' // First of the nodes should be `repo`
 const FINISH_BUTTON_SELECTOR = '[class^="btn-primary btn"]'
 const NEW_OAUTH_TOKEN_SELECTOR = '[id="new-oauth-token"]'
@@ -111,7 +111,7 @@ function GenerateTokenGuide() {
 
     const areNodesExisting = CREATING_STEPS.every(({ selector }) => {
       if (!document.querySelector(selector)) {
-        console.warning(`Node ${selector} not found`)
+        console.log(`Node ${selector} not found`)
       }
 
       return document.querySelector(selector)
@@ -136,7 +136,7 @@ function GenerateTokenGuide() {
 
     const areNodesExisting = CREATED_STEPS.every(({ selector }) => {
       if (!document.querySelector(selector)) {
-        console.warning(`Node ${selector} not found`)
+        console.log(`Node ${selector} not found`)
       }
 
       return document.querySelector(selector)
