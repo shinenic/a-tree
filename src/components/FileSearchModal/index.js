@@ -7,11 +7,10 @@ import {
   highlightText,
   generateHotkeyListener,
 } from 'utils/fileSearch'
-import { initialState, reducer } from './reducer'
 import { isEmpty } from 'lodash'
-import * as Style from './style'
-
 import Modal from 'components/shared/Modal'
+import { initialState, reducer } from './reducer'
+import * as Style from './style'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -85,8 +84,8 @@ const FileSearchModal = ({ owner, repo, branch }) => {
   }, [])
 
   const handleOptionClick = useCallback(
-    (selectedIndex) => () => {
-      dispatch({ type: 'SELECT_INDEX', payload: { selectedIndex } })
+    (index) => () => {
+      dispatch({ type: 'SELECT_INDEX', payload: { selectedIndex: index } })
     },
     []
   )

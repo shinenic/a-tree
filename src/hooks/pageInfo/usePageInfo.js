@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getPageInfo } from 'utils/github'
+import { getPageInfo, isGithubReservedUsername } from 'utils/github'
 import { useSettingCtx } from 'components/Setting/Context/Provider'
 import { createGithubQuery } from 'utils/api'
 import { ERROR_MESSAGE } from 'constants'
@@ -8,13 +8,10 @@ import useListenLocation from 'hooks/pageInfo/useListenLocation'
 import useListenTitle from 'hooks/pageInfo/useListenTitle'
 import { useQuery } from 'react-query'
 import { isEmpty } from 'lodash'
-import isReserved from 'github-reserved-names'
 
 const NOT_FOUND_STATUS = 404
 const INVALID_TOKEN_STATUS = 401
 const OK_STATUS = 200
-
-const isGithubReservedUsername = (owner) => isReserved.check(owner)
 
 const isGithubPage = (host) => host === 'github.com'
 
@@ -22,12 +19,13 @@ const isGithubPage = (host) => host === 'github.com'
  * This hook return pageInfo if the page is supported,
  * to get the necessary data, we need 3 thing to ensure the full page info.
  * 1. default branch - this value will come from `repo info api` response,
- *    (repo info api)  the api can also be used to check whether the page(pathname) is under a `accessible` repository,
+ *    (repo info api)  the api can also be used to check whether the page(pathname)
+ *    is under a `accessible` repository,
  * 2. pathname - from url listener
  * 3. title    - from dom listener
  *
- * For the error message, check the response of api whether `OK` first,
- *   if not => check if the word of owner is reserved ('setting', 'pulls', etc.).
+ * For the error message, check if the word of owner is reserved ('setting', 'pulls', etc.) first,
+ *   if not => check the response of api whether `OK`,
  *   if not => check if the token is invalid (wrong, expired, etc.).
  *   if not => check if the name of repo isn't available.
  *   if not => the token may miss permissions to access this repository.

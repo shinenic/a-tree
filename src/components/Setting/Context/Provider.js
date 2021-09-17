@@ -1,9 +1,9 @@
 import { useReducer, useContext, createContext, useEffect } from 'react'
-import { reducer, initialState } from './reducer'
 import {
   getSettingFromLocalStorage,
   storeSettingIntoLocalStorage,
 } from 'utils/setting'
+import { reducer, initialState } from './reducer'
 
 const SettingContext = createContext(initialState)
 const SettingDispatchContext = createContext()

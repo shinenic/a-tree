@@ -35,7 +35,7 @@ export const TITLE_MATCHER = {
     resolver: (defaultBranch, title) => defaultBranch,
   },
   FILE_BROWSING: {
-    regex: /\sat\s[\w\/-]+\s·\s/,
+    regex: /\sat\s[\w/-]+\s·\s/,
     resolver: (defaultBranch, title) => title.split('at ')[1].split(' ')[0],
   },
   OTHER_BRANCHES: {

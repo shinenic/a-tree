@@ -30,7 +30,7 @@ const LabelIcon = ({ status }) => {
 }
 
 LabelIcon.propTypes = {
-  status: PropTypes.oneOf(Object.values(STATUS)),
+  status: PropTypes.oneOf(Object.values(STATUS)).isRequired,
 }
 
 export default LabelIcon

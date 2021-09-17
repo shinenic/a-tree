@@ -30,7 +30,7 @@ const useStyles = makeStyles({
   },
   root: {
     '&:focus > $content, &$selected > $content': {
-      backgroundColor: `#d6e7fd`,
+      backgroundColor: '#d6e7fd',
     },
     '&:focus > $content $label, &:hover > $content $label, &$selected > $content $label':
       {

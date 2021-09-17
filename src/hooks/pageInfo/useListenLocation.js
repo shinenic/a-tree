@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
-import { GLOBAL_MESSAGE_TYPE } from 'constants'
-import { isLocalMode } from 'constants'
+import { GLOBAL_MESSAGE_TYPE, isLocalMode } from 'constants'
 
 const useListenLocation = () => {
   const [currentLocation, setCurrentLocation] = useState({ ...window.location })

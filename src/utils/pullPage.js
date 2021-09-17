@@ -19,13 +19,13 @@ import { noop } from 'lodash'
 const getFileNodes = () => {
   const diffContainer = document.getElementById('files')
   if (!diffContainer) {
-    throw new Error(`Can't find diff container DOM (id="files")`)
+    throw new Error('Can\'t find diff container DOM (id="files")')
   }
 
   const elementList = diffContainer.querySelectorAll('div[id*="diff-"]')
 
   if (!elementList.length) {
-    throw new Error(`Can't find any file block nodes`)
+    throw new Error("Can't find any file block nodes")
   }
 
   return Array.from(elementList)
@@ -42,17 +42,18 @@ const getFileNodes = () => {
  *
  * @param {object}  option
  * @param {string}  option.filePath full file path, eg. `src/hooks/test.js`
- * @param {boolean} option.focusFile if true, the nodes will be hidden except the node matches `filePath`
+ * @param {boolean} option.focusFile if true, the nodes will be hidden
+ *                                   except the node matches `filePath`
  * @param {boolean} option.showAllFiles if true, all of the nodes will be visible
  * @returns {HTMLElement} return the node of `filePath` if specified
  */
 const loopFileNodes = ({ fileHash, focusFile, showAllFiles } = {}) => {
   if (focusFile && showAllFiles) {
-    throw new Error(`"focusFile" and "showAllFiles" can't be used together`)
+    throw new Error('"focusFile" and "showAllFiles" can\'t be used together')
   }
 
   if (focusFile && !fileHash) {
-    throw new Error(`"focusFile" and "fileHash" should be used together`)
+    throw new Error('"focusFile" and "fileHash" should be used together')
   }
 
   const fileNodes = getFileNodes()
@@ -66,12 +67,10 @@ const loopFileNodes = ({ fileHash, focusFile, showAllFiles } = {}) => {
       if (focusFile || showAllFiles) {
         node.style.display = null
       }
-    } else {
-      if (showAllFiles) {
-        node.style.display = null
-      } else if (focusFile) {
-        node.style.display = 'none'
-      }
+    } else if (showAllFiles) {
+      node.style.display = null
+    } else if (focusFile) {
+      node.style.display = 'none'
     }
   })
 
@@ -96,7 +95,7 @@ export const scrollToFile = (fileHash, options) => {
 
 export const generateReviewCheckListener = (callback = noop) => {
   const getViewedFilesMap = () => {
-    const fileNodeContainers = document.querySelectorAll(`div[id^="diff"]`)
+    const fileNodeContainers = document.querySelectorAll('div[id^="diff"]')
 
     const viewedFileMap = Array.from(fileNodeContainers).reduce(
       (result, fileNode) => {

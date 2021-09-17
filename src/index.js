@@ -1,7 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
-import { CONTAINER_ID } from 'constants'
+import {
+  CONTAINER_ID,
+  GLOBAL_MESSAGE_TYPE,
+  CONTEXT_MENU_ITEM_ID,
+} from 'constants'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import SettingProvider from 'components/Setting/Context/Provider'
 import GenerateTokenGuide from 'components/Tour/GenerateTokenGuide'
@@ -9,14 +12,14 @@ import {
   getSettingFromLocalStorage,
   storeSettingIntoLocalStorage,
 } from 'utils/setting'
-import { GLOBAL_MESSAGE_TYPE, CONTEXT_MENU_ITEM_ID } from 'constants'
 import { reject } from 'lodash'
+import App from './App'
 
 window.chrome.runtime.onMessage.addListener(({ type, payload }) => {
   if (type === GLOBAL_MESSAGE_TYPE.ON_CONTEXT_MENU_CLICKED) {
     const { menuItemId } = payload
     const prevState = getSettingFromLocalStorage()
-    const host = window.location.host
+    const { host } = window.location
 
     switch (menuItemId) {
       case CONTEXT_MENU_ITEM_ID.ENABLE_EXTENSION:
@@ -40,7 +43,7 @@ window.chrome.runtime.onMessage.addListener(({ type, payload }) => {
 })
 
 const checkDomainMatched = (domains) => {
-  const host = window.location.host
+  const { host } = window.location
 
   return domains.includes(host) || host === 'github.com'
 }

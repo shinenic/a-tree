@@ -88,14 +88,14 @@ const CopyIcon = ({ targetText }) => {
   return (
     <CustomTooltip title={getTooltip(status)}>
       <Style.IconBox onClick={handleClick} isIdle={status === IDLE}>
-        {transitions((style, status) => getIcon(status, style))}
+        {transitions((style, newStatus) => getIcon(newStatus, style))}
       </Style.IconBox>
     </CustomTooltip>
   )
 }
 
 CopyIcon.propTypes = {
-  targetText: PropTypes.string,
+  targetText: PropTypes.string.isRequired,
 }
 
 export default CopyIcon

@@ -26,12 +26,12 @@ export const FocusCheckBox = (props) => {
       labelPlacement="start"
       checked={isFocusMode}
       onChange={handleChange}
-      control={
+      control={(
         <Checkbox
           color="primary"
           inputProps={{ 'aria-label': 'secondary checkbox' }}
         />
-      }
+      )}
       {...props}
     />
   )
@@ -50,12 +50,12 @@ export const PositionSelect = (props) => {
     <FormControlLabel
       label="Position"
       labelPlacement="start"
-      control={
+      control={(
         <Select value={position} onChange={handleChange} displayEmpty>
           <MenuItem value={LEFT}>{LEFT}</MenuItem>
           <MenuItem value={RIGHT}>{RIGHT}</MenuItem>
         </Select>
-      }
+      )}
       {...props}
     />
   )
@@ -86,19 +86,19 @@ export const TokenTextField = (props) => {
       <FormControlLabel
         label="Token"
         labelPlacement="start"
-        control={
+        control={(
           <TextField
             placeholder="Personal access token"
             value={input}
             onChange={handleInputChange}
           />
-        }
+        )}
         {...props}
       />
       <div style={{ display: 'flex', margin: '4px 0 0 8px' }}>
         <Button
           variant="outlined"
-          color={'secondary'}
+          color="secondary"
           disabled={isEmpty(input) && isEmpty(token)}
           onClick={handleClear}
           style={{ marginRight: '8px' }}
@@ -107,7 +107,7 @@ export const TokenTextField = (props) => {
         </Button>
         <Button
           variant="outlined"
-          color={'primary'}
+          color="primary"
           disabled={input === token}
           onClick={handleSave}
           style={{ marginRight: '8px' }}
