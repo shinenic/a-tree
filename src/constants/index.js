@@ -3,12 +3,19 @@ export const CONTAINER_ID = 'github-review-enhancer'
 export const LOCAL_STORAGE_KEY_PREFIX = '[github-review-enhancer] '
 
 export const PAGE_TYPE = {
-  CODE: 'CODE',
-  PULL: 'PULL',
-  COMMIT: 'COMMIT',
-  PULL_FILES: 'PULL_FILES',
-  PULL_COMMIT: 'PULL_COMMIT',
-  PULL_COMMITS: 'PULL_COMMITS',
+  CODE: {
+    DEFAULT: 'CODE',
+    COMMIT: 'CODE.COMMIT',
+  },
+  // PULL: 'PULL',
+  // COMMIT: 'COMMIT',
+  PULL: {
+    DEFAULT: 'PULL',
+    FILES: 'PULL.FILES',
+    COMMIT: 'PULL.COMMIT',
+    COMMITS: 'PULL.COMMITS',
+  },
+  ISSUES: 'ISSUES',
   UNKNOWN: 'UNKNOWN',
   UNSUPPORTED: 'UNSUPPORTED',
 }

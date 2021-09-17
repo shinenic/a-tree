@@ -36,10 +36,10 @@ const createDispatches = (set, get) => {
     storeSettingIntoLocalStorage({ ...get() })
   }
   return {
-    updateToken: (token = '') => set({ token }),
+    setToken: (token = '') => set({ token }),
     toggleFocusMode: () => set(({ isFocusMode }) => !isFocusMode),
-    updateDrawerWidth: (drawerWidth = 300) => set({ drawerWidth }),
-    updateBaseUrl: (baseUrl) => set({ baseUrl }),
+    setDrawerWidth: (drawerWidth = 300) => set({ drawerWidth }),
+    setBaseUrl: (baseUrl) => set({ baseUrl }),
     setDrawerPositionLeft: () => set({ position: LEFT }),
     setDrawerPositionRight: () => set({ position: RIGHT }),
   }
