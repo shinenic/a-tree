@@ -67,8 +67,15 @@ Quick extension reload for development: [Extensions Reloader](https://chrome.goo
   We need to check whether the page navigated to support SPA,
   for more detail, you can check the file `src/background.js`
 
+- contextMenus
+  For Github enterprise users, we provide a way to enable our extension via right click.
+
 
 ### F&Q
+
+- How to enable extension for Github enterprise pages
+  After you install the extension, right-click on any Github Enterprise pages, then click the `Enable a-tree in this domain`.
+  
 
 - Why the extension shows in some unexpected pages
 
