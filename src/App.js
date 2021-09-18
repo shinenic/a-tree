@@ -1,17 +1,15 @@
+import FileSearchModal from 'components/FileSearchModal'
 import MainDrawer from 'components/MainDrawer'
 import usePageInfo from 'hooks/pageInfo/usePageInfo'
-import FileSearchModal from 'components/FileSearchModal'
-import { useSettingStateCtx } from 'components/Setting/Context/Provider'
-import GlobalStyle from './GlobalStyle'
 
 function App() {
   const { error, isLoading, pageInfo } = usePageInfo()
-  const { drawerWidth } = useSettingStateCtx()
+
+  if (isLoading) return null
 
   return (
     <>
-      <GlobalStyle pl={drawerWidth} />
-      <MainDrawer {...pageInfo} error={error} isLoading={isLoading} />
+      <MainDrawer {...pageInfo} error={error} />
       <FileSearchModal {...pageInfo} />
     </>
   )

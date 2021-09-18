@@ -2,15 +2,31 @@ export const CONTAINER_ID = 'a-tree'
 
 export const LOCAL_STORAGE_KEY_PREFIX = '[a-tree] '
 
-export const PAGE_TYPE = {
+export const CODE_PAGE_TYPE = {
   CODE: 'CODE',
+  CODE_COMMIT: 'CODE.COMMIT',
+}
+
+export const PULL_PAGE_TYPE = {
   PULL: 'PULL',
-  COMMIT: 'COMMIT',
-  PULL_FILES: 'PULL_FILES',
-  PULL_COMMIT: 'PULL_COMMIT',
-  PULL_COMMITS: 'PULL_COMMITS',
-  UNKNOWN: 'UNKNOWN',
-  UNSUPPORTED: 'UNSUPPORTED',
+  PULL_FILES: 'PULL.FILES',
+  PULL_COMMIT: 'PULL.COMMIT',
+  PULL_COMMITS: 'PULL.COMMITS',
+}
+
+/**
+ * Defined types for pages which relate to repositories
+ */
+export const PAGE_TYPE = {
+  ...CODE_PAGE_TYPE,
+  ...PULL_PAGE_TYPE,
+  PULLS: 'PULLS',
+  ISSUES: 'ISSUES',
+  /**
+   * Pages which related to repositories but doesn't belong any of the types above.
+   * e.g. {owner}/{repo}/actions, {owner}/{repo}/security
+   */
+  OTHERS: 'OTHERS',
 }
 
 export const GLOBAL_MESSAGE_TYPE = {
@@ -25,7 +41,7 @@ export const CONTEXT_MENU_ITEM_ID = {
 
 /** @type {PageInfo} */
 export const DEFAULT_PAGE_INFO = {
-  pageType: PAGE_TYPE.UNSUPPORTED,
+  pageType: null,
   owner: null,
   repo: null,
   commit: null,

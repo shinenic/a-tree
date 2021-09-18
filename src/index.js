@@ -1,46 +1,14 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import {
-  CONTAINER_ID,
-  GLOBAL_MESSAGE_TYPE,
-  CONTEXT_MENU_ITEM_ID,
-} from 'constants'
-import { QueryClient, QueryClientProvider } from 'react-query'
 import SettingProvider from 'components/Setting/Context/Provider'
 import GenerateTokenGuide from 'components/Tour/GenerateTokenGuide'
-import {
-  getSettingFromLocalStorage,
-  storeSettingIntoLocalStorage,
-} from 'utils/setting'
-import { reject } from 'lodash'
+import { CONTAINER_ID } from 'constants'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import listenContextMenu from 'utils/contextMenuListener'
+import { isRepoPathname } from 'utils/github'
+import { getSettingFromLocalStorage } from 'utils/setting'
+
 import App from './App'
-
-window.chrome.runtime.onMessage.addListener(({ type, payload }) => {
-  if (type === GLOBAL_MESSAGE_TYPE.ON_CONTEXT_MENU_CLICKED) {
-    const { menuItemId } = payload
-    const prevState = getSettingFromLocalStorage()
-    const { host } = window.location
-
-    switch (menuItemId) {
-      case CONTEXT_MENU_ITEM_ID.ENABLE_EXTENSION:
-        storeSettingIntoLocalStorage({
-          ...prevState,
-          domains: [...new Set([...(prevState.domains || []), host])],
-        })
-        break
-      case CONTEXT_MENU_ITEM_ID.DISABLE_EXTENSION:
-        storeSettingIntoLocalStorage({
-          ...prevState,
-          domains: reject(prevState.domains, (domain) => domain === host),
-        })
-        break
-      default:
-        return
-    }
-
-    window.location.reload()
-  }
-})
 
 const checkDomainMatched = (domains) => {
   const { host } = window.location
@@ -48,7 +16,7 @@ const checkDomainMatched = (domains) => {
   return domains.includes(host) || host === 'github.com'
 }
 
-const applyStyleFromLocalStorage = (drawerWidth) => {
+const appendGlobalStyle = (drawerWidth) => {
   const style = document.createElement('style')
   style.innerHTML = `
     html {
@@ -69,7 +37,14 @@ const renderExtension = () => {
 
   if (!checkDomainMatched(domains)) return
 
-  applyStyleFromLocalStorage(drawerWidth)
+  /**
+   * In the beginning of the page, if the host is Github and the pathname is repo pages,
+   * leave space for drawer by appending `margin-left style` to avoid `screen jumping`.
+   * (The ReactDom still need to be rendered to support SPA by listening url change)
+   */
+  if (isRepoPathname()) {
+    appendGlobalStyle(drawerWidth)
+  }
 
   const onLoad = () => {
     const queryClient = new QueryClient()
@@ -88,7 +63,9 @@ const renderExtension = () => {
       document.getElementById(CONTAINER_ID)
     )
   }
+
   window.onload = onLoad
 }
 
+listenContextMenu()
 renderExtension()
