@@ -48,7 +48,9 @@ const checkDomainMatched = (domains) => {
   return domains.includes(host) || host === 'github.com'
 }
 
-const applyStyleFromLocalStorage = (drawerWidth) => {
+const applyStyleFromLocalStorage = (drawerPinned, drawerWidth) => {
+  if (!drawerPinned) return
+
   const style = document.createElement('style')
   style.innerHTML = `
     html {
@@ -65,11 +67,11 @@ const createContainer = () => {
 }
 
 const renderExtension = () => {
-  const { drawerWidth, domains } = getSettingFromLocalStorage()
+  const { drawerWidth, drawerPinned, domains } = getSettingFromLocalStorage()
 
   if (!checkDomainMatched(domains)) return
 
-  applyStyleFromLocalStorage(drawerWidth)
+  applyStyleFromLocalStorage(drawerPinned, drawerWidth)
 
   const onLoad = () => {
     const queryClient = new QueryClient()
