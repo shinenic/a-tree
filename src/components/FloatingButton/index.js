@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import Box from '@material-ui/core/Box'
 import Draggable from 'react-draggable'
 import { useSettingCtx } from 'components/Setting/Context/Provider'
@@ -7,6 +7,7 @@ const HEIGHT = 50
 
 const FloatingButton = () => {
   const [{ floatingButtonPositionY }, dispatch] = useSettingCtx()
+  const [isDragging, setIsDragging] = useState(false)
 
   // Memorized original position y because the implementation of `react-draggable` is
   // to use `transform` to control the element, if we update position y immediately,
@@ -19,7 +20,17 @@ const FloatingButton = () => {
   const url = window.chrome.runtime.getURL('icon192.png')
 
   return (
-    <Box position="fixed" top={originalPositionY} left={0} zIndex={2100}>
+    <Box
+      position="fixed"
+      top={originalPositionY}
+      left={0}
+      zIndex={2100}
+      onMouseUp={() => {
+        if (isDragging) return
+
+        dispatch({ type: 'TOGGLE_DRAWER' })
+      }}
+    >
       <Draggable
         axis="y"
         defaultPosition={{ x: 0, y: 0 }}
@@ -42,9 +53,6 @@ const FloatingButton = () => {
           style={{
             cursor: 'pointer',
           }}
-          onClick={() => {
-            dispatch({ type: 'TOGGLE_DRAWER' })
-          }}
         >
           <Box
             component="img"
@@ -58,7 +66,7 @@ const FloatingButton = () => {
           />
           <Box
             position="absolute"
-            width={20}
+            width={50}
             height={HEIGHT}
             top={0}
             left={0}
@@ -66,7 +74,8 @@ const FloatingButton = () => {
             style={{
               cursor: 'move',
             }}
-            onClick={(e) => e.stopPropagation()}
+            onMouseDown={() => setIsDragging(false)}
+            onMouseMove={() => setIsDragging(true)}
           />
         </Box>
       </Draggable>
