@@ -1,8 +1,8 @@
-import GlobalStyle from './GlobalStyle'
 import MainDrawer from 'components/MainDrawer'
 import usePageInfo from 'hooks/pageInfo/usePageInfo'
 import FileSearchModal from 'components/FileSearchModal'
 import { useSettingStateCtx } from 'components/Setting/Context/Provider'
+import GlobalStyle from './GlobalStyle'
 
 function App() {
   const { error, isLoading, pageInfo } = usePageInfo()

@@ -1,7 +1,7 @@
-import { PAGE_TYPE } from 'constants'
 import { TITLE_MATCHER } from 'constants/github'
 import { isEmpty } from 'lodash'
-import { DEFAULT_PAGE_INFO } from 'constants'
+import { DEFAULT_PAGE_INFO, PAGE_TYPE } from 'constants'
+import isReserved from 'github-reserved-names'
 
 const { CODE, PULL, COMMIT, PULL_COMMIT, PULL_COMMITS, PULL_FILES, UNKNOWN } =
   PAGE_TYPE
@@ -14,7 +14,7 @@ const { CODE, PULL, COMMIT, PULL_COMMIT, PULL_COMMITS, PULL_FILES, UNKNOWN } =
  * @return {PageInfo}
  */
 export const getPageInfo = (pathname = '', defaultBranch, title) => {
-  const [_, first, second, third, ...restPaths] = pathname.split('/')
+  const [, first, second, third, ...restPaths] = pathname.split('/')
 
   if (!first || !second) {
     return DEFAULT_PAGE_INFO
@@ -41,9 +41,7 @@ export const getPageInfo = (pathname = '', defaultBranch, title) => {
       ...basicInfo,
       pageType: CODE,
       ...(!isEmpty(third) &&
-        branch && {
-          filePath: restPaths.join('').split(branch)[1],
-        }),
+        branch && { filePath: restPaths.join('').split(branch)[1] }),
     }
   }
 
@@ -125,7 +123,8 @@ export const matchBranchFromTitle = (defaultBranch, title) => {
 
   let result = null
 
-  for (let key in TITLE_MATCHER) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const key in TITLE_MATCHER) {
     if (title.match(TITLE_MATCHER[key].regex)) {
       result = TITLE_MATCHER[key].resolver(defaultBranch, title)
       break
@@ -134,3 +133,5 @@ export const matchBranchFromTitle = (defaultBranch, title) => {
 
   return result
 }
+
+export const isGithubReservedUsername = (owner) => isReserved.check(owner)

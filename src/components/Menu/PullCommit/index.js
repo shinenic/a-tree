@@ -4,13 +4,13 @@ import { makeStyles } from '@material-ui/core/styles'
 import { animated } from 'react-spring'
 import Avatar from '@material-ui/core/Avatar'
 import moment from 'moment'
-import * as Style from './style'
-import CopyIcon from './CopyIcon'
 
 import { PJAX_ID } from 'constants/github'
 
 import useClickOutside from 'hooks/useClickOutside'
 import usePullCommitMenu from 'hooks/usePullCommitMenu'
+import CopyIcon from './CopyIcon'
+import * as Style from './style'
 
 const AnimatedMenuContainer = animated(Style.MenuContainer)
 
@@ -115,15 +115,15 @@ export default function PullCommitMenu({
         {buttonText}
       </Button>
       <AnimatedMenuContainer style={{ ...menuStyles, ...menuPositionStyle }}>
-        {
-          <Style.StyledGithubLink
-            onClick={handleClose}
-            href={`/${owner}/${repo}/pull/${pull}/files`}
-            pjaxId={PJAX_ID.PULL}
-          >
-            Show all changes ({data?.length ?? 0})
-          </Style.StyledGithubLink>
-        }
+        <Style.StyledGithubLink
+          onClick={handleClose}
+          href={`/${owner}/${repo}/pull/${pull}/files`}
+          pjaxId={PJAX_ID.PULL}
+        >
+          Show all changes (
+          {data?.length ?? 0}
+          )
+        </Style.StyledGithubLink>
         {data &&
           data.map(({ commit, sha, author }) => (
             <Commit

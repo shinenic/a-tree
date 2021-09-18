@@ -27,19 +27,20 @@ export const PHASE = {
 const CREATING_STEPS = [
   {
     selector: NOTE_INPUT_SELECTOR,
-    content: `Fill in the note for the extension.`,
+    content: 'Fill in the note for the extension.',
   },
   {
     selector: EXPIRATION_SELECTOR,
-    content: `Set expiration.`,
+    content: 'Set expiration.',
   },
   {
     selector: TOKEN_SCOPE_SELECTOR,
-    content: `Check the "repo" is selected for repositories access`,
+    content: 'Check the "repo" is selected for repositories access',
   },
   {
     selector: FINISH_BUTTON_SELECTOR,
-    content: `Finished! Don't forget to copy and paste the token into extension after generated.`,
+    content:
+      "Finished! Don't forget to copy and paste the token into extension after generated.",
   },
 ]
 
@@ -156,7 +157,7 @@ function GenerateTokenGuide() {
   return (
     <ReactTour
       rounded={4}
-      disableFocusLock={true}
+      disableFocusLock
       steps={steps}
       isOpen={isTourOpen}
       onRequestClose={() => setIsTourOpen(false)}

@@ -69,10 +69,11 @@ export const reducer = (state, action) => {
         ...state,
         isOpened: false,
       }
-    case SET_IS_LOADING:
+    case SET_IS_LOADING: {
       const { isLoading } = action.payload
       return { ...state, isLoading }
-    case UPDATE_SOURCE_DATA:
+    }
+    case UPDATE_SOURCE_DATA: {
       const { files } = action.payload
       return {
         ...state,
@@ -82,6 +83,7 @@ export const reducer = (state, action) => {
         keyword: '',
         selectedIndex: 0,
       }
+    }
     case UPDATE_KEYWORD: {
       const { keyword = '' } = action.payload
       const { maxResultCount, files } = state

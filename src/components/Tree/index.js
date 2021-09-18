@@ -1,15 +1,15 @@
 import React, { useMemo } from 'react'
 import TreeView from '@material-ui/lab/TreeView'
-import TreeItem from './Item'
 import { get, set, isEmpty, sortBy, compact } from 'lodash'
 import {
   AiFillFolder,
   AiFillFolderOpen,
   AiOutlineFileText,
 } from 'react-icons/ai'
+import { makeStyles } from '@material-ui/core/styles'
+import TreeItem from './Item'
 import { MAIN_COLOR } from './constants'
 import LabelIcon from './LabelIcon'
-import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles({
   root: {
@@ -32,7 +32,7 @@ const generateTree = (tree) => {
     return result
   }, {})
 
-  let folderNodeIds = []
+  const folderNodeIds = []
   setNodeIds(objTree, null, folderNodeIds)
 
   return [objTree, folderNodeIds]
@@ -90,7 +90,7 @@ const Tree = ({ tree, onItemClick }) => {
   return sortBy(Object.keys(tree), [
     (key) => {
       if (tree[key].children) return 0
-      else return 1
+      return 1
     },
   ]).map((key) => {
     const node = tree[key]

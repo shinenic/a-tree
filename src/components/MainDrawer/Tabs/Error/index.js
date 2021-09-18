@@ -22,10 +22,10 @@ const Error = ({ errorMessage }) => {
             a new one.`}
         {errorMessage === ERROR_MESSAGE.NO_PERMISSION &&
           token &&
-          `It seems that the token has no permission to access this repository.`}
+          'It seems that the token has no permission to access this repository.'}
         {errorMessage === ERROR_MESSAGE.NO_PERMISSION &&
           !token &&
-          `It seems that this is an private repository, please create a personal token to access this repository!`}
+          'It seems that this is an private repository, please create a personal token to access this repository!'}
       </div>
       <Style.HintContent onClick={handleHintClick}>
         How to create personal access tokens?

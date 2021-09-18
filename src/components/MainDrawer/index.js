@@ -3,18 +3,18 @@ import Drawer from '@material-ui/core/Drawer'
 import { makeStyles } from '@material-ui/core/styles'
 import { PAGE_TYPE } from 'constants'
 
+import PullCommitMenu from 'components/Menu/PullCommit'
+import Setting from 'components/Setting'
+import { compact, throttle } from 'lodash'
+import { useSettingCtx } from 'components/Setting/Context/Provider'
 import CodePage from './Tabs/Code'
 import PullPage from './Tabs/Pull'
 import PullCommit from './Tabs/PullCommit'
 import Error from './Tabs/Error'
 import Loading from './Tabs/Loading'
-import PullCommitMenu from 'components/Menu/PullCommit'
-import Setting from 'components/Setting'
 import ResizableWrapper from './ResizableWrapper'
 
-import { compact, throttle } from 'lodash'
 import * as Style from './style'
-import { useSettingCtx } from 'components/Setting/Context/Provider'
 
 const useStyles = makeStyles({
   paper: {
@@ -42,7 +42,7 @@ const MainDrawer = ({
   const branch = branchFromUrl || defaultBranch
 
   const renderHeader = () => {
-    let breadcrumb = [owner, repo]
+    const breadcrumb = [owner, repo]
 
     if (pageType === PAGE_TYPE.CODE) {
       breadcrumb.push(branch)
