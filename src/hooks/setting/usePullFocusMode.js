@@ -39,6 +39,7 @@ const usePullFocusMode = ({ basePathname, pageType }) => {
        */
       if (
         pageType !== PAGE_TYPE.PULL_FILES &&
+        pageType !== PAGE_TYPE.CODE_COMMIT &&
         pageType !== PAGE_TYPE.PULL_COMMIT &&
         pageType !== PAGE_TYPE.PULL_COMMITS
       ) {

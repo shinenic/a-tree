@@ -11,6 +11,7 @@ import GlobalStyle from 'GlobalStyle'
 import CodePage from './Tabs/Code'
 import PullPage from './Tabs/Pull'
 import PullCommit from './Tabs/PullCommit'
+import Commit from './Tabs/Commit'
 import Error from './Tabs/Error'
 import ResizableWrapper from './ResizableWrapper'
 
@@ -72,9 +73,6 @@ const MainDrawer = ({
     return compact(breadcrumb).join('  >  ')
   }
 
-  /**
-   * @TODO support commit page
-   */
   const renderContent = () => {
     if (error) {
       return <Error errorMessage={error?.message} />
@@ -90,6 +88,8 @@ const MainDrawer = ({
         return (
           <PullCommit owner={owner} repo={repo} commit={commit} pull={pull} />
         )
+      case PAGE_TYPE.CODE_COMMIT:
+        return <Commit owner={owner} repo={repo} commit={commit} />
       default:
         return <CodePage owner={owner} repo={repo} branch={branch} />
     }
