@@ -30,19 +30,28 @@ const usePullCommitMenu = ({ owner, repo, pull, commit }) => {
 
   const hasData = !isEmpty(data)
   useEffect(() => {
-    // @TODO: support multiple commits
+    /**
+     * @TODO support multiple commits
+     */
     if (Array.isArray(commit)) return
 
     if (!commit) {
       setButtonText(DEFAULT_BUTTON_TEXT)
     } else if (hasData && commit && Array.isArray(data)) {
       const commitInfo = data.find(({ sha }) => sha === commit)
-      const commitIndex = data.findIndex(({ sha }) => sha === commit) + 1
-      setButtonText(
-        `(${commitIndex}/${data.length}) ${commitInfo.sha.slice(0, 5)} ${
-          commitInfo.commit.message
-        }`
-      )
+
+      /**
+       * @TODO Handle latest commit when someone push commit to the branch.
+       */
+      if (commitInfo) {
+        const commitIndex = data.findIndex(({ sha }) => sha === commit) + 1
+
+        setButtonText(
+          `(${commitIndex}/${data.length}) ${commitInfo.sha.slice(0, 5)} ${
+            commitInfo.commit.message
+          }`
+        )
+      }
     }
   }, [commit, hasData])
 
