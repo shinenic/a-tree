@@ -3,7 +3,10 @@ import Box from '@material-ui/core/Box'
 import Draggable from 'react-draggable'
 import { useSettingCtx } from 'components/Setting/Context/Provider'
 
-const HEIGHT = 50
+const HEIGHT = 40
+const WIDTH = 40
+
+const IMG_WIDTH = 25
 
 const FloatingButton = () => {
   const [{ floatingButtonPositionY }, dispatch] = useSettingCtx()
@@ -49,7 +52,7 @@ const FloatingButton = () => {
         }}
       >
         <Box
-          width={50}
+          width={WIDTH}
           height={HEIGHT}
           bgcolor="#252a2e"
           display="flex"
@@ -63,8 +66,8 @@ const FloatingButton = () => {
           <Box
             component="img"
             src={url}
-            width={30}
-            height={30}
+            width={IMG_WIDTH}
+            height={IMG_WIDTH}
             style={{
               userSelect: 'none',
               userDrag: 'none',
@@ -72,7 +75,7 @@ const FloatingButton = () => {
           />
           <Box
             position="absolute"
-            width={50}
+            width={WIDTH}
             height={HEIGHT}
             top={0}
             left={0}
