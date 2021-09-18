@@ -39,7 +39,8 @@ const CREATING_STEPS = [
   },
   {
     selector: FINISH_BUTTON_SELECTOR,
-    content: 'Finished! Don\'t forget to copy and paste the token into extension after generated.',
+    content:
+      "Finished! Don't forget to copy and paste the token into extension after generated.",
   },
 ]
 
@@ -49,9 +50,7 @@ const CREATED_STEPS = [
     content: (
       <p>
         Token created 🎉
-        <br />
-        {' '}
-        It has been copied in our setting, enjoy it!
+        <br /> It has been copied in our setting, enjoy it!
       </p>
     ),
   },
