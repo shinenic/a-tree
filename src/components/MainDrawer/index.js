@@ -36,6 +36,7 @@ const MainDrawer = ({
   defaultBranch,
   error,
   isLoading,
+  open,
 }) => {
   const [{ drawerWidth }, dispatch] = useSettingCtx()
   const classes = useStyles()
@@ -94,18 +95,16 @@ const MainDrawer = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleOnResize = useCallback(
     throttle((_, __, element) => {
-      const width = element.clientWidth < 200 ? 5 : element.clientWidth
-
       dispatch({
         type: 'UPDATE_DRAWER_WIDTH',
-        payload: width,
+        payload: element.clientWidth,
       })
     }, 100),
     []
   )
 
   return (
-    <Drawer anchor="left" open variant="permanent" classes={classes}>
+    <Drawer anchor="left" open={open} variant="persistent" classes={classes}>
       <ResizableWrapper
         drawerWidth={drawerWidth}
         handleOnResize={handleOnResize}
