@@ -2,11 +2,14 @@ import React from 'react'
 import { useQueryFiles } from 'hooks/api/useGithubQueries'
 import Tree from 'components/Tree'
 import { linkGithubPage, getFileLink } from 'utils/link'
+import Loading from '../Loading'
 
 const Code = ({ owner, branch, repo }) => {
-  const { data, isLoading } = useQueryFiles({ owner, branch, repo })
+  const { data, isLoading, error } = useQueryFiles({ owner, branch, repo })
 
-  if (isLoading) return null
+  if (error) return null
+
+  if (isLoading) return <Loading />
 
   const onItemClick = ({ path, type }) => {
     if (type === 'tree') return

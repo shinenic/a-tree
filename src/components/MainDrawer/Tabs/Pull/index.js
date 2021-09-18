@@ -1,15 +1,18 @@
 import { useQueryPull } from 'hooks/api/useGithubQueries'
 import Tree from 'components/Tree'
 import usePullFocusMode from 'hooks/setting/usePullFocusMode'
+import Loading from '../Loading'
 
 const Pull = ({ owner, pull, repo, pageType }) => {
-  const { data, isLoading } = useQueryPull({ owner, pull, repo })
+  const { data, isLoading, error } = useQueryPull({ owner, pull, repo })
   const onItemClick = usePullFocusMode({
     basePathname: `/${owner}/${repo}/pull/${pull}/files`,
     pageType,
   })
 
-  if (isLoading) return null
+  if (error) return null
+
+  if (isLoading) return <Loading />
 
   return (
     <Tree

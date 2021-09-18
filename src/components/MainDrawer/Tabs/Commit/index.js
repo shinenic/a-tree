@@ -2,6 +2,7 @@ import { useQueryCommit } from 'hooks/api/useGithubQueries'
 import Tree from 'components/Tree'
 import usePullFocusMode from 'hooks/setting/usePullFocusMode'
 import { PAGE_TYPE } from 'constants'
+import Loading from '../Loading'
 
 const Commit = ({ owner, commit, repo }) => {
   const { data, isLoading, error } = useQueryCommit({ owner, commit, repo })
@@ -10,7 +11,9 @@ const Commit = ({ owner, commit, repo }) => {
     pageType: PAGE_TYPE.CODE_COMMIT,
   })
 
-  if (isLoading || error) return null
+  if (error) return null
+
+  if (isLoading) return <Loading />
 
   return (
     <Tree
