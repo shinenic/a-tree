@@ -9,6 +9,8 @@ const { LEFT, RIGHT } = DRAWER_POSITION
  * @property {'left'|'right'} position position of main drawer
  * @property {boolean} isFocusMode repository name
  * @property {number} drawerWidth
+ * @property {string[]} domains custom Enterprise domains
+ * @property {string[]} disablePageTypes stop drawer on specified page types
  */
 
 /** @type {SettingState} */
@@ -17,7 +19,8 @@ export const initialState = {
   position: LEFT,
   isFocusMode: false,
   drawerWidth: 300,
-  domains: []
+  domains: [],
+  disablePageTypeList: [],
 }
 
 /**
@@ -38,6 +41,8 @@ export const reducer = (state, action) => {
       return { ...state, drawerWidth: action.payload }
     case 'UPDATE_BASE_URL':
       return { ...state, baseUrl: action.payload }
+    case 'UPDATE_DISABLE_PAGE_TYPE_LIST':
+      return { ...state, disablePageTypeList: action.payload }
     default:
       throw new Error(`Unknown Type: ${action.type}`)
   }

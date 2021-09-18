@@ -37,7 +37,7 @@ const MainDrawer = ({
   defaultBranch,
   error,
 }) => {
-  const [{ drawerWidth }, dispatch] = useSettingCtx()
+  const [{ drawerWidth, disablePageTypeList }, dispatch] = useSettingCtx()
   const classes = useStyles()
   const branch = branchFromUrl || defaultBranch
 
@@ -108,7 +108,12 @@ const MainDrawer = ({
     []
   )
 
-  if (error?.message === ERROR_MESSAGE.NOT_SUPPORTED_PAGE) return null
+  if (
+    error?.message === ERROR_MESSAGE.NOT_SUPPORTED_PAGE ||
+    disablePageTypeList.includes(pageType)
+  ) {
+    return <GlobalStyle pl={0} />
+  }
 
   return (
     <>

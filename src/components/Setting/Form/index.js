@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import FormGroup from '@material-ui/core/FormGroup'
 import FormControl from '@material-ui/core/FormControl'
-import { FocusCheckBox, PositionSelect, TokenTextField } from './Fields'
+import { FocusCheckBox, VisibilityCheckBoxes, TokenTextField } from './Fields'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -29,8 +29,8 @@ export default function SettingForm() {
   return (
     <FormControl component="fieldset" className={classes.paper}>
       <FormGroup aria-label="setting" className={classes.formGroup}>
+        <VisibilityCheckBoxes />
         <FocusCheckBox classes={{ label: classes.label }} />
-        {/* <PositionSelect classes={{ label: classes.label }} /> */}
         <TokenTextField classes={{ label: classes.label }} />
       </FormGroup>
     </FormControl>
