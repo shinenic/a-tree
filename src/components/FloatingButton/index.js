@@ -15,7 +15,13 @@ const FloatingButton = () => {
   // so we need to keep original Y to make <Draggable> controllable and
   // update local storage's Y as soon as we finished dragging.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const originalPositionY = useMemo(() => floatingButtonPositionY, [])
+  const originalPositionY = useMemo(
+    () =>
+      // >=1 is impossible, means the data is dirty, should reset it to prevent button missing
+      (floatingButtonPositionY >= 1 ? 0.5 : floatingButtonPositionY) *
+      window.innerHeight,
+    []
+  )
 
   const url = window.chrome.runtime.getURL('icon192.png')
 
@@ -38,7 +44,7 @@ const FloatingButton = () => {
         onStop={(_, { y }) => {
           dispatch({
             type: 'UPDATE_FLOATING_BUTTON_POSITION_Y',
-            payload: y + originalPositionY,
+            payload: (y + originalPositionY) / window.innerHeight,
           })
         }}
       >

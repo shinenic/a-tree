@@ -19,7 +19,7 @@ export const initialState = {
   drawerWidth: 300,
   drawerPinned: true,
   domains: [],
-  floatingButtonPositionY: 40,
+  floatingButtonPositionY: 0.5, // percent
 }
 
 /**
