@@ -2,6 +2,7 @@ import { useQueryCommit } from 'hooks/api/useGithubQueries'
 import Tree from 'components/Tree'
 import useLinkPullFile from 'hooks/setting/useLinkPullFile'
 import { PAGE_TYPE } from 'constants'
+import FileSearchModal from 'components/FileSearchModal'
 import Loading from '../Loading'
 
 const PullCommit = ({ owner, commit, repo, pull }) => {
@@ -13,15 +14,24 @@ const PullCommit = ({ owner, commit, repo, pull }) => {
 
   if (error) return null
 
-  if (isLoading) return <Loading />
-
   return (
-    <Tree
-      tree={data.files}
-      onItemClick={onItemClick}
-      treeId={`${owner}-${repo}-${commit}`}
-      isExpandedAll
-    />
+    <>
+      <FileSearchModal
+        files={data?.files}
+        isLoading={isLoading}
+        selectCallback={onItemClick}
+      />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Tree
+          tree={data.files}
+          onItemClick={onItemClick}
+          treeId={`${owner}-${repo}-${commit}`}
+          isExpandedAll
+        />
+      )}
+    </>
   )
 }
 

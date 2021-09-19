@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useReducer, useMemo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQueryFiles } from 'hooks/api/useGithubQueries'
 
 import {
   buildUsedLetterMap,
@@ -26,39 +25,36 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 /**
- * @TODO Handle loading status
+ * @TODO Handle loading & error status
+ * @TODO Handle SPA from page Pull-Conversation to page Pull-Files
+ * @FIXME Can't apply focus file via press `enter`
  */
-const FileSearchModal = ({ owner, repo, branch }) => {
-  const classes = useStyles()
-  const inputRef = useRef(null)
-
+const FileSearchModal = ({ isLoading, selectCallback, files, error }) => {
   const [{ result = [], keyword = '', selectedIndex = 0, isOpened }, dispatch] =
     useReducer(reducer, {
       ...initialState,
-      pageInfo: { owner, repo, branch },
+      selectCallback,
     })
 
-  const { data, isLoading, error } = useQueryFiles({ owner, repo, branch })
+  const classes = useStyles()
+  const inputRef = useRef(null)
 
   useEffect(() => {
     dispatch({ type: 'SET_IS_LOADING', payload: { isLoading } })
 
-    if (!isLoading && !isEmpty(data)) {
+    if (!isLoading && !isEmpty(files)) {
       dispatch({
         type: 'UPDATE_SOURCE_DATA',
         payload: {
-          files: data?.tree?.filter(({ type }) => type !== 'tree') ?? [],
+          files: files?.filter(({ type }) => type !== 'tree') ?? [],
         },
       })
     }
-  }, [isLoading, data])
+  }, [isLoading, files])
 
   useEffect(() => {
-    dispatch({
-      type: 'UPDATE_PAGE_INFO',
-      payload: { pageInfo: { owner, repo, branch } },
-    })
-  }, [owner, repo, branch])
+    dispatch({ type: 'UPDATE_SELECT_CALLBACK', payload: { selectCallback } })
+  }, [selectCallback])
 
   /**
    * Auto focus input when modal opened
@@ -91,7 +87,7 @@ const FileSearchModal = ({ owner, repo, branch }) => {
   )
   const highlightMap = useMemo(() => buildUsedLetterMap(keyword), [keyword])
 
-  if (error || !owner || !repo) return null
+  if (error) return null
 
   return (
     <Modal
@@ -107,7 +103,9 @@ const FileSearchModal = ({ owner, repo, branch }) => {
           onChange={handleInputChange}
         />
         {result.map((file, index) => {
-          const paths = file.path.split('/')
+          const paths = file.filename
+            ? file.filename.split('/')
+            : file.path.split('/')
           const path = paths.slice(0, -1).join('/')
           const fileName = paths.slice(-1).join()
           const isSelected = index === selectedIndex
@@ -115,7 +113,7 @@ const FileSearchModal = ({ owner, repo, branch }) => {
           return (
             <Style.FileRow
               onClick={handleOptionClick(index)}
-              key={file.path}
+              key={paths.join('')}
               isSelected={isSelected}
             >
               <Style.FileName

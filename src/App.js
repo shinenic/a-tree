@@ -1,4 +1,3 @@
-import FileSearchModal from 'components/FileSearchModal'
 import MainDrawer from 'components/MainDrawer'
 import usePageInfo from 'hooks/pageInfo/usePageInfo'
 
@@ -7,12 +6,7 @@ function App() {
 
   if (isLoading) return null
 
-  return (
-    <>
-      <MainDrawer {...pageInfo} error={error} />
-      <FileSearchModal {...pageInfo} />
-    </>
-  )
+  return <MainDrawer {...pageInfo} error={error} />
 }
 
 export default App
