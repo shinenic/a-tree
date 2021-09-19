@@ -23,7 +23,7 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: ['react'],
+  plugins: ['react', 'simple-import-sort'],
   rules: {
     semi: [2, 'never'],
     'no-use-before-define': 'off',
@@ -49,5 +49,7 @@ module.exports = {
     indent: 'off',
     'import/prefer-default-export': 'off',
     'react/jsx-wrap-multilines': 'off',
+    'simple-import-sort/exports': 'error',
+    'react/jsx-one-expression-per-line': 'off',
   },
 }
