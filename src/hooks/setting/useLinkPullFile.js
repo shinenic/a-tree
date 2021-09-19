@@ -12,7 +12,7 @@ const getFileHash = (filename) => `diff-${sha256(filename)}`
 
 const getFileLink = (baseUrl, filename) => `${baseUrl}#${getFileHash(filename)}`
 
-const usePullFocusMode = ({ basePathname, pageType }) => {
+const useLinkPullFile = ({ basePathname, pageType }) => {
   const { isFocusMode } = useSettingStateCtx()
   const previousLockedFile = useRef(null)
 
@@ -81,4 +81,4 @@ const usePullFocusMode = ({ basePathname, pageType }) => {
   return onItemClick
 }
 
-export default usePullFocusMode
+export default useLinkPullFile
