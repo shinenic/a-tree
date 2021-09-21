@@ -21,6 +21,7 @@ export const initialState = {
   drawerWidth: 300,
   domains: [],
   disablePageTypeList: [],
+  isModalOpening: false,
 }
 
 /**
@@ -43,6 +44,10 @@ export const reducer = (state, action) => {
       return { ...state, baseUrl: action.payload }
     case 'UPDATE_DISABLE_PAGE_TYPE_LIST':
       return { ...state, disablePageTypeList: action.payload }
+    case 'OPEN_MODAL':
+      return { ...state, isModalOpening: true }
+    case 'CLOSE_MODAL':
+      return { ...state, isModalOpening: false }
     default:
       throw new Error(`Unknown Type: ${action.type}`)
   }

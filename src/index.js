@@ -1,12 +1,13 @@
 import SettingProvider from 'components/Setting/Context/Provider'
 import GenerateTokenGuide from 'components/Tour/GenerateTokenGuide'
-import { CONTAINER_ID } from 'constants'
+import { CONTAINER_ID, isLocalMode } from 'constants'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import listenContextMenu from 'utils/contextMenuListener'
-import { isRepoPathname, getPageInfo } from 'utils/github'
+import { getPageInfo } from 'utils/github'
 import { getSettingFromLocalStorage } from 'utils/setting'
+import { SettingModal } from 'components/Setting'
 
 import App from './App'
 
@@ -36,7 +37,7 @@ const renderExtension = () => {
   const { drawerWidth, domains, disablePageTypeList } =
     getSettingFromLocalStorage()
 
-  if (!checkDomainMatched(domains)) return
+  if (!checkDomainMatched(domains) && !isLocalMode) return
 
   const { pageType } = getPageInfo(window.location.pathname)
   /**
@@ -60,6 +61,7 @@ const renderExtension = () => {
           <SettingProvider>
             <GenerateTokenGuide />
             <App />
+            <SettingModal />
           </SettingProvider>
         </QueryClientProvider>
       </React.StrictMode>,
@@ -70,5 +72,7 @@ const renderExtension = () => {
   window.onload = onLoad
 }
 
-listenContextMenu()
+if (!isLocalMode) {
+  listenContextMenu()
+}
 renderExtension()

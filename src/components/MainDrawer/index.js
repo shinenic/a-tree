@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { PAGE_TYPE, ERROR_MESSAGE } from 'constants'
 
 import PullCommitMenu from 'components/Menu/PullCommit'
-import Setting from 'components/Setting'
+import { SettingButton } from 'components/Setting'
 import { compact, throttle } from 'lodash'
 import { useSettingCtx } from 'components/Setting/Context/Provider'
 import GlobalStyle from 'GlobalStyle'
@@ -132,7 +132,7 @@ const MainDrawer = ({
           />
           <Style.DrawerContent>{renderContent()}</Style.DrawerContent>
           <Style.DrawerFooter>
-            <Setting />
+            <SettingButton />
           </Style.DrawerFooter>
         </ResizableWrapper>
       </Drawer>
