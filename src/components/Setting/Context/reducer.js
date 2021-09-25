@@ -17,7 +17,9 @@ export const initialState = {
   position: LEFT,
   isFocusMode: false,
   drawerWidth: 300,
-  domains: []
+  drawerPinned: true,
+  domains: [],
+  floatingButtonPositionY: 0.5, // percent
 }
 
 /**
@@ -38,6 +40,10 @@ export const reducer = (state, action) => {
       return { ...state, drawerWidth: action.payload }
     case 'UPDATE_BASE_URL':
       return { ...state, baseUrl: action.payload }
+    case 'UPDATE_FLOATING_BUTTON_POSITION_Y':
+      return { ...state, floatingButtonPositionY: action.payload }
+    case 'TOGGLE_DRAWER':
+      return { ...state, drawerPinned: !state.drawerPinned }
     default:
       throw new Error(`Unknown Type: ${action.type}`)
   }
