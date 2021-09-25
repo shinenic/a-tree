@@ -118,11 +118,9 @@ export default function PullCommitMenu({
         <Style.StyledGithubLink
           onClick={handleClose}
           href={`/${owner}/${repo}/pull/${pull}/files`}
-          pjaxId={PJAX_ID.PULL}
+          pjaxId={PJAX_ID.CODE}
         >
-          Show all changes (
-          {data?.length ?? 0}
-          )
+          Show all changes ({data?.length ?? 0})
         </Style.StyledGithubLink>
         {data &&
           data.map(({ commit, sha, author }) => (
