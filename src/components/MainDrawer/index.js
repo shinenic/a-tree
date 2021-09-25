@@ -85,6 +85,7 @@ const MainDrawer = ({
           <PullPage owner={owner} repo={repo} pull={pull} pageType={pageType} />
         )
       case PAGE_TYPE.PULL_COMMIT:
+      case PAGE_TYPE.PULL_COMMITS:
         return (
           <PullCommit owner={owner} repo={repo} commit={commit} pull={pull} />
         )
