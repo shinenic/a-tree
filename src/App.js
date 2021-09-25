@@ -1,6 +1,5 @@
 import usePageInfo from 'hooks/pageInfo/usePageInfo'
 import MainDrawer from 'components/MainDrawer'
-import FileSearchModal from 'components/FileSearchModal'
 import { useSettingStateCtx } from 'components/Setting/Context/Provider'
 import FloatingButton from 'components/FloatingButton'
 import GlobalStyle from './GlobalStyle'
@@ -21,7 +20,6 @@ function App() {
         isLoading={isLoading}
         open={drawerPinned}
       />
-      <FileSearchModal {...pageInfo} />
     </>
   )
 }
