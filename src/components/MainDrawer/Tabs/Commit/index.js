@@ -5,11 +5,11 @@ import { PAGE_TYPE } from 'constants'
 import FileSearchModal from 'components/FileSearchModal'
 import Loading from '../Loading'
 
-const PullCommit = ({ owner, commit, repo, pull }) => {
+const Commit = ({ owner, commit, repo }) => {
   const { data, isLoading, error } = useQueryCommit({ owner, commit, repo })
   const onItemClick = useLinkPullFile({
-    basePathname: `/${owner}/${repo}/pull/${pull}/commits/${commit}`,
-    pageType: PAGE_TYPE.PULL_COMMIT,
+    basePathname: `/${owner}/${repo}/commit/${commit}`,
+    pageType: PAGE_TYPE.CODE_COMMIT,
   })
 
   if (error) return null
@@ -35,4 +35,4 @@ const PullCommit = ({ owner, commit, repo, pull }) => {
   )
 }
 
-export default PullCommit
+export default Commit

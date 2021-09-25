@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
 import { AiOutlineSetting } from 'react-icons/ai'
@@ -7,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import Modal from 'components/shared/Modal'
 import SettingForm from './Form'
+import { useSettingCtx, useSettingDispatchCtx } from './Context/Provider'
 
 const useStyles = makeStyles(() => ({
   button: {
@@ -20,11 +19,11 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const Setting = () => {
-  const [isOpened, setIsOpened] = useState(false)
+export const SettingButton = () => {
+  const dispatch = useSettingDispatchCtx()
   const classes = useStyles()
 
-  const handleClose = () => setIsOpened(false)
+  const handleOpen = () => dispatch({ type: 'OPEN_MODAL' })
 
   return (
     <div className={classes.container}>
@@ -33,15 +32,22 @@ const Setting = () => {
         className={classes.button}
         color="primary"
         endIcon={<AiOutlineSetting />}
-        onClick={() => setIsOpened(true)}
+        onClick={handleOpen}
       >
         Setting
       </Button>
-      <Modal isOpened={isOpened} onClose={handleClose}>
-        <SettingForm />
-      </Modal>
     </div>
   )
 }
 
-export default Setting
+export const SettingModal = () => {
+  const [{ isModalOpening }, dispatch] = useSettingCtx()
+
+  const handleClose = () => dispatch({ type: 'CLOSE_MODAL' })
+
+  return (
+    <Modal isOpened={isModalOpening} onClose={handleClose}>
+      <SettingForm />
+    </Modal>
+  )
+}

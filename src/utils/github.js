@@ -1,10 +1,19 @@
-import { TITLE_MATCHER } from 'constants/github'
-import { isEmpty } from 'lodash'
 import { DEFAULT_PAGE_INFO, PAGE_TYPE } from 'constants'
+import { TITLE_MATCHER } from 'constants/github'
 import isReserved from 'github-reserved-names'
+import { isEmpty } from 'lodash'
 
-const { CODE, PULL, COMMIT, PULL_COMMIT, PULL_COMMITS, PULL_FILES, UNKNOWN } =
-  PAGE_TYPE
+const {
+  CODE,
+  CODE_COMMIT,
+  ISSUES,
+  PULLS,
+  PULL,
+  PULL_COMMIT,
+  PULL_COMMITS,
+  PULL_FILES,
+  OTHERS,
+} = PAGE_TYPE
 
 /**
  * This function only parse pageInfo from `pathname` and `title`,
@@ -14,20 +23,20 @@ const { CODE, PULL, COMMIT, PULL_COMMIT, PULL_COMMITS, PULL_FILES, UNKNOWN } =
  * @return {PageInfo}
  */
 export const getPageInfo = (pathname = '', defaultBranch, title) => {
-  const [, first, second, third, ...restPaths] = pathname.split('/')
-
-  if (!first || !second) {
+  if (!isRepoPathname(pathname)) {
     return DEFAULT_PAGE_INFO
   }
+
+  const [, first, second, third, ...restPaths] = pathname.split('/')
 
   const branch = matchBranchFromTitle(defaultBranch, title)
 
   const basicInfo = {
     ...DEFAULT_PAGE_INFO,
+    pageType: OTHERS,
     owner: first,
     repo: second,
     branch,
-    pageType: UNKNOWN,
     defaultBranch,
   }
 
@@ -42,6 +51,17 @@ export const getPageInfo = (pathname = '', defaultBranch, title) => {
       pageType: CODE,
       ...(!isEmpty(third) &&
         branch && { filePath: restPaths.join('').split(branch)[1] }),
+    }
+  }
+
+  /**
+   * {user}/{repo}/commit/{commit}
+   */
+  if (third === 'commit' && !isEmpty(restPaths[0])) {
+    return {
+      ...basicInfo,
+      pageType: CODE_COMMIT,
+      commit: restPaths[0],
     }
   }
 
@@ -62,18 +82,8 @@ export const getPageInfo = (pathname = '', defaultBranch, title) => {
   }
 
   /**
-   * {user}/{repo}/commit/{commit}
-   */
-  if (third === 'commit' && !isEmpty(restPaths[0])) {
-    return {
-      ...basicInfo,
-      pageType: COMMIT,
-      commit: restPaths[0],
-    }
-  }
-
-  /**
    * {user}/{repo}/pull/{pull}/files/{commit1}..${commit2}
+   * @TODO Get both commit and support multi commits
    */
   if (
     third === 'pull' &&
@@ -84,7 +94,7 @@ export const getPageInfo = (pathname = '', defaultBranch, title) => {
       ...basicInfo,
       pageType: PULL_COMMITS,
       pull: restPaths[0],
-      commit: restPaths[2].split('..'),
+      commit: restPaths[2].split('..')[1],
     }
   }
 
@@ -107,6 +117,26 @@ export const getPageInfo = (pathname = '', defaultBranch, title) => {
       ...basicInfo,
       pageType: PULL,
       pull: restPaths[0],
+    }
+  }
+
+  /**
+   * {user}/{repo}/pulls/*
+   */
+  if (third === 'pulls') {
+    return {
+      ...basicInfo,
+      pageType: PULLS,
+    }
+  }
+
+  /**
+   * {user}/{repo}/issues/*
+   */
+  if (third === 'issues') {
+    return {
+      ...basicInfo,
+      pageType: ISSUES,
     }
   }
 
@@ -135,3 +165,10 @@ export const matchBranchFromTitle = (defaultBranch, title) => {
 }
 
 export const isGithubReservedUsername = (owner) => isReserved.check(owner)
+
+export const isRepoPathname = (pathname) => {
+  const githubPathname = pathname || window.location.pathname
+  const [, owner, repo] = githubPathname.split('/')
+
+  return !isGithubReservedUsername(owner) && repo
+}

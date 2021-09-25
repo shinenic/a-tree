@@ -2,11 +2,13 @@ import React from 'react'
 import { useQueryFiles } from 'hooks/api/useGithubQueries'
 import Tree from 'components/Tree'
 import { linkGithubPage, getFileLink } from 'utils/link'
+import FileSearchModal from 'components/FileSearchModal'
+import Loading from '../Loading'
 
 const Code = ({ owner, branch, repo }) => {
-  const { data, isLoading } = useQueryFiles({ owner, branch, repo })
+  const { data, isLoading, error } = useQueryFiles({ owner, branch, repo })
 
-  if (isLoading) return null
+  if (error) return null
 
   const onItemClick = ({ path, type }) => {
     if (type === 'tree') return
@@ -23,14 +25,23 @@ const Code = ({ owner, branch, repo }) => {
   }
 
   return (
-    <Tree
-      tree={data.tree}
-      onItemClick={onItemClick}
-      treeId={`${owner}-${repo}-${branch}`}
-    />
+    <>
+      <FileSearchModal
+        files={data?.tree}
+        isLoading={isLoading}
+        selectCallback={onItemClick}
+      />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Tree
+          tree={data.tree}
+          onItemClick={onItemClick}
+          treeId={`${owner}-${repo}-${branch}`}
+        />
+      )}
+    </>
   )
 }
-
-Code.propTypes = {}
 
 export default Code

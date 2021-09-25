@@ -8,7 +8,7 @@ const OPENED_SHORTCUT_ACTIONS = [
   { action: CLOSE, key: 'Escape' },
   { action: SELECT_PREV, key: 'ArrowUp' },
   { action: SELECT_NEXT, key: 'ArrowDown' },
-  { action: SELECT_INDEX, key: 'Enter' },
+  { action: SELECT_INDEX, key: 'Enter', preventDefault: true },
   {
     action: CLOSE,
     key: ['k', 'p'],
@@ -47,7 +47,6 @@ export const generateHotkeyListener = (dispatch, isModalOpened) => {
     actions.some(({ action, key, modifier, preventDefault }) => {
       if (isKeyMatched(event, key, modifier)) {
         if (preventDefault) event.preventDefault()
-
         dispatch({ type: action })
         return true
       }

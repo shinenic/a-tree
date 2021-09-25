@@ -48,6 +48,7 @@ module.exports = {
     'react/destructuring-assignment': 'off',
     indent: 'off',
     'import/prefer-default-export': 'off',
+    'react/jsx-wrap-multilines': 'off',
     'simple-import-sort/exports': 'error',
     'react/jsx-one-expression-per-line': 'off',
   },

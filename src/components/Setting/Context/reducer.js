@@ -9,6 +9,11 @@ const { LEFT, RIGHT } = DRAWER_POSITION
  * @property {'left'|'right'} position position of main drawer
  * @property {boolean} isFocusMode repository name
  * @property {number} drawerWidth
+ * @property {string[]} domains custom Enterprise domains
+ * @property {string[]} disablePageTypeList stop drawer on specified page types
+ * @property {boolean} isModalOpening
+ * @property {boolean} drawerPinned
+ * @property {number} floatingButtonPositionY position Y of floating button (percent)
  */
 
 /** @type {SettingState} */
@@ -17,9 +22,11 @@ export const initialState = {
   position: LEFT,
   isFocusMode: false,
   drawerWidth: 300,
-  drawerPinned: true,
   domains: [],
-  floatingButtonPositionY: 0.5, // percent
+  disablePageTypeList: [],
+  isModalOpening: false,
+  drawerPinned: true,
+  floatingButtonPositionY: 0.5,
 }
 
 /**
@@ -40,6 +47,12 @@ export const reducer = (state, action) => {
       return { ...state, drawerWidth: action.payload }
     case 'UPDATE_BASE_URL':
       return { ...state, baseUrl: action.payload }
+    case 'UPDATE_DISABLE_PAGE_TYPE_LIST':
+      return { ...state, disablePageTypeList: action.payload }
+    case 'OPEN_MODAL':
+      return { ...state, isModalOpening: true }
+    case 'CLOSE_MODAL':
+      return { ...state, isModalOpening: false }
     case 'UPDATE_FLOATING_BUTTON_POSITION_Y':
       return { ...state, floatingButtonPositionY: action.payload }
     case 'TOGGLE_DRAWER':

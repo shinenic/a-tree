@@ -1,17 +1,19 @@
 import React, { useCallback } from 'react'
 import Drawer from '@material-ui/core/Drawer'
 import { makeStyles } from '@material-ui/core/styles'
-import { PAGE_TYPE } from 'constants'
+import { PAGE_TYPE, ERROR_MESSAGE } from 'constants'
 
 import PullCommitMenu from 'components/Menu/PullCommit'
-import Setting from 'components/Setting'
+import { SettingButton } from 'components/Setting'
 import { compact, throttle } from 'lodash'
 import { useSettingCtx } from 'components/Setting/Context/Provider'
+import GlobalStyle from 'GlobalStyle'
+import { getHeaderHeight } from 'utils/style'
 import CodePage from './Tabs/Code'
 import PullPage from './Tabs/Pull'
 import PullCommit from './Tabs/PullCommit'
+import Commit from './Tabs/Commit'
 import Error from './Tabs/Error'
-import Loading from './Tabs/Loading'
 import ResizableWrapper from './ResizableWrapper'
 
 import * as Style from './style'
@@ -38,57 +40,62 @@ const MainDrawer = ({
   isLoading,
   open,
 }) => {
-  const [{ drawerWidth }, dispatch] = useSettingCtx()
+  const [{ drawerWidth, disablePageTypeList }, dispatch] = useSettingCtx()
   const classes = useStyles()
   const branch = branchFromUrl || defaultBranch
 
   const renderHeader = () => {
     const breadcrumb = [owner, repo]
 
-    if (pageType === PAGE_TYPE.CODE) {
-      breadcrumb.push(branch)
-      breadcrumb.push(filePath)
-    }
+    switch (pageType) {
+      case PAGE_TYPE.CODE:
+      case PAGE_TYPE.PULLS:
+        breadcrumb.push(branch)
+        breadcrumb.push(filePath)
+        break
 
-    if (pageType === PAGE_TYPE.COMMIT) {
-      breadcrumb.push(branch)
-      breadcrumb.push(commit)
-    }
+      case PAGE_TYPE.CODE_COMMIT:
+        breadcrumb.push(branch)
+        breadcrumb.push(commit)
+        break
 
-    if (pageType === PAGE_TYPE.PULL) {
-      breadcrumb.push(pull)
-    }
+      case PAGE_TYPE.PULL:
+      case PAGE_TYPE.PULL_FILES:
+        breadcrumb.push(pull)
+        break
 
-    if (pageType === PAGE_TYPE.PULL_COMMIT) {
-      breadcrumb.push(pull)
-      breadcrumb.push(commit)
+      case PAGE_TYPE.PULL_COMMIT:
+        breadcrumb.push(pull)
+        breadcrumb.push(commit)
+        break
+
+      default:
+        break
     }
 
     return compact(breadcrumb).join('  >  ')
   }
 
   const renderContent = () => {
-    if (isLoading) {
-      return <Loading />
-    }
-
     if (error) {
       return <Error errorMessage={error?.message} />
     }
 
     switch (pageType) {
-      case PAGE_TYPE.CODE:
-      default:
-        return <CodePage owner={owner} repo={repo} branch={branch} />
       case PAGE_TYPE.PULL:
       case PAGE_TYPE.PULL_FILES:
         return (
           <PullPage owner={owner} repo={repo} pull={pull} pageType={pageType} />
         )
       case PAGE_TYPE.PULL_COMMIT:
+      case PAGE_TYPE.PULL_COMMITS:
         return (
           <PullCommit owner={owner} repo={repo} commit={commit} pull={pull} />
         )
+      case PAGE_TYPE.CODE_COMMIT:
+        return <Commit owner={owner} repo={repo} commit={commit} />
+      default:
+        return <CodePage owner={owner} repo={repo} branch={branch} />
     }
   }
 
@@ -103,20 +110,37 @@ const MainDrawer = ({
     []
   )
 
+  if (
+    error?.message === ERROR_MESSAGE.NOT_SUPPORTED_PAGE ||
+    disablePageTypeList.includes(pageType)
+  ) {
+    return <GlobalStyle pl={0} />
+  }
+
   return (
-    <Drawer anchor="left" open={open} variant="persistent" classes={classes}>
-      <ResizableWrapper
-        drawerWidth={drawerWidth}
-        handleOnResize={handleOnResize}
-      >
-        <Style.DrawerHeader>{renderHeader()}</Style.DrawerHeader>
-        <PullCommitMenu owner={owner} repo={repo} pull={pull} commit={commit} />
-        <Style.DrawerContent>{renderContent()}</Style.DrawerContent>
-        <Style.DrawerFooter>
-          <Setting />
-        </Style.DrawerFooter>
-      </ResizableWrapper>
-    </Drawer>
+    <>
+      <GlobalStyle pl={open ? drawerWidth : 0} />
+      <Drawer anchor="left" open={open} variant="persistent" classes={classes}>
+        <ResizableWrapper
+          drawerWidth={drawerWidth}
+          handleOnResize={handleOnResize}
+        >
+          <Style.DrawerHeader height={getHeaderHeight()}>
+            {renderHeader()}
+          </Style.DrawerHeader>
+          <PullCommitMenu
+            owner={owner}
+            repo={repo}
+            pull={pull}
+            commit={commit}
+          />
+          <Style.DrawerContent>{renderContent()}</Style.DrawerContent>
+          <Style.DrawerFooter>
+            <SettingButton />
+          </Style.DrawerFooter>
+        </ResizableWrapper>
+      </Drawer>
+    </>
   )
 }
 

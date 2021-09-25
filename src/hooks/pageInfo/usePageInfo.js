@@ -9,6 +9,7 @@ import useListenTitle from 'hooks/pageInfo/useListenTitle'
 import { useQuery } from 'react-query'
 import { isEmpty } from 'lodash'
 
+const API_RATE_LIMIT = 403
 const NOT_FOUND_STATUS = 404
 const INVALID_TOKEN_STATUS = 401
 const OK_STATUS = 200
@@ -26,6 +27,7 @@ const isGithubPage = (host) => host === 'github.com'
  *
  * For the error message, check if the word of owner is reserved ('setting', 'pulls', etc.) first,
  *   if not => check the response of api whether `OK`,
+ *   if not => check if the API rate limit exceeded.
  *   if not => check if the token is invalid (wrong, expired, etc.).
  *   if not => check if the name of repo isn't available.
  *   if not => the token may miss permissions to access this repository.
@@ -70,6 +72,10 @@ const usePageInfo = () => {
 
         return repoResponse.data.default_branch
       } catch (repoError) {
+        if (repoError.status === API_RATE_LIMIT) {
+          throw new Error(ERROR_MESSAGE.API_RATE_LIMIT)
+        }
+
         if (repoError.status === INVALID_TOKEN_STATUS) {
           throw new Error(ERROR_MESSAGE.TOKEN_INVALID)
         }

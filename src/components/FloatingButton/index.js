@@ -2,14 +2,32 @@ import React, { useMemo, useState } from 'react'
 import Box from '@material-ui/core/Box'
 import Draggable from 'react-draggable'
 import { useSettingCtx } from 'components/Setting/Context/Provider'
+import { styled } from '@material-ui/core/styles'
+import { getURL } from 'utils/chrome'
 
-const HEIGHT = 40
-const WIDTH = 40
+const BOX_SIZE = 40
+const IMG_WIDTH = 30
 
-const IMG_WIDTH = 25
+const IconContainer = styled(Box)({
+  width: BOX_SIZE,
+  height: BOX_SIZE,
+  backgroundColor: '#252a2e',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  boxShadow: '0 3px 8px #d0d7de',
+  borderRadius: '0 5px 5px 0',
+  cursor: 'pointer',
+  opacity: ({ drawerPinned }) => (drawerPinned ? 0.8 : 1),
+  transition: 'opacity 0.1s',
+
+  '&:hover': {
+    opacity: ({ drawerPinned }) => (drawerPinned ? 0.7 : 0.9),
+  },
+})
 
 const FloatingButton = () => {
-  const [{ floatingButtonPositionY }, dispatch] = useSettingCtx()
+  const [{ floatingButtonPositionY, drawerPinned }, dispatch] = useSettingCtx()
   const [isDragging, setIsDragging] = useState(false)
 
   // Memorized original position y because the implementation of `react-draggable` is
@@ -26,7 +44,7 @@ const FloatingButton = () => {
     []
   )
 
-  const url = window.chrome.runtime.getURL('icon192.png')
+  const url = getURL('icon192.png')
 
   return (
     <Box
@@ -51,18 +69,7 @@ const FloatingButton = () => {
           })
         }}
       >
-        <Box
-          width={WIDTH}
-          height={HEIGHT}
-          bgcolor="#252a2e"
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          borderRadius="0 5px 5px 0"
-          style={{
-            cursor: 'pointer',
-          }}
-        >
+        <IconContainer drawerPinned={drawerPinned}>
           <Box
             component="img"
             src={url}
@@ -75,8 +82,8 @@ const FloatingButton = () => {
           />
           <Box
             position="absolute"
-            width={WIDTH}
-            height={HEIGHT}
+            width={BOX_SIZE}
+            height={BOX_SIZE}
             top={0}
             left={0}
             component="span"
@@ -86,7 +93,7 @@ const FloatingButton = () => {
             onMouseDown={() => setIsDragging(false)}
             onMouseMove={() => setIsDragging(true)}
           />
-        </Box>
+        </IconContainer>
       </Draggable>
     </Box>
   )

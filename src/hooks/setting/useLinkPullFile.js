@@ -7,12 +7,15 @@ import useUpdateEffect from 'hooks/useUpdateEffect'
 import { PAGE_TYPE } from 'constants'
 import { scrollToTabsNav } from 'utils/scroll'
 import { linkGithubPage } from 'utils/link'
+import { checkDomainMatched } from 'utils/github'
+
+const isEnterprise = window.location.host !== 'github.com'
 
 const getFileHash = (filename) => `diff-${sha256(filename)}`
 
 const getFileLink = (baseUrl, filename) => `${baseUrl}#${getFileHash(filename)}`
 
-const usePullFocusMode = ({ basePathname, pageType }) => {
+const useLinkPullFile = ({ basePathname, pageType }) => {
   const { isFocusMode } = useSettingStateCtx()
   const previousLockedFile = useRef(null)
 
@@ -39,9 +42,14 @@ const usePullFocusMode = ({ basePathname, pageType }) => {
        */
       if (
         pageType !== PAGE_TYPE.PULL_FILES &&
-        pageType !== PAGE_TYPE.PULL_COMMIT
+        pageType !== PAGE_TYPE.CODE_COMMIT &&
+        pageType !== PAGE_TYPE.PULL_COMMIT &&
+        pageType !== PAGE_TYPE.PULL_COMMITS
       ) {
-        linkGithubPage(getFileLink(basePathname, filename), '#js-repo-pjax-container')
+        linkGithubPage(
+          getFileLink(basePathname, filename),
+          isEnterprise ? '#js-repo-pjax-container' : undefined
+        )
         return
       }
 
@@ -76,4 +84,4 @@ const usePullFocusMode = ({ basePathname, pageType }) => {
   return onItemClick
 }
 
-export default usePullFocusMode
+export default useLinkPullFile

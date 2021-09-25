@@ -1,5 +1,5 @@
-import MainDrawer from 'components/MainDrawer'
 import usePageInfo from 'hooks/pageInfo/usePageInfo'
+import MainDrawer from 'components/MainDrawer'
 import FileSearchModal from 'components/FileSearchModal'
 import { useSettingStateCtx } from 'components/Setting/Context/Provider'
 import FloatingButton from 'components/FloatingButton'
@@ -8,6 +8,8 @@ import GlobalStyle from './GlobalStyle'
 function App() {
   const { error, isLoading, pageInfo } = usePageInfo()
   const { drawerWidth, drawerPinned } = useSettingStateCtx()
+
+  if (isLoading) return null
 
   return (
     <>
