@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react'
 import Box from '@material-ui/core/Box'
 import Draggable from 'react-draggable'
 import { useSettingCtx } from 'components/Setting/Context/Provider'
+import { getURL } from 'utils/chrome'
 
 const HEIGHT = 40
 const WIDTH = 40
@@ -26,7 +27,7 @@ const FloatingButton = () => {
     []
   )
 
-  const url = window.chrome.runtime.getURL('icon192.png')
+  const url = getURL('icon192.png')
 
   return (
     <Box
