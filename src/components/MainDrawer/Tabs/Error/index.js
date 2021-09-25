@@ -17,6 +17,8 @@ const Error = ({ errorMessage }) => {
   return (
     <Style.ErrorContainer>
       <div>
+        {errorMessage === ERROR_MESSAGE.API_RATE_LIMIT &&
+          'API rate limit exceeded, please try to create a token to get a higher rate limit'}
         {errorMessage === ERROR_MESSAGE.TOKEN_INVALID &&
           `It seems that the token is expired or invalid, please try to create
             a new one.`}
