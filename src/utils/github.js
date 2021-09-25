@@ -1,7 +1,7 @@
 import { DEFAULT_PAGE_INFO, PAGE_TYPE } from 'constants'
 import { TITLE_MATCHER } from 'constants/github'
 import isReserved from 'github-reserved-names'
-import { isEmpty, isNil } from 'lodash'
+import { isEmpty } from 'lodash'
 
 const {
   CODE,
@@ -83,6 +83,7 @@ export const getPageInfo = (pathname = '', defaultBranch, title) => {
 
   /**
    * {user}/{repo}/pull/{pull}/files/{commit1}..${commit2}
+   * @TODO Get both commit and support multi commits
    */
   if (
     third === 'pull' &&
@@ -93,7 +94,7 @@ export const getPageInfo = (pathname = '', defaultBranch, title) => {
       ...basicInfo,
       pageType: PULL_COMMITS,
       pull: restPaths[0],
-      commit: restPaths[2].split('..'),
+      commit: restPaths[2].split('..')[1],
     }
   }
 
