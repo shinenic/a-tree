@@ -37,6 +37,8 @@ const MainDrawer = ({
   filePath,
   defaultBranch,
   error,
+  isLoading,
+  open,
 }) => {
   const [{ drawerWidth, disablePageTypeList }, dispatch] = useSettingCtx()
   const classes = useStyles()
@@ -100,11 +102,9 @@ const MainDrawer = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleOnResize = useCallback(
     throttle((_, __, element) => {
-      const width = element.clientWidth < 200 ? 5 : element.clientWidth
-
       dispatch({
         type: 'UPDATE_DRAWER_WIDTH',
-        payload: width,
+        payload: element.clientWidth,
       })
     }, 100),
     []
@@ -119,8 +119,8 @@ const MainDrawer = ({
 
   return (
     <>
-      <GlobalStyle pl={drawerWidth} />
-      <Drawer anchor="left" open variant="permanent" classes={classes}>
+      <GlobalStyle pl={open ? drawerWidth : 0} />
+      <Drawer anchor="left" open={open} variant="persistent" classes={classes}>
         <ResizableWrapper
           drawerWidth={drawerWidth}
           handleOnResize={handleOnResize}

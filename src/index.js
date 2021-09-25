@@ -17,7 +17,9 @@ const checkDomainMatched = (domains) => {
   return domains.includes(host) || host === 'github.com'
 }
 
-const appendGlobalStyle = (drawerWidth) => {
+const appendGlobalStyle = (drawerPinned, drawerWidth) => {
+  if (!drawerPinned) return
+
   const style = document.createElement('style')
   style.innerHTML = `
     html {
@@ -34,7 +36,7 @@ const createContainer = () => {
 }
 
 const renderExtension = () => {
-  const { drawerWidth, domains, disablePageTypeList } =
+  const { drawerWidth, domains, disablePageTypeList, drawerPinned } =
     getSettingFromLocalStorage()
 
   if (!checkDomainMatched(domains) && !isLocalMode) return
@@ -47,7 +49,7 @@ const renderExtension = () => {
    * (The ReactDom still need to be rendered to support SPA by listening url change)
    */
   if (pageType && !disablePageTypeList.includes(pageType)) {
-    appendGlobalStyle(drawerWidth)
+    appendGlobalStyle(drawerPinned, drawerWidth)
   }
 
   const onLoad = () => {

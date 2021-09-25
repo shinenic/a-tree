@@ -10,7 +10,10 @@ const { LEFT, RIGHT } = DRAWER_POSITION
  * @property {boolean} isFocusMode repository name
  * @property {number} drawerWidth
  * @property {string[]} domains custom Enterprise domains
- * @property {string[]} disablePageTypes stop drawer on specified page types
+ * @property {string[]} disablePageTypeList stop drawer on specified page types
+ * @property {boolean} isModalOpening
+ * @property {boolean} drawerPinned
+ * @property {number} floatingButtonPositionY position Y of floating button (percent)
  */
 
 /** @type {SettingState} */
@@ -22,6 +25,8 @@ export const initialState = {
   domains: [],
   disablePageTypeList: [],
   isModalOpening: false,
+  drawerPinned: true,
+  floatingButtonPositionY: 0.5,
 }
 
 /**
@@ -48,6 +53,10 @@ export const reducer = (state, action) => {
       return { ...state, isModalOpening: true }
     case 'CLOSE_MODAL':
       return { ...state, isModalOpening: false }
+    case 'UPDATE_FLOATING_BUTTON_POSITION_Y':
+      return { ...state, floatingButtonPositionY: action.payload }
+    case 'TOGGLE_DRAWER':
+      return { ...state, drawerPinned: !state.drawerPinned }
     default:
       throw new Error(`Unknown Type: ${action.type}`)
   }
