@@ -103,7 +103,7 @@ export default function PullCommitMenu({
     })
   }, [data, pull])
 
-  if (!pull || !data) return null
+  if (!pull) return null
 
   return (
     <div ref={menuRef}>

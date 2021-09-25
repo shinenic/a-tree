@@ -22,7 +22,7 @@ const Commit = ({ owner, commit, repo }) => {
         selectCallback={onItemClick}
       />
       {isLoading ? (
-        <Loading />
+        <Loading isExpandedAll />
       ) : (
         <Tree
           tree={data.files}

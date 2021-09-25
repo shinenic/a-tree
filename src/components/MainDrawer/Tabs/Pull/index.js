@@ -21,7 +21,7 @@ const Pull = ({ owner, pull, repo, pageType }) => {
         selectCallback={onItemClick}
       />
       {isLoading ? (
-        <Loading />
+        <Loading isExpandedAll />
       ) : (
         <Tree
           tree={data}
