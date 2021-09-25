@@ -7,7 +7,6 @@ import useUpdateEffect from 'hooks/useUpdateEffect'
 import { PAGE_TYPE } from 'constants'
 import { scrollToTabsNav } from 'utils/scroll'
 import { linkGithubPage } from 'utils/link'
-import { checkDomainMatched } from 'utils/github'
 
 const isEnterprise = window.location.host !== 'github.com'
 

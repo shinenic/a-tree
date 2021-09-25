@@ -1,12 +1,15 @@
 import React from 'react'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import * as Style from './style'
+import Tree from 'components/Tree'
+import { placeholderDeepTree, placeholderFlattenTree } from './placeholder'
 
-const Loading = () => {
+const Loading = ({ isExpandedAll = false }) => {
   return (
-    <Style.Container>
-      <CircularProgress />
-    </Style.Container>
+    <Tree
+      treeId="loading"
+      isLoading
+      tree={isExpandedAll ? placeholderDeepTree : placeholderFlattenTree}
+      isExpandedAll={isExpandedAll}
+    />
   )
 }
 

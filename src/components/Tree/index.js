@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo, useEffect } from 'react'
 import TreeView from '@material-ui/lab/TreeView'
 import { get, set, isEmpty, sortBy, compact } from 'lodash'
 import {
@@ -7,6 +7,11 @@ import {
   AiOutlineFileText,
 } from 'react-icons/ai'
 import { makeStyles } from '@material-ui/core/styles'
+import {
+  LabelTextSkeleton,
+  IconSkeleton,
+  placeholderDeepTree,
+} from 'components/MainDrawer/Tabs/Loading/placeholder'
 import TreeItem from './Item'
 import { MAIN_COLOR } from './constants'
 import LabelIcon from './LabelIcon'
@@ -18,6 +23,20 @@ const useStyles = makeStyles({
     maxWidth: 400,
   },
 })
+
+const getDefaultIcon = (isLoading) => {
+  return isLoading
+    ? {
+        defaultCollapseIcon: <IconSkeleton />,
+        defaultExpandIcon: <IconSkeleton />,
+        defaultEndIcon: <IconSkeleton />,
+      }
+    : {
+        defaultCollapseIcon: <AiFillFolderOpen color={MAIN_COLOR} />,
+        defaultExpandIcon: <AiFillFolder color={MAIN_COLOR} />,
+        defaultEndIcon: <AiOutlineFileText color={MAIN_COLOR} />,
+      }
+}
 
 const generateTree = (tree) => {
   const objTree = tree.reduce((result, node) => {
@@ -84,7 +103,7 @@ const setNodeIds = (tree, parentNodeId = '', folderNodeIds) => {
   })
 }
 
-const Tree = ({ tree, onItemClick }) => {
+const Tree = ({ tree, onItemClick, isLoading }) => {
   if (isEmpty(tree)) return null
 
   return sortBy(Object.keys(tree), [
@@ -104,11 +123,26 @@ const Tree = ({ tree, onItemClick }) => {
       if (onItemClick) onItemClick(node, e)
     }
 
+    const handleNodeClick = (e) => {
+      if (isLoading) {
+        e.preventDefault()
+      }
+    }
+
     if (hasChildren) {
       return (
         <div key={node.nodeId} onClick={handleClick}>
-          <TreeItem nodeId={node.nodeId} label={label}>
-            <Tree tree={node.children} onItemClick={onItemClick} />
+          <TreeItem
+            nodeId={node.nodeId}
+            label={isLoading ? <LabelTextSkeleton /> : label}
+            onIconClick={handleNodeClick}
+            onLabelClick={handleNodeClick}
+          >
+            <Tree
+              tree={node.children}
+              onItemClick={onItemClick}
+              isLoading={isLoading}
+            />
           </TreeItem>
         </div>
       )
@@ -118,8 +152,8 @@ const Tree = ({ tree, onItemClick }) => {
       <div key={node.nodeId} onClick={handleClick}>
         <TreeItem
           nodeId={node.nodeId}
-          label={label}
-          icon={<LabelIcon status={status} />}
+          label={isLoading ? <LabelTextSkeleton /> : label}
+          icon={isLoading ? <IconSkeleton /> : <LabelIcon status={status} />}
         />
       </div>
     )
@@ -131,6 +165,7 @@ export default function CustomizedTreeView({
   isExpandedAll = false,
   onItemClick,
   treeId,
+  isLoading,
 }) {
   const classes = useStyles()
 
@@ -144,11 +179,13 @@ export default function CustomizedTreeView({
       <TreeView
         className={classes.root}
         defaultExpanded={defaultExpandedIds}
-        defaultCollapseIcon={<AiFillFolderOpen color={MAIN_COLOR} />}
-        defaultExpandIcon={<AiFillFolder color={MAIN_COLOR} />}
-        defaultEndIcon={<AiOutlineFileText color={MAIN_COLOR} />}
+        {...getDefaultIcon(isLoading)}
       >
-        <Tree tree={objectTree} onItemClick={onItemClick} />
+        <Tree
+          tree={objectTree}
+          onItemClick={onItemClick}
+          isLoading={isLoading}
+        />
       </TreeView>
     )
   }, [treeId, onItemClick])
