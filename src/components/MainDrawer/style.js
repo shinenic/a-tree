@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const DrawerHeader = styled.div`
   background: rgb(55, 62, 67);
-  height: 62px;
+  height: ${({ height }) => height || '62px'};
   box-sizing: border-box;
   color: white;
   display: flex;

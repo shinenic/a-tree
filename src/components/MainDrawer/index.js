@@ -8,6 +8,7 @@ import { SettingButton } from 'components/Setting'
 import { compact, throttle } from 'lodash'
 import { useSettingCtx } from 'components/Setting/Context/Provider'
 import GlobalStyle from 'GlobalStyle'
+import { getHeaderHeight } from 'utils/style'
 import CodePage from './Tabs/Code'
 import PullPage from './Tabs/Pull'
 import PullCommit from './Tabs/PullCommit'
@@ -124,7 +125,9 @@ const MainDrawer = ({
           drawerWidth={drawerWidth}
           handleOnResize={handleOnResize}
         >
-          <Style.DrawerHeader>{renderHeader()}</Style.DrawerHeader>
+          <Style.DrawerHeader height={getHeaderHeight()}>
+            {renderHeader()}
+          </Style.DrawerHeader>
           <PullCommitMenu
             owner={owner}
             repo={repo}
