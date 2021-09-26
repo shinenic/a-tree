@@ -1,8 +1,9 @@
 import styled from 'styled-components'
+import { DEFAULT_HEADER_HEIGHT } from 'constants'
 
 export const DrawerHeader = styled.div`
   background: rgb(55, 62, 67);
-  height: ${({ height }) => height || '62px'};
+  height: ${({ height }) => height || `${DEFAULT_HEADER_HEIGHT}px`};
   box-sizing: border-box;
   color: white;
   display: flex;
