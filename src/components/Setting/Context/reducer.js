@@ -13,7 +13,7 @@ const { LEFT, RIGHT } = DRAWER_POSITION
  * @property {string[]} disablePageTypeList stop drawer on specified page types
  * @property {boolean} isModalOpening
  * @property {boolean} drawerPinned
- * @property {number} floatingButtonPositionY position Y of floating button (percent)
+ * @property {number} floatingButtonPositionY position Y of floating button (px)
  */
 
 /** @type {SettingState} */
@@ -26,7 +26,7 @@ export const initialState = {
   disablePageTypeList: [],
   isModalOpening: false,
   drawerPinned: true,
-  floatingButtonPositionY: 0.5,
+  floatingButtonPositionY: 500,
 }
 
 /**

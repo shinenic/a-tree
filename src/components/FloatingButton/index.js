@@ -1,78 +1,103 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useCallback, useEffect, useRef } from 'react'
 import Box from '@material-ui/core/Box'
 import Draggable from 'react-draggable'
 import { useSettingCtx } from 'components/Setting/Context/Provider'
-import { styled } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import { getURL } from 'utils/chrome'
+import useWindowSize from 'hooks/useWindowSize'
+import { getHeaderHeight } from 'utils/style'
+import { DEFAULT_HEADER_HEIGHT } from 'constants'
 
 const BOX_SIZE = 40
 const IMG_WIDTH = 30
 
-const IconContainer = styled(Box)({
-  width: BOX_SIZE,
-  height: BOX_SIZE,
-  backgroundColor: '#252a2e',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  boxShadow: '0 3px 8px #d0d7de',
-  borderRadius: '0 5px 5px 0',
-  cursor: 'pointer',
-  opacity: ({ drawerPinned }) => (drawerPinned ? 0.8 : 1),
-  transition: 'opacity 0.1s',
+const TOGGLE_THRESHOLD = 6
 
-  '&:hover': {
-    opacity: ({ drawerPinned }) => (drawerPinned ? 0.7 : 0.9),
-  },
-})
+const iconUrl = getURL('icon192.png')
+
+const useStyles = ({ drawerPinned }) =>
+  makeStyles({
+    root: {
+      width: BOX_SIZE,
+      height: BOX_SIZE,
+      backgroundColor: '#252a2e',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      boxShadow: '0 3px 8px #d0d7de',
+      borderRadius: '0 5px 5px 0',
+      cursor: 'pointer',
+      opacity: drawerPinned ? 0.8 : 1,
+      transition: 'opacity 0.1s',
+
+      '&:hover': {
+        opacity: drawerPinned ? 0.7 : 0.9,
+      },
+    },
+  })
 
 const FloatingButton = () => {
   const [{ floatingButtonPositionY, drawerPinned }, dispatch] = useSettingCtx()
-  const [isDragging, setIsDragging] = useState(false)
+  const { height: windowHeight } = useWindowSize()
+  const originY = useRef(floatingButtonPositionY)
+  const containerClasses = useStyles({ drawerPinned })()
 
-  // Memorized original position y because the implementation of `react-draggable` is
-  // to use `transform` to control the element, if we update position y immediately,
-  // the position y would be doubled (position Y + transform Y),
-  // so we need to keep original Y to make <Draggable> controllable and
-  // update local storage's Y as soon as we finished dragging.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const originalPositionY = useMemo(
-    () =>
-      // >=1 is impossible, means the data is dirty, should reset it to prevent button missing
-      (floatingButtonPositionY >= 1 ? 0.5 : floatingButtonPositionY) *
-      window.innerHeight,
-    []
-  )
+  const headerHeight = useMemo(() => {
+    const heightNumber = Number(getHeaderHeight().replace(/\D+/g, ''))
+    return Number.isNaN(heightNumber) || heightNumber === 0
+      ? DEFAULT_HEADER_HEIGHT
+      : heightNumber
+  }, [])
 
-  const url = getURL('icon192.png')
+  const onStart = useCallback((_, { y }) => {
+    originY.current = y
+  }, [])
+
+  const onStop = useCallback((_, { y }) => {
+    if (Math.abs(y - originY.current) < TOGGLE_THRESHOLD) {
+      dispatch({ type: 'TOGGLE_DRAWER' })
+    }
+  }, [])
+
+  /**
+   * @TODO prevent update global context frequently (re-render)
+   *       (zustand, redux, recoil?)
+   */
+  const updateY = useCallback((_, { y }) => {
+    dispatch({
+      type: 'UPDATE_FLOATING_BUTTON_POSITION_Y',
+      payload: y,
+    })
+  }, [])
+
+  useEffect(() => {
+    if (windowHeight - BOX_SIZE < floatingButtonPositionY) {
+      dispatch({
+        type: 'UPDATE_FLOATING_BUTTON_POSITION_Y',
+        payload: windowHeight - BOX_SIZE,
+      })
+    }
+  }, [windowHeight])
 
   return (
-    <Box
-      position="fixed"
-      top={originalPositionY}
-      left={0}
-      zIndex={2100}
-      onMouseUp={() => {
-        if (isDragging) return
-
-        dispatch({ type: 'TOGGLE_DRAWER' })
-      }}
-    >
+    <Box position="fixed" top={0} left={0} zIndex={2100}>
       <Draggable
         axis="y"
-        defaultPosition={{ x: 0, y: 0 }}
+        defaultPosition={{ x: floatingButtonPositionY, y: 0 }}
         handle="span"
-        onStop={(_, { y }) => {
-          dispatch({
-            type: 'UPDATE_FLOATING_BUTTON_POSITION_Y',
-            payload: (y + originalPositionY) / window.innerHeight,
-          })
+        onDrag={updateY}
+        position={{ y: floatingButtonPositionY, x: 0 }}
+        bounds={{
+          top: headerHeight,
+          bottom: windowHeight - BOX_SIZE,
         }}
+        onStart={onStart}
+        onStop={onStop}
       >
-        <IconContainer drawerPinned={drawerPinned}>
+        <Box classes={containerClasses}>
           <Box
             component="img"
-            src={url}
+            src={iconUrl}
             width={IMG_WIDTH}
             height={IMG_WIDTH}
             style={{
@@ -90,10 +115,8 @@ const FloatingButton = () => {
             style={{
               cursor: 'move',
             }}
-            onMouseDown={() => setIsDragging(false)}
-            onMouseMove={() => setIsDragging(true)}
           />
-        </IconContainer>
+        </Box>
       </Draggable>
     </Box>
   )

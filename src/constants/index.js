@@ -2,6 +2,8 @@ export const CONTAINER_ID = 'a-tree'
 
 export const LOCAL_STORAGE_KEY_PREFIX = '[a-tree] '
 
+export const DEFAULT_HEADER_HEIGHT = 62
+
 export const CODE_PAGE_TYPE = {
   CODE: 'CODE',
   CODE_COMMIT: 'CODE.COMMIT',
