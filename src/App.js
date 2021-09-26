@@ -13,7 +13,7 @@ function App() {
 
   return (
     <>
-      <FloatingButton />
+      <FloatingButton pageType={pageInfo.pageType} />
       <GlobalStyle pl={drawerPinned ? drawerWidth : 0} />
       <MainDrawer
         {...pageInfo}

@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback, useEffect, useRef } from 'react'
 import Box from '@material-ui/core/Box'
 import Draggable from 'react-draggable'
-import { useSettingCtx } from 'components/Setting/Context/Provider'
+import useStore from 'stores/setting'
 import { makeStyles } from '@material-ui/core/styles'
 import { getURL } from 'utils/chrome'
 import useWindowSize from 'hooks/useWindowSize'
@@ -36,6 +36,7 @@ const useStyles = ({ drawerPinned }) =>
     },
   })
 
+const FloatingButton = ({ pageType }) => {
   const floatingButtonPositionY = useStore((s) => s.floatingButtonPositionY)
   const drawerPinned = useStore((s) => s.drawerPinned)
   const dispatch = useStore((s) => s.dispatch)
@@ -77,6 +78,12 @@ const useStyles = ({ drawerPinned }) =>
       })
     }
   }, [windowHeight])
+
+  /**
+   * @TODO Check do we need to hide the floating button and drawer at the same time?
+   *       Or close drawer automatically on specific page types
+   */
+  if (!pageType || disablePageTypeList?.includes(pageType)) return null
 
   return (
     <Box position="fixed" top={0} left={0} zIndex={2100}>
