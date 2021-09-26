@@ -4,8 +4,8 @@ import { AiOutlineSetting } from 'react-icons/ai'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Modal from 'components/shared/Modal'
+import useStore from 'stores/setting'
 import SettingForm from './Form'
-import { useSettingCtx, useSettingDispatchCtx } from './Context/Provider'
 
 const useStyles = makeStyles(() => ({
   button: {
@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 export const SettingButton = () => {
-  const dispatch = useSettingDispatchCtx()
+  const dispatch = useStore((s) => s.dispatch)
   const classes = useStyles()
 
   const handleOpen = () => dispatch({ type: 'OPEN_MODAL' })
@@ -41,7 +41,8 @@ export const SettingButton = () => {
 }
 
 export const SettingModal = () => {
-  const [{ isModalOpening }, dispatch] = useSettingCtx()
+  const dispatch = useStore((s) => s.dispatch)
+  const isModalOpening = useStore((s) => s.isModalOpening)
 
   const handleClose = () => dispatch({ type: 'CLOSE_MODAL' })
 

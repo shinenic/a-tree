@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query'
 import { isValidQuery, createGithubQuery } from 'utils/api'
-import { useSettingStateCtx } from 'components/Setting/Context/Provider'
+import useStore from 'stores/setting'
 import parseLink from 'parse-link-header'
 
 function useGithubQuery(
@@ -9,7 +9,9 @@ function useGithubQuery(
   useQueryOptions = {},
   getFullPages = false
 ) {
-  const { token, baseUrl } = useSettingStateCtx()
+  const token = useStore((s) => s.token)
+  const baseUrl = useStore((s) => s.baseUrl)
+
   const { url, placeholders = {} } = variables
   const { enabled = true } = useQueryOptions
 

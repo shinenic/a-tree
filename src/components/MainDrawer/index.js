@@ -6,7 +6,7 @@ import { PAGE_TYPE, ERROR_MESSAGE } from 'constants'
 import PullCommitMenu from 'components/Menu/PullCommit'
 import { SettingButton } from 'components/Setting'
 import { compact, throttle } from 'lodash'
-import { useSettingCtx } from 'components/Setting/Context/Provider'
+import useStore from 'stores/setting'
 import GlobalStyle from 'GlobalStyle'
 import { getHeaderHeight } from 'utils/style'
 import CodePage from './Tabs/Code'
@@ -40,7 +40,11 @@ const MainDrawer = ({
   isLoading,
   open,
 }) => {
-  const [{ drawerWidth, disablePageTypeList }, dispatch] = useSettingCtx()
+  const { drawerWidth, disablePageTypeList, dispatch } = useStore((s) => ({
+    drawerWidth: s.drawerWidth,
+    disablePageTypeList: s.disablePageTypeList,
+    dispatch: s.dispatch,
+  }))
   const classes = useStyles()
   const branch = branchFromUrl || defaultBranch
 

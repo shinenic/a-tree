@@ -1,11 +1,20 @@
-import { initialState } from 'components/Setting/Context/reducer'
-import { LOCAL_STORAGE_KEY_PREFIX } from 'constants'
+import { initialState } from 'stores/setting'
+import { SETTING_KEY } from 'constants'
 
+/**
+ * @Note The data structure of zustand's persistent object will be
+ * ```
+ * LocalStorageKey: {
+ *   state: { data1, data2, ...},
+ *   version: 0,
+ * }
+ * ```
+ */
 export const getSettingFromLocalStorage = () => {
   try {
     return {
       ...initialState,
-      ...JSON.parse(localStorage.getItem(`${LOCAL_STORAGE_KEY_PREFIX}setting`)),
+      ...JSON.parse(localStorage.getItem(SETTING_KEY)).state,
     }
   } catch {
     return initialState
@@ -13,8 +22,17 @@ export const getSettingFromLocalStorage = () => {
 }
 
 export const storeSettingIntoLocalStorage = (state) => {
-  localStorage.setItem(
-    `${LOCAL_STORAGE_KEY_PREFIX}setting`,
-    JSON.stringify(state)
-  )
+  let originalData = null
+  try {
+    originalData = JSON.parse(localStorage.getItem(SETTING_KEY))
+  } catch {
+    originalData = { state: initialState }
+  }
+
+  const zustandPersistentObj = {
+    ...originalData,
+    state,
+  }
+
+  localStorage.setItem(SETTING_KEY, JSON.stringify(zustandPersistentObj))
 }

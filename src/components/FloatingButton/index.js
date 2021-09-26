@@ -36,8 +36,11 @@ const useStyles = ({ drawerPinned }) =>
     },
   })
 
-const FloatingButton = () => {
-  const [{ floatingButtonPositionY, drawerPinned }, dispatch] = useSettingCtx()
+  const floatingButtonPositionY = useStore((s) => s.floatingButtonPositionY)
+  const drawerPinned = useStore((s) => s.drawerPinned)
+  const dispatch = useStore((s) => s.dispatch)
+  const disablePageTypeList = useStore((s) => s.disablePageTypeList) ?? []
+
   const { height: windowHeight } = useWindowSize()
   const originY = useRef(floatingButtonPositionY)
   const containerClasses = useStyles({ drawerPinned })()
@@ -59,10 +62,6 @@ const FloatingButton = () => {
     }
   }, [])
 
-  /**
-   * @TODO prevent update global context frequently (re-render)
-   *       (zustand, redux, recoil?)
-   */
   const updateY = useCallback((_, { y }) => {
     dispatch({
       type: 'UPDATE_FLOATING_BUTTON_POSITION_Y',

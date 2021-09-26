@@ -1,4 +1,7 @@
-import { DRAWER_POSITION } from 'constants'
+import { DRAWER_POSITION, SETTING_KEY } from 'constants'
+
+import create from 'zustand'
+import { persist } from 'zustand/middleware'
 
 const { LEFT, RIGHT } = DRAWER_POSITION
 
@@ -14,6 +17,7 @@ const { LEFT, RIGHT } = DRAWER_POSITION
  * @property {boolean} isModalOpening
  * @property {boolean} drawerPinned
  * @property {number} floatingButtonPositionY position Y of floating button (px)
+ * @property {string} baseUrl record host string for api endpoint
  */
 
 /** @type {SettingState} */
@@ -27,16 +31,17 @@ export const initialState = {
   isModalOpening: false,
   drawerPinned: true,
   floatingButtonPositionY: 500,
+  baseUrl: null,
 }
 
 /**
  * @param {SettingState} state
  * @param {object} action
  */
-export const reducer = (state, action) => {
-  switch (action.type) {
+export const reducer = (state, { type, payload }) => {
+  switch (type) {
     case 'UPDATE_TOKEN':
-      return { ...state, token: action.payload }
+      return { ...state, token: payload }
     case 'SET_DRAWER_POSITION_LEFT':
       return { ...state, position: LEFT }
     case 'SET_DRAWER_POSITION_RIGHT':
@@ -44,20 +49,30 @@ export const reducer = (state, action) => {
     case 'TOGGLE_FOCUS_MODE':
       return { ...state, isFocusMode: !state.isFocusMode }
     case 'UPDATE_DRAWER_WIDTH':
-      return { ...state, drawerWidth: action.payload }
+      return { ...state, drawerWidth: payload }
     case 'UPDATE_BASE_URL':
-      return { ...state, baseUrl: action.payload }
+      return { ...state, baseUrl: payload }
     case 'UPDATE_DISABLE_PAGE_TYPE_LIST':
-      return { ...state, disablePageTypeList: action.payload }
+      return { ...state, disablePageTypeList: payload }
     case 'OPEN_MODAL':
       return { ...state, isModalOpening: true }
     case 'CLOSE_MODAL':
       return { ...state, isModalOpening: false }
     case 'UPDATE_FLOATING_BUTTON_POSITION_Y':
-      return { ...state, floatingButtonPositionY: action.payload }
+      return { ...state, floatingButtonPositionY: payload }
     case 'TOGGLE_DRAWER':
       return { ...state, drawerPinned: !state.drawerPinned }
     default:
-      throw new Error(`Unknown Type: ${action.type}`)
+      throw new Error(`Unknown Type: ${type}`)
   }
 }
+
+const states = (set) => ({
+  ...initialState,
+  dispatch: ({ type, payload } = {}) =>
+    set((state) => reducer(state, { type, payload })),
+})
+
+const useStore = create(persist(states, { name: SETTING_KEY }))
+
+export default useStore

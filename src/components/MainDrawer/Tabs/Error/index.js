@@ -1,13 +1,13 @@
 import React from 'react'
 import { ERROR_MESSAGE } from 'constants'
-import { useSettingStateCtx } from 'components/Setting/Context/Provider'
+import useStore from 'stores/setting'
 import { NEW_TOKEN_PATHNAME } from 'constants/tokenPage'
 import { PHASE, storePhase } from 'components/Tour/GenerateTokenGuide'
 
 import * as Style from './style'
 
 const Error = ({ errorMessage }) => {
-  const { token } = useSettingStateCtx()
+  const token = useStore((s) => s.token)
 
   const handleHintClick = () => {
     storePhase(PHASE.START_TOUR)
