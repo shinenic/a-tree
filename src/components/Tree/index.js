@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from 'react'
+import { useMemo } from 'react'
 import TreeView from '@material-ui/lab/TreeView'
 import { get, set, isEmpty, sortBy, compact } from 'lodash'
 import {
@@ -10,7 +10,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import {
   LabelTextSkeleton,
   IconSkeleton,
-  placeholderDeepTree,
 } from 'components/MainDrawer/Tabs/Loading/placeholder'
 import TreeItem from './Item'
 import { MAIN_COLOR } from './constants'
