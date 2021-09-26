@@ -11,7 +11,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import { isEmpty, intersection } from 'lodash'
 import { PAGE_TYPE } from 'constants'
-import { useSettingCtx } from 'components/Setting/Context/Provider'
+import useStore from 'stores/setting'
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -50,7 +50,8 @@ export default function SettingForm() {
 }
 
 const TokenField = ({ classes }) => {
-  const [{ token }, dispatch] = useSettingCtx()
+  const dispatch = useStore((s) => s.dispatch)
+  const token = useStore((s) => s.token)
 
   const handleInputChange = (event) => {
     dispatch({ type: 'UPDATE_TOKEN', payload: event.target.value })
@@ -92,7 +93,8 @@ const TokenField = ({ classes }) => {
 }
 
 const FocusCheckBox = ({ classes }) => {
-  const [{ isFocusMode }, dispatch] = useSettingCtx()
+  const dispatch = useStore((s) => s.dispatch)
+  const isFocusMode = useStore((s) => s.isFocusMode)
 
   const handleChange = () => {
     dispatch({ type: 'TOGGLE_FOCUS_MODE' })
@@ -125,7 +127,8 @@ const VISIBLE_PAGE_TYPE_OPTIONS = [
 ]
 
 export const VisibilityCheckBoxes = ({ classes }) => {
-  const [{ disablePageTypeList = [] }, dispatch] = useSettingCtx()
+  const disablePageTypeList = useStore((s) => s.disablePageTypeList) ?? []
+  const dispatch = useStore((s) => s.dispatch)
 
   return (
     <>

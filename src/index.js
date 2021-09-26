@@ -1,4 +1,3 @@
-import SettingProvider from 'components/Setting/Context/Provider'
 import GenerateTokenGuide from 'components/Tour/GenerateTokenGuide'
 import { CONTAINER_ID, isLocalMode } from 'constants'
 import React from 'react'
@@ -60,11 +59,9 @@ const renderExtension = () => {
     ReactDOM.render(
       <React.StrictMode>
         <QueryClientProvider client={queryClient}>
-          <SettingProvider>
-            <GenerateTokenGuide />
-            <App />
-            <SettingModal />
-          </SettingProvider>
+          <GenerateTokenGuide />
+          <App />
+          <SettingModal />
         </QueryClientProvider>
       </React.StrictMode>,
       document.getElementById(CONTAINER_ID)

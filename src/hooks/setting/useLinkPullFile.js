@@ -1,8 +1,8 @@
 import { useCallback, useRef } from 'react'
 import sha256 from 'crypto-js/sha256'
+import useStore from 'stores/setting'
 
 import { focusFile, scrollToFile, resetFocusFiles } from 'utils/pullPage'
-import { useSettingStateCtx } from 'components/Setting/Context/Provider'
 import useUpdateEffect from 'hooks/useUpdateEffect'
 import { PAGE_TYPE } from 'constants'
 import { scrollToTabsNav } from 'utils/scroll'
@@ -15,7 +15,7 @@ const getFileHash = (filename) => `diff-${sha256(filename)}`
 const getFileLink = (baseUrl, filename) => `${baseUrl}#${getFileHash(filename)}`
 
 const useLinkPullFile = ({ basePathname, pageType }) => {
-  const { isFocusMode } = useSettingStateCtx()
+  const isFocusMode = useStore((s) => s.isFocusMode)
   const previousLockedFile = useRef(null)
 
   /**

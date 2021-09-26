@@ -10,7 +10,7 @@ import {
 } from 'constants/tokenPage'
 import { toSafeInteger } from 'lodash'
 import useListenLocation from 'hooks/pageInfo/useListenLocation'
-import { useSettingDispatchCtx } from 'components/Setting/Context/Provider'
+import useStore from 'stores/setting'
 
 const NOTE_INPUT_SELECTOR = 'input[id*="description"]'
 const EXPIRATION_SELECTOR = 'select[class*="expiration"]'
@@ -98,7 +98,7 @@ function GenerateTokenGuide() {
   const { pathname } = useListenLocation()
   const [isTourOpen, setIsTourOpen] = useState(false)
   const [steps, setSteps] = useState([])
-  const dispatch = useSettingDispatchCtx()
+  const dispatch = useStore((s) => s.dispatch)
 
   const phase = useMemo(() => getCurrentPhase(), [])
 
