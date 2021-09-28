@@ -30,7 +30,7 @@ const Error = ({ errorMessage }) => {
           'It seems that this is an private repository, please create a personal token to access this repository!'}
       </div>
       <Style.HintContent onClick={handleHintClick}>
-        How to create personal access tokens?
+        How to create a new token?
       </Style.HintContent>
     </Style.ErrorContainer>
   )
