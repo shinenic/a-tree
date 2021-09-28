@@ -1,15 +1,15 @@
 import React from 'react'
 import { Resizable } from 're-resizable'
-import styled from 'styled-components'
+import { styled } from '@material-ui/core/styles'
 
-const Handler = styled.div`
-  width: 8px;
-  height: 100%;
+const Handler = styled('div')({
+  width: '8px',
+  height: '100%',
 
-  &:hover {
-    border-left: 1px solid #8a8a8a;
-  }
-`
+  '&:hover': {
+    borderLeft: '1px solid #8a8a8a',
+  },
+})
 
 const ResizableWrapper = ({ children, drawerWidth, handleOnResize }) => {
   return (

@@ -1,7 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
-import Container from '@material-ui/core/Container'
 import Paper from '@material-ui/core/Paper'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
@@ -14,14 +13,7 @@ import { PAGE_TYPE } from 'constants'
 import useStore from 'stores/setting'
 
 const useStyles = makeStyles((theme) => ({
-  layout: {
-    width: 'auto',
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
-  },
   paper: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
     padding: theme.spacing(3),
   },
   typography: {
@@ -37,15 +29,11 @@ export default function SettingForm() {
   const classes = useStyles()
 
   return (
-    <main className={classes.layout}>
-      <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
-        <Paper variant="outlined" className={classes.paper}>
-          <VisibilityCheckBoxes classes={classes} />
-          <FocusCheckBox classes={classes} />
-          <TokenField classes={classes} />
-        </Paper>
-      </Container>
-    </main>
+    <Paper variant="outlined" className={classes.paper}>
+      <VisibilityCheckBoxes classes={classes} />
+      <FocusCheckBox classes={classes} />
+      <TokenField classes={classes} />
+    </Paper>
   )
 }
 

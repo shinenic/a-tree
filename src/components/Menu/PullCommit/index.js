@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react'
-import Button from '@material-ui/core/Button'
-import { makeStyles } from '@material-ui/core/styles'
 import { animated } from 'react-spring'
-import Avatar from '@material-ui/core/Avatar'
 import moment from 'moment'
 
 import { PJAX_ID } from 'constants/github'
@@ -14,37 +11,7 @@ import * as Style from './style'
 
 const AnimatedMenuContainer = animated(Style.MenuContainer)
 
-const useStyles = makeStyles((theme) => ({
-  buttonRoot: {
-    display: 'block',
-    width: '100%',
-    height: '40px',
-    borderBottom: '1px solid #f1f1f1',
-    borderRadius: '0',
-    textTransform: 'none',
-    background: 'white',
-  },
-  buttonLabel: {
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-  },
-  smallAvatar: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-  },
-}))
-
-const Commit = ({
-  commit,
-  sha,
-  author,
-  date,
-  avatarClassName,
-  link,
-  selected,
-  handleClose,
-}) => {
+const Commit = ({ commit, sha, author, date, link, selected, handleClose }) => {
   const authorName = commit.author?.name ?? ''
   const loginName = author?.login ?? ''
   const message = commit.message.split('\n')[0]
@@ -59,11 +26,7 @@ const Commit = ({
     >
       <div>{message}</div>
       <Style.CommitDetail>
-        <Avatar
-          className={avatarClassName}
-          src={author?.avatar_url ?? ''}
-          alt={authorName}
-        />
+        <Style.SmallAvatar src={author?.avatar_url ?? ''} alt={authorName} />
         <Style.Sha>{shortedSha}</Style.Sha>
         <div>{`${authorName} (${loginName})`}</div>
         <div>{moment(date).fromNow()}</div>
@@ -79,7 +42,6 @@ export default function PullCommitMenu({
   pull,
   commit: currentCommit,
 }) {
-  const classes = useStyles()
   const [menuPositionStyle, setMenuPositionStyle] = useState({})
   const {
     data,
@@ -107,13 +69,9 @@ export default function PullCommitMenu({
 
   return (
     <div ref={menuRef}>
-      <Button
-        disabled={disabled}
-        classes={{ root: classes.buttonRoot, label: classes.buttonLabel }}
-        onClick={handleButtonClick}
-      >
+      <Style.ToggleButton disabled={disabled} onClick={handleButtonClick}>
         {buttonText}
-      </Button>
+      </Style.ToggleButton>
       <AnimatedMenuContainer style={{ ...menuStyles, ...menuPositionStyle }}>
         <Style.StyledGithubLink
           onClick={handleClose}
@@ -131,7 +89,6 @@ export default function PullCommitMenu({
               sha={sha}
               author={author}
               link={`/${owner}/${repo}/pull/${pull}/commits/${sha}`}
-              avatarClassName={classes.smallAvatar}
               handleClose={handleClose}
               selected={currentCommit?.includes?.(sha)}
             />

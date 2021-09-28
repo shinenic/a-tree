@@ -3,6 +3,22 @@ import styled from 'styled-components'
 import useLockBodyScroll from 'hooks/useLockBodyScroll'
 import useClickOutside from 'hooks/useClickOutside'
 
+import Dialog from '@material-ui/core/Dialog'
+
+export default function NativeDialog({
+  isOpened,
+  onClose,
+  children,
+  overlayClasses,
+  ...rest
+}) {
+  return (
+    <Dialog open={isOpened} onClose={onClose} closeAfterTransition {...rest}>
+      {children}
+    </Dialog>
+  )
+}
+
 const AnimatedOverlay = a(styled.div`
   background: #6668;
   position: fixed;
@@ -16,7 +32,7 @@ const AnimatedOverlay = a(styled.div`
   z-index: 999999;
 `)
 
-const Modal = ({
+export const CustomModal = ({
   isOpened,
   onClose,
   children,
@@ -54,5 +70,3 @@ const Modal = ({
       )
   )
 }
-
-export default Modal

@@ -24,11 +24,11 @@ const useListenLocation = () => {
  */
 const useDummyListenLocation = () => {
   return {
-    href: 'https://github.com/shinenic/a-tree',
+    href: 'https://github.com/shinenic/a-tree/pull/123',
     origin: 'https://github.com',
     host: 'github.com',
     hostname: 'github.com',
-    pathname: '/shinenic/a-tree',
+    pathname: '/shinenic/a-tree/pull/123',
   }
 }
 

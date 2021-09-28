@@ -18,14 +18,14 @@ import ResizableWrapper from './ResizableWrapper'
 
 import * as Style from './style'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   paper: {
     boxShadow:
       '0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -2px rgb(0 0 0 / 5%)',
-    borderRight: 'none',
+    borderRight: theme.palette.type === 'dark' ? '1px solid #ffffff40' : 'none',
     overflowX: 'hidden',
   },
-})
+}))
 
 const MainDrawer = ({
   pageType,

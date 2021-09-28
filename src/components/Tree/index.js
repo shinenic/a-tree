@@ -6,11 +6,12 @@ import {
   AiFillFolderOpen,
   AiOutlineFileText,
 } from 'react-icons/ai'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 import {
   LabelTextSkeleton,
   IconSkeleton,
 } from 'components/MainDrawer/Tabs/Loading/placeholder'
+import tinycolor from 'tinycolor2'
 import TreeItem from './Item'
 import { MAIN_COLOR } from './constants'
 import LabelIcon from './LabelIcon'
@@ -23,7 +24,13 @@ const useStyles = makeStyles({
   },
 })
 
-const getDefaultIcon = (isLoading) => {
+const getDefaultIcon = (isLoading, theme) => {
+  const getIconColor = (color) => {
+    return theme.palette.type === 'dark'
+      ? tinycolor(color).brighten(60).toHexString()
+      : color
+  }
+
   return isLoading
     ? {
         defaultCollapseIcon: <IconSkeleton />,
@@ -31,9 +38,11 @@ const getDefaultIcon = (isLoading) => {
         defaultEndIcon: <IconSkeleton />,
       }
     : {
-        defaultCollapseIcon: <AiFillFolderOpen color={MAIN_COLOR} />,
-        defaultExpandIcon: <AiFillFolder color={MAIN_COLOR} />,
-        defaultEndIcon: <AiOutlineFileText color={MAIN_COLOR} />,
+        defaultCollapseIcon: (
+          <AiFillFolderOpen color={getIconColor(MAIN_COLOR)} />
+        ),
+        defaultExpandIcon: <AiFillFolder color={getIconColor(MAIN_COLOR)} />,
+        defaultEndIcon: <AiOutlineFileText color={getIconColor(MAIN_COLOR)} />,
       }
 }
 
@@ -166,6 +175,7 @@ export default function CustomizedTreeView({
   treeId,
   isLoading,
 }) {
+  const theme = useTheme()
   const classes = useStyles()
 
   const treeView = useMemo(() => {
@@ -178,7 +188,7 @@ export default function CustomizedTreeView({
       <TreeView
         className={classes.root}
         defaultExpanded={defaultExpandedIds}
-        {...getDefaultIcon(isLoading)}
+        {...getDefaultIcon(isLoading, theme)}
       >
         <Tree
           tree={objectTree}

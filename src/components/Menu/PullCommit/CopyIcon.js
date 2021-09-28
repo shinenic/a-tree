@@ -3,8 +3,9 @@ import PropTypes from 'prop-types'
 import { FaRegCopy, FaCheck } from 'react-icons/fa'
 import { BiErrorCircle } from 'react-icons/bi'
 import Tooltip from '@material-ui/core/Tooltip'
-import { withStyles } from '@material-ui/core/styles'
+import { withStyles, useTheme } from '@material-ui/core/styles'
 import { useTransition, animated } from 'react-spring'
+import tinycolor from 'tinycolor2'
 import * as Style from './style'
 
 const CustomTooltip = withStyles(() => ({
@@ -29,11 +30,22 @@ const copyText = (text, onSuccess, onFailure) => {
   navigator.clipboard.writeText(text).then(onSuccess, onFailure)
 }
 
-const getIcon = (status, style) => {
+const getIconColor = (color, theme) => {
+  return theme.palette.type === 'dark'
+    ? tinycolor(color).brighten(40).toHexString()
+    : color
+}
+
+const getIcon = (status, style, theme) => {
   switch (status) {
     case IDLE:
     default:
-      return <AnimatedFaRegCopy style={style} color="#384861" />
+      return (
+        <AnimatedFaRegCopy
+          style={style}
+          color={getIconColor('#384861', theme)}
+        />
+      )
     case COPIED:
       return <AnimatedFaCheck style={style} color="#2ba770" />
     case ERROR:
@@ -60,6 +72,7 @@ const CopyIcon = ({ targetText }) => {
     enter: { opacity: 1 },
     leave: { opacity: 0 },
   })
+  const theme = useTheme()
 
   const handleClick = (e) => {
     copyText(
@@ -87,9 +100,12 @@ const CopyIcon = ({ targetText }) => {
 
   return (
     <CustomTooltip title={getTooltip(status)}>
-      <Style.IconBox onClick={handleClick} isIdle={status === IDLE}>
-        {transitions((style, newStatus) => getIcon(newStatus, style))}
-      </Style.IconBox>
+      {/* Add a div to insert Tooltip */}
+      <div>
+        <Style.IconBox onClick={handleClick} isIdle={status === IDLE}>
+          {transitions((style, newStatus) => getIcon(newStatus, style, theme))}
+        </Style.IconBox>
+      </div>
     </CustomTooltip>
   )
 }

@@ -1,4 +1,5 @@
 import { PJAX_ID } from 'constants/github'
+import Link from '@material-ui/core/Link'
 
 const getHrefPathname = (href = '') => {
   try {
@@ -41,14 +42,14 @@ const GithubLink = ({
   }
 
   return (
-    <a
+    <Link
       href={href}
       onClick={handleClick}
       {...(!disableSPA && { 'data-pjax': pjaxId })}
       {...rest}
     >
       {children}
-    </a>
+    </Link>
   )
 }
 
