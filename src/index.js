@@ -7,6 +7,7 @@ import listenContextMenu from 'utils/contextMenuListener'
 import { getPageInfo } from 'utils/github'
 import { getSettingFromLocalStorage } from 'utils/setting'
 import { SettingModal } from 'components/Setting'
+import MainThemeProvider from 'styles/Provider'
 
 import App from './App'
 
@@ -59,9 +60,11 @@ const renderExtension = () => {
     ReactDOM.render(
       <React.StrictMode>
         <QueryClientProvider client={queryClient}>
-          <GenerateTokenGuide />
-          <App />
-          <SettingModal />
+          <MainThemeProvider>
+            <GenerateTokenGuide />
+            <App />
+            <SettingModal />
+          </MainThemeProvider>
         </QueryClientProvider>
       </React.StrictMode>,
       document.getElementById(CONTAINER_ID)
