@@ -7,13 +7,14 @@ import {
   generateHotkeyListener,
 } from 'utils/fileSearch'
 import { isEmpty } from 'lodash'
-import Modal from 'components/shared/Modal'
+import { CustomModal } from 'components/shared/Modal'
 import { initialState, reducer } from './reducer'
 import * as Style from './style'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     backgroundColor: theme.palette.background.paper,
+    color: theme.palette.text.secondary,
     border: '1px solid #666',
     borderRadius: '4px',
     boxShadow: theme.shadows[5],
@@ -90,7 +91,7 @@ const FileSearchModal = ({ isLoading, selectCallback, files, error }) => {
   if (error) return null
 
   return (
-    <Modal
+    <CustomModal
       isOpened={isOpened}
       onClose={() => dispatch({ type: 'CLOSE' })}
       overLayStyle={{ alignItems: 'start', paddingTop: '15vh' }}
@@ -130,7 +131,7 @@ const FileSearchModal = ({ isLoading, selectCallback, files, error }) => {
           )
         })}
       </div>
-    </Modal>
+    </CustomModal>
   )
 }
 

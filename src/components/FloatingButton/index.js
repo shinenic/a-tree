@@ -16,7 +16,7 @@ const TOGGLE_THRESHOLD = 6
 const iconUrl = getURL('icon192.png')
 
 const useStyles = ({ drawerPinned }) =>
-  makeStyles({
+  makeStyles((theme) => ({
     root: {
       width: BOX_SIZE,
       height: BOX_SIZE,
@@ -24,7 +24,9 @@ const useStyles = ({ drawerPinned }) =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      boxShadow: '0 3px 8px #d0d7de',
+      boxShadow: theme.shadows[2],
+      border: theme.palette.type === 'dark' ? '2px solid #ffffff52' : 'none',
+      borderLeft: 'none',
       borderRadius: '0 5px 5px 0',
       cursor: 'pointer',
       opacity: drawerPinned ? 0.8 : 1,
@@ -34,7 +36,7 @@ const useStyles = ({ drawerPinned }) =>
         opacity: drawerPinned ? 0.7 : 0.9,
       },
     },
-  })
+  }))
 
 const FloatingButton = ({ pageType }) => {
   const floatingButtonPositionY = useStore((s) => s.floatingButtonPositionY)

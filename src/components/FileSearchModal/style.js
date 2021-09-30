@@ -14,24 +14,24 @@ export const Input = styled.input`
 `
 
 export const FileRow = styled.div`
-  color: #555;
   display: flex;
   align-items: center;
-  padding: 0 16px;
-  margin-bottom: 4px;
-  background-color: ${({ isSelected }) => (isSelected ? '#ccc' : '#fff')};
+  padding: 3px 16px;
   cursor: pointer;
 
+  background-color: ${({ isSelected, theme }) =>
+    isSelected && theme.palette.action.focus};
+
   b {
-    color: #222;
+    color: ${({ theme }) => theme.palette.text.primary};
   }
 
   &:hover {
-    background-color: ${({ isSelected }) => (isSelected ? '#ccc' : '#eee')};
+    background-color: ${({ theme }) => theme.palette.action.hover};
   }
 
   &:nth-of-type(1) {
-    margin-top: 12px;
+    margin-top: 10px;
   }
 `
 

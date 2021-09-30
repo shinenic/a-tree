@@ -1,8 +1,10 @@
 import React from 'react'
-import { alpha, makeStyles, withStyles } from '@material-ui/core/styles'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 import TreeItem from '@material-ui/lab/TreeItem'
 import Collapse from '@material-ui/core/Collapse'
 import { useSpring, animated } from 'react-spring'
+import tinycolor from 'tinycolor2'
+import useViewedFilesStore from 'stores/pull'
 
 const TransitionComponent = (props) => {
   const style = useSpring({
@@ -20,55 +22,64 @@ const TransitionComponent = (props) => {
   )
 }
 
-const useStyles = makeStyles({
-  content: {
-    '&:hover': {
-      backgroundColor: '#eff2f4',
-    },
-    padding: '5px 6px',
-    borderRadius: '3px',
-  },
-  root: {
-    '&:focus > $content, &$selected > $content': {
-      backgroundColor: '#d6e7fd',
-    },
-    '&:focus > $content $label, &:hover > $content $label, &$selected > $content $label':
-      {
-        backgroundColor: 'transparent',
-      },
-  },
-  label: {
-    backgroundColor: 'transparent !important',
-  },
-})
+const HOVER_BG = '#eff2f4'
+const SELECT_BG = '#d6e7fd'
 
-const StyledTreeItem = withStyles((theme) => ({
-  iconContainer: {
-    '& .close': {
-      opacity: 0.3,
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    content: {
+      '&:hover': {
+        backgroundColor:
+          theme.palette.type === 'light'
+            ? HOVER_BG
+            : tinycolor
+                .mix(HOVER_BG, theme.palette.background.paper, 80)
+                .toHexString(),
+      },
+      padding: '5px 6px',
+      borderRadius: '3px',
     },
-  },
-  group: {
-    marginLeft: 7,
-    paddingLeft: 18,
-    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
-  },
-}))((props) => {
+    root: {
+      '&:focus > $content, &$selected > $content': {
+        backgroundColor:
+          theme.palette.type === 'light'
+            ? SELECT_BG
+            : tinycolor
+                .mix(SELECT_BG, theme.palette.background.paper, 80)
+                .toHexString(),
+      },
+      '&:focus > $content $label, &:hover > $content $label, &$selected > $content $label':
+        {
+          backgroundColor: 'transparent',
+        },
+    },
+    label: {
+      backgroundColor: 'transparent !important',
+      userSelect: 'none',
+    },
+  })
+)
+
+const StyledTreeItem = ({ originalPath, ...rest }) => {
   const classes = useStyles()
+
+  const isViewed = useViewedFilesStore((s) => s.viewedFileMap[originalPath])
 
   return (
     <TreeItem
-      {...props}
       classes={{
         root: classes.root,
         content: classes.content,
         label: classes.label,
       }}
       TransitionComponent={TransitionComponent}
+      style={{
+        transition: 'opacity 0.4s',
+        ...(isViewed && { opacity: 0.5 }),
+      }}
+      {...rest}
     />
   )
-})
-
-StyledTreeItem.propTypes = {}
+}
 
 export default StyledTreeItem

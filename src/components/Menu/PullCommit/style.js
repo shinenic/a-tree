@@ -1,144 +1,150 @@
-import styled, { css } from 'styled-components'
 import GithubLink from 'components/shared/GithubLink'
+
+import { styled as muiStyled, makeStyles } from '@material-ui/core/styles'
+import Paper from '@material-ui/core/Paper'
+import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
+import Avatar from '@material-ui/core/Avatar'
+import tinycolor from 'tinycolor2'
+import { getCommonScrollbarStyle } from 'utils/style'
 
 const BUTTON_HEIGHT = 40
 
-export const CommitButton = styled.div`
-  background: white;
-  height: ${BUTTON_HEIGHT}px;
-  width: 100%;
-  text-align: center;
-  padding: 8px;
-  transition: background 0.2s;
-  cursor: pointer;
-  border-bottom: 1px solid #e1e4e8;
+export const MenuContainer = muiStyled(Paper)(({ theme }) => ({
+  border:
+    theme.palette.type === 'dark'
+      ? `1px solid ${theme.palette.text.secondary}`
+      : 'none',
+  backgroundColor: theme.palette.background.paper,
+  top: `${BUTTON_HEIGHT + 10}px`,
+  zIndex: 10,
+  position: 'fixed',
+  maxWidth: '540px',
+  minWidth: '440px',
+  maxHeight: '50vh',
+  overflowX: 'hidden',
+  overflowY: 'auto',
 
-  &:hover {
-    background: #e1e4e8;
-  }
-`
+  boxShadow: theme.shadows[3],
 
-export const CommitButtonText = styled.div``
+  ...getCommonScrollbarStyle(theme),
+}))
 
-export const MenuContainer = styled.div`
-  border: 1px solid #e1e4e8;
-  background-color: #fcfcfc;
-  top: ${BUTTON_HEIGHT + 10}px;
-  z-index: 10;
-  position: fixed;
+const useStyledGithubLinkStyle = makeStyles((theme) => ({
+  root: {
+    padding: '8px 14px',
 
-  max-width: 540px;
-  min-width: 440px;
-  max-height: 50vh;
-  overflow-x: hidden;
-  overflow-y: auto;
+    display: 'block',
+    color: theme.palette.text.primary,
+    borderTop: `1px solid ${
+      theme.palette.type === 'dark' ? theme.palette.text.secondary : '#e1e4e8'
+    }`,
+    transition: 'background 0.1s',
 
-  box-shadow: rgb(15 15 15 / 5%) 0px 0px 0px 1px,
-    rgb(15 15 15 / 10%) 0px 3px 6px, rgb(15 15 15 / 20%) 0px 9px 24px;
+    backgroundColor: ({ selected }) =>
+      selected
+        ? theme.palette.background.default
+        : theme.palette.background.paper,
 
-  /* width */
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
+    '&:hover': {
+      backgroundColor: tinycolor
+        .mix(theme.palette.text.primary, theme.palette.background.paper, 90)
+        .toHexString(),
+      textDecoration: 'none',
+    },
 
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: white;
-  }
+    '&:first-child': {
+      borderTop: 'none',
+      fontSize: 16,
+      padding: 14,
+    },
 
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #bbb;
-  }
+    '& > div:nth-child(1)': {
+      color: theme.palette.text.primary,
+      fontSize: 16,
+    },
 
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #888;
-  }
-`
+    '& > div:nth-child(2)': {
+      color: theme.palette.text.secondary,
+      fontSize: 14,
+    },
+  },
+}))
 
-export const StyledGithubLink = styled(GithubLink)`
-  padding: 8px 14px;
+export const StyledGithubLink = ({ selected, height, ...props }) => {
+  const classes = useStyledGithubLinkStyle({ selected, height })
+  return <GithubLink className={classes.root} color="inherit" {...props} />
+}
 
-  display: block;
-  color: block;
-  border-top: 1px solid #e1e4e8;
+export const CommitDetail = muiStyled(Box)({
+  marginTop: 4,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'start',
 
-  background-color: ${({ selected }) => (selected ? '#ddd' : 'while')};
+  '& > div': {
+    marginLeft: '8px',
+  },
+  '& > div:first-child': {
+    marginLeft: '0',
+  },
+})
 
-  &:hover {
-    background-color: ${({ selected }) => (selected ? '#ddd' : '#eee')};
-    text-decoration: none;
-  }
+export const Sha = muiStyled(Box)({
+  width: 54,
+  textAlign: 'center',
+})
 
-  &:first-child {
-    border-top: none;
-    font-size: 16px;
-    padding: 14px;
-  }
+export const IconBox = ({ size = 24, isIdle, ...props }) => {
+  return (
+    <Box
+      sx={{
+        position: 'relative',
+        cursor: 'pointer',
+        marginLeft: 4,
 
-  & > div:nth-child(1) {
-    color: black;
-    font-size: 16px;
-  }
+        height: size,
+        width: size,
 
-  & > div:nth-child(2) {
-    color: #333;
-    font-size: 14px;
-  }
-`
+        padding: 2,
+        borderRadius: 4,
+        transition: 'opacity 0.2s',
 
-export const CommitDetail = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+        '&:hover': {
+          opacity: isIdle ? 0.7 : 'unset',
+        },
+        '&:active': {
+          opacity: isIdle ? 0.5 : 'unset',
+        },
 
-  margin-top: 4px;
+        '& > *': {
+          height: size - 4,
+          width: size - 4,
 
-  & > div {
-    margin-left: 8px;
-  }
+          position: 'absolute',
+          left: 2,
+          right: 2,
+        },
+      }}
+      {...props}
+    />
+  )
+}
 
-  & > div:first-child {
-    margin-left: 0;
-  }
-`
+export const SmallAvatar = muiStyled(Avatar)(({ theme }) => ({
+  width: theme.spacing(3),
+  height: theme.spacing(3),
+}))
 
-export const Sha = styled.div`
-  width: 54px;
-  text-align: center;
-`
-
-export const IconBox = styled.div`
-  position: relative;
-  cursor: pointer;
-  transition: background;
-  margin-left: 8px;
-
-  height: ${({ size = 24 }) => `${size}px`};
-  width: ${({ size = 24 }) => `${size}px`};
-
-  padding: 2px;
-  border-radius: 4px;
-
-  ${({ isIdle }) =>
-    isIdle &&
-    css`
-      &:hover {
-        background-color: #0002;
-      }
-
-      &:active {
-        background-color: #0004;
-      }
-    `};
-
-  & > * {
-    height: ${({ size = 24 }) => `${size - 4}px`};
-    width: ${({ size = 24 }) => `${size - 4}px`};
-
-    position: absolute;
-    left: 2px;
-    right: 2px;
-  }
-`
+export const ToggleButton = muiStyled(Button)(({ theme }) => ({
+  display: 'block',
+  width: '100%',
+  height: '40px',
+  borderBottom:
+    theme.palette.type === 'dark' ? '1px solid #666' : '1px solid #f1f1f1',
+  borderRadius: '0',
+  textTransform: 'none',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+}))

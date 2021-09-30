@@ -51,3 +51,8 @@ export const TITLE_MATCHER = {
     resolver: (defaultBranch, title) => defaultBranch,
   },
 }
+
+export const VIEWER_STATE = {
+  UNVIEWED: 'UNVIEWED',
+  VIEWED: 'VIEWED',
+}
