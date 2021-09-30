@@ -156,10 +156,12 @@ const Tree = ({ tree, onItemClick, isLoading }) => {
       )
     }
 
+    const originalPath = node.path || node.filename
     return (
       <div key={node.nodeId} onClick={handleClick}>
         <TreeItem
           nodeId={node.nodeId}
+          originalPath={originalPath}
           label={isLoading ? <LabelTextSkeleton /> : label}
           icon={isLoading ? <IconSkeleton /> : <LabelIcon status={status} />}
         />

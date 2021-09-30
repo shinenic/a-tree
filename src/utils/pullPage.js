@@ -93,44 +93,35 @@ export const scrollToFile = (fileHash, options) => {
   scrollTo(document.getElementById(fileHash), options)
 }
 
+/**
+ * @param {(filename:string, checked: boolean) => void} callback
+ */
 export const generateReviewCheckListener = (callback = noop) => {
-  const getViewedFilesMap = () => {
-    const fileNodeContainers = document.querySelectorAll('div[id^="diff"]')
+  const handler = (e) => {
+    if (e.target.type !== 'checkbox') return
 
-    const viewedFileMap = Array.from(fileNodeContainers).reduce(
-      (result, fileNode) => {
-        const link = fileNode.querySelector(
+    // eslint-disable-next-line no-restricted-syntax
+    for (const node of e.path) {
+      if (/^diff-/.test(node.id)) {
+        const link = node.querySelector(
           'a[href^="#diff"]:not([title*="Expand"])'
         )
-        const checkBox = fileNode.querySelector('input[type="checkbox"]')
 
-        if (!link || !checkBox) return result
+        if (link) {
+          const filename = link.title.includes(' → ')
+            ? link.title.split(' → ')[1]
+            : link.title
 
-        const filename = link.title.includes(' → ')
-          ? link.title.split(' → ')[1]
-          : link.title
-
-        return {
-          ...result,
-          [filename]: checkBox.checked,
+          callback(filename, e.target.checked)
         }
-      },
-      {}
-    )
-
-    callback(viewedFileMap)
-  }
-
-  const handler = (e) => {
-    if (e.target.type === 'checkbox') {
-      getViewedFilesMap()
+        break
+      }
     }
   }
 
   const pageContainer = document.getElementById(GITHUB_PAGE_CONTAINER_ID)
   if (!pageContainer) return noop
 
-  getViewedFilesMap(callback)
   pageContainer.addEventListener('click', handler)
 
   return () => {

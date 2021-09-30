@@ -1,14 +1,10 @@
 import React from 'react'
-import {
-  alpha,
-  makeStyles,
-  withStyles,
-  createStyles,
-} from '@material-ui/core/styles'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 import TreeItem from '@material-ui/lab/TreeItem'
 import Collapse from '@material-ui/core/Collapse'
 import { useSpring, animated } from 'react-spring'
 import tinycolor from 'tinycolor2'
+import useViewedFilesStore from 'stores/pull'
 
 const TransitionComponent = (props) => {
   const style = useSpring({
@@ -59,40 +55,31 @@ const useStyles = makeStyles((theme) =>
     },
     label: {
       backgroundColor: 'transparent !important',
+      userSelect: 'none',
     },
   })
 )
 
-const StyledTreeItem = withStyles((theme) => ({
-  /**
-   * @TODO Remove these styles?
-   */
-  iconContainer: {
-    '& .close': {
-      opacity: 0.3,
-    },
-  },
-  group: {
-    marginLeft: 7,
-    paddingLeft: 18,
-    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
-  },
-}))((props) => {
+const StyledTreeItem = ({ originalPath, ...rest }) => {
   const classes = useStyles()
+
+  const isViewed = useViewedFilesStore((s) => s.viewedFileMap[originalPath])
 
   return (
     <TreeItem
-      {...props}
       classes={{
         root: classes.root,
         content: classes.content,
         label: classes.label,
       }}
       TransitionComponent={TransitionComponent}
+      style={{
+        transition: 'opacity 0.4s',
+        ...(isViewed && { opacity: 0.5 }),
+      }}
+      {...rest}
     />
   )
-})
-
-StyledTreeItem.propTypes = {}
+}
 
 export default StyledTreeItem

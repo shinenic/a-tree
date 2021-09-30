@@ -46,6 +46,7 @@ module.exports = {
     'react/prop-types': 'off',
     'jsx-a11y/click-events-have-key-events': 'off',
     'jsx-a11y/no-static-element-interactions': 'off',
+    'react/no-unescaped-entities': 'off',
     'react/destructuring-assignment': 'off',
     indent: 'off',
     'import/prefer-default-export': 'off',
