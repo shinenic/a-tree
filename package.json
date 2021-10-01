@@ -36,6 +36,8 @@
     "build:dev": "webpack --config=webpack/webpack.common.js --mode=development",
     "build:prod": "webpack --config=webpack/webpack.common.js --mode=production",
     "dev": "LOCAL_MODE=false yarn run build:dev --watch",
+    "analyzer": "LOCAL_MODE=false ANALYZER=true yarn run build:dev",
+    "analyzer:prod": "LOCAL_MODE=false ANALYZER=true yarn run build:prod",
     "dev:local": "LOCAL_MODE=true PORT=5566 API_PORT=5567 webpack-dev-server --config=webpack/webpack.local.js",
     "mockoon:start": "mockoon-cli start --data ./mockAPI/mockoon.json -i 0",
     "mockoon:stop": "mockoon-cli stop"
@@ -79,6 +81,7 @@
     "react-refresh": "^0.10.0",
     "web-vitals": "^2.1.0",
     "webpack": "^5.44.0",
+    "webpack-bundle-analyzer": "^4.4.2",
     "webpack-cli": "^4.7.2",
     "webpack-dev-server": "^4.1.1"
   }

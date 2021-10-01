@@ -1,6 +1,7 @@
 const path = require('path')
 const CopyPlugin = require('copy-webpack-plugin')
 const webpack = require('webpack')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 module.exports = (_, { mode }) => {
   const isDev = mode === 'development'
@@ -38,6 +39,7 @@ module.exports = (_, { mode }) => {
       new webpack.ProvidePlugin({
         process: 'process/browser',
       }),
+      ...(process.env.ANALYZER ? [new BundleAnalyzerPlugin()] : []),
     ],
     devtool: 'cheap-module-source-map',
   }
