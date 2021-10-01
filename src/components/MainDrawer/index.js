@@ -38,13 +38,15 @@ const MainDrawer = ({
   defaultBranch,
   error,
   isLoading,
-  open,
 }) => {
-  const { drawerWidth, disablePageTypeList, dispatch } = useStore((s) => ({
-    drawerWidth: s.drawerWidth,
-    disablePageTypeList: s.disablePageTypeList,
-    dispatch: s.dispatch,
-  }))
+  const { drawerWidth, disablePageTypeList, dispatch, drawerPinned } = useStore(
+    (s) => ({
+      drawerWidth: s.drawerWidth,
+      disablePageTypeList: s.disablePageTypeList,
+      dispatch: s.dispatch,
+      drawerPinned: s.drawerPinned,
+    })
+  )
   const classes = useStyles()
   const branch = branchFromUrl || defaultBranch
 
@@ -116,6 +118,7 @@ const MainDrawer = ({
 
   if (
     error?.message === ERROR_MESSAGE.NOT_SUPPORTED_PAGE ||
+    error?.message === ERROR_MESSAGE.NOT_FOUND_PAGE ||
     disablePageTypeList.includes(pageType)
   ) {
     return <GlobalStyle pl={0} />
@@ -123,8 +126,13 @@ const MainDrawer = ({
 
   return (
     <>
-      <GlobalStyle pl={open ? drawerWidth : 0} />
-      <Drawer anchor="left" open={open} variant="persistent" classes={classes}>
+      <GlobalStyle pl={drawerPinned ? drawerWidth : 0} />
+      <Drawer
+        anchor="left"
+        open={drawerPinned}
+        variant="persistent"
+        classes={classes}
+      >
         <ResizableWrapper
           drawerWidth={drawerWidth}
           handleOnResize={handleOnResize}
