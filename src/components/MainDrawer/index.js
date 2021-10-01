@@ -9,6 +9,7 @@ import { compact, throttle } from 'lodash'
 import useStore from 'stores/setting'
 import GlobalStyle from 'GlobalStyle'
 import { getHeaderHeight } from 'utils/style'
+import FloatingButton from 'components/FloatingButton'
 import CodePage from './Tabs/Code'
 import PullPage from './Tabs/Pull'
 import PullCommit from './Tabs/PullCommit'
@@ -127,6 +128,7 @@ const MainDrawer = ({
   return (
     <>
       <GlobalStyle pl={drawerPinned ? drawerWidth : 0} />
+      <FloatingButton pageType={pageType} />
       <Drawer
         anchor="left"
         open={drawerPinned}

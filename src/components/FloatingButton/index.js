@@ -38,11 +38,14 @@ const useStyles = ({ drawerPinned }) =>
     },
   }))
 
-const FloatingButton = ({ pageType }) => {
+/**
+ * @TODO Check do we need to hide the floating button and drawer at the same time?
+ *       Or close drawer automatically on specific page types
+ */
+const FloatingButton = () => {
   const floatingButtonPositionY = useStore((s) => s.floatingButtonPositionY)
   const drawerPinned = useStore((s) => s.drawerPinned)
   const dispatch = useStore((s) => s.dispatch)
-  const disablePageTypeList = useStore((s) => s.disablePageTypeList) ?? []
 
   const { height: windowHeight } = useWindowSize()
   const originY = useRef(floatingButtonPositionY)
@@ -80,12 +83,6 @@ const FloatingButton = ({ pageType }) => {
       })
     }
   }, [windowHeight])
-
-  /**
-   * @TODO Check do we need to hide the floating button and drawer at the same time?
-   *       Or close drawer automatically on specific page types
-   */
-  if (!pageType || disablePageTypeList?.includes(pageType)) return null
 
   return (
     <Box position="fixed" top={0} left={0} zIndex={2100}>
