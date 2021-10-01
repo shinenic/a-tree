@@ -58,9 +58,9 @@ function CreatedTokenTourGuide({ prevUrl }) {
         horizontal: 'left',
       }}
     >
-      <Box>
-        <Typography variant="body1">Token created 🎉</Typography>
-        <Typography variant="subtitle2">
+      <Box sx={{ paddingRight: 40, paddingBottom: 18 }}>
+        <Typography variant="h6">Token created 🎉</Typography>
+        <Typography variant="body1">
           It has been copied in our setting, enjoy it!
         </Typography>
       </Box>
@@ -75,7 +75,7 @@ function CreatedTokenTourGuide({ prevUrl }) {
             size="small"
             color="primary"
             variant="contained"
-            style={{ marginRight: 10 }}
+            style={{ marginRight: 10, textTransform: 'none', fontSize: 15 }}
             onClick={() => {
               window.location.href = prevUrl
             }}
@@ -84,7 +84,12 @@ function CreatedTokenTourGuide({ prevUrl }) {
           </Button>
         )}
 
-        <Button size="small" color="primary" onClick={handleClose}>
+        <Button
+          size="small"
+          color="primary"
+          onClick={handleClose}
+          style={{ textTransform: 'none', fontSize: 15 }}
+        >
           Close
         </Button>
       </Box>

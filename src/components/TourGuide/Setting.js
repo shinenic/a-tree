@@ -52,6 +52,7 @@ const SettingTourGuide = ({ anchorRef }) => {
   return (
     <Popover
       open={isOpening}
+      onClick={handleClose}
       anchorEl={anchorRef.current}
       PaperProps={{
         className: classes.paper,
@@ -65,11 +66,11 @@ const SettingTourGuide = ({ anchorRef }) => {
         horizontal: 'left',
       }}
     >
-      <Box>
-        <Typography variant="subtitle2" color="textSecondary">
+      <Box sx={{ paddingRight: 30, paddingBottom: 18 }}>
+        <Typography variant="body1" color="textSecondary">
           By creating a new personal access token, you can
         </Typography>
-        <Box sx={{ margin: '4px 0 16px 8px' }}>
+        <Box sx={{ margin: '8px 0 6px 8px', '& > p': { marginTop: 4 } }}>
           <Typography variant="body1">
             - Sync your pull request files' viewed status
           </Typography>
@@ -87,11 +88,17 @@ const SettingTourGuide = ({ anchorRef }) => {
           color="primary"
           variant="contained"
           onClick={goTokenPage}
-          style={{ marginRight: 10 }}
+          style={{ marginRight: 10, textTransform: 'none', fontSize: 15 }}
         >
           Guide me
         </Button>
-        <Button size="small" color="primary" onClick={handleClose}>
+
+        <Button
+          size="small"
+          color="primary"
+          onClick={handleClose}
+          style={{ textTransform: 'none', fontSize: 15 }}
+        >
           Got it
         </Button>
       </Box>
