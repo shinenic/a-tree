@@ -51,6 +51,11 @@ const TokenField = ({ classes }) => {
     dispatch({ type: 'UPDATE_TOKEN', payload: '' })
   }
 
+  const handleStart = () => {
+    dispatch({ type: 'CLOSE_MODAL' })
+    startTokenGuide()
+  }
+
   return (
     <>
       <Typography variant="h6" className={classes.typography}>
@@ -77,7 +82,7 @@ const TokenField = ({ classes }) => {
           >
             <Button
               disabled={!isEmpty(token)}
-              onClick={startTokenGuide}
+              onClick={handleStart}
               color="primary"
               variant="contained"
             >
