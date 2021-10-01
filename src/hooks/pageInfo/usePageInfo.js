@@ -105,10 +105,10 @@ const usePageInfo = () => {
 
   // This effect handle SPA by listening `pathname`, `data` is used to get default branch only
   useEffect(() => {
-    if (defaultBranch) {
+    if (!isLoading) {
       setPageInfo(getPageInfo(pathname, defaultBranch, title))
     }
-  }, [pathname, defaultBranch])
+  }, [pathname, defaultBranch, isLoading, title])
 
   return {
     error,

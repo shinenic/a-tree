@@ -1,6 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
+import Box from '@material-ui/core/Box'
 import Paper from '@material-ui/core/Paper'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
@@ -11,6 +12,7 @@ import Checkbox from '@material-ui/core/Checkbox'
 import { isEmpty, intersection } from 'lodash'
 import { PAGE_TYPE } from 'constants'
 import useStore from 'stores/setting'
+import { startTokenGuide } from 'utils/tokenGuide'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -49,13 +51,18 @@ const TokenField = ({ classes }) => {
     dispatch({ type: 'UPDATE_TOKEN', payload: '' })
   }
 
+  const handleStart = () => {
+    dispatch({ type: 'CLOSE_MODAL' })
+    startTokenGuide()
+  }
+
   return (
     <>
       <Typography variant="h6" className={classes.typography}>
         Personal access token (private & enterprise)
       </Typography>
       <Grid container spacing={3} alignItems="center">
-        <Grid item xs={9}>
+        <Grid item xs={7}>
           <TextField
             id="TokenTextField"
             name="TokenTextField"
@@ -65,15 +72,31 @@ const TokenField = ({ classes }) => {
             onChange={handleInputChange}
           />
         </Grid>
-        <Grid item xs={3}>
-          <Button
-            disabled={isEmpty(token)}
-            onClick={handleClear}
-            color="secondary"
-            variant="outlined"
+        <Grid item xs={5}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              marginLeft: 20,
+            }}
           >
-            Clear
-          </Button>
+            <Button
+              disabled={!isEmpty(token)}
+              onClick={handleStart}
+              color="primary"
+              variant="contained"
+            >
+              Create
+            </Button>
+            <Button
+              disabled={isEmpty(token)}
+              onClick={handleClear}
+              color="secondary"
+              variant="outlined"
+            >
+              Clear
+            </Button>
+          </Box>
         </Grid>
       </Grid>
     </>

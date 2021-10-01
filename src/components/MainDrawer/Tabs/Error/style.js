@@ -1,6 +1,6 @@
 import { styled as muiStyled } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
-import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
 
 export const ErrorContainer = muiStyled(Paper)({
   height: '100%',
@@ -9,17 +9,19 @@ export const ErrorContainer = muiStyled(Paper)({
   justifyContent: 'center',
   alignItems: 'center',
   flexDirection: 'column',
+  border: 'none',
+  boxShadow: 'none',
 })
 
-export const HintContent = muiStyled(Box)(({ theme }) => ({
-  transition: 'color 0.3s',
-  marginTop: 40,
-  height: 40,
-  display: 'flex',
-  alignItems: 'center',
-  color: theme.palette.text.secondary,
-  cursor: 'pointer',
-  '&:hover': {
-    color: theme.palette.text.primary,
-  },
-}))
+export const HintContent = (props) => {
+  return (
+    <Button
+      color="primary"
+      style={{
+        marginTop: 40,
+        textTransform: 'none',
+      }}
+      {...props}
+    />
+  )
+}

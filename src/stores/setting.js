@@ -18,6 +18,7 @@ const { LEFT, RIGHT } = DRAWER_POSITION
  * @property {boolean} drawerPinned
  * @property {number} floatingButtonPositionY position Y of floating button (px)
  * @property {string} baseUrl record host string for api endpoint
+ * @property {boolean} isTokenHintShowed
  */
 
 /** @type {SettingState} */
@@ -32,6 +33,7 @@ export const initialState = {
   drawerPinned: true,
   floatingButtonPositionY: 500,
   baseUrl: null,
+  isTokenHintShowed: false,
 }
 
 /**
@@ -62,6 +64,8 @@ export const reducer = (state, { type, payload }) => {
       return { ...state, floatingButtonPositionY: payload }
     case 'TOGGLE_DRAWER':
       return { ...state, drawerPinned: !state.drawerPinned }
+    case 'SET_TOKEN_HINT_SHOWED':
+      return { ...state, isTokenHintShowed: true }
     default:
       throw new Error(`Unknown Type: ${type}`)
   }

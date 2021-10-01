@@ -1,18 +1,9 @@
-import { makeStyles } from '@material-ui/core'
+import { createGlobalStyle } from 'styled-components'
 
-const useDynamicGlobalStyle = (pl) =>
-  makeStyles(() => ({
-    '@global': {
-      html: {
-        marginLeft: `${pl}px !important`,
-      },
-    },
-  }))
-
-const GlobalStyle = ({ pl }) => {
-  useDynamicGlobalStyle(pl)()
-
-  return null
-}
+const GlobalStyle = createGlobalStyle`
+  html {
+    margin-left: ${(props) => props.pl}px !important;
+  }
+`
 
 export default GlobalStyle
