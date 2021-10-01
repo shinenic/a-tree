@@ -1,18 +1,12 @@
 import React from 'react'
 import { ERROR_MESSAGE } from 'constants'
 import useStore from 'stores/setting'
-import { NEW_TOKEN_PATHNAME } from 'constants/tokenPage'
-import { PHASE, storePhase } from 'components/Tour/GenerateTokenGuide'
+import { startTokenGuide } from 'utils/tokenGuide'
 
 import * as Style from './style'
 
 const Error = ({ errorMessage }) => {
   const token = useStore((s) => s.token)
-
-  const handleHintClick = () => {
-    storePhase(PHASE.START_TOUR)
-    window.location.href = NEW_TOKEN_PATHNAME
-  }
 
   return (
     <Style.ErrorContainer>
@@ -29,7 +23,7 @@ const Error = ({ errorMessage }) => {
           !token &&
           'It seems that this is an private repository, please create a personal token to access this repository!'}
       </div>
-      <Style.HintContent onClick={handleHintClick}>
+      <Style.HintContent onClick={startTokenGuide}>
         How to create a new token?
       </Style.HintContent>
     </Style.ErrorContainer>

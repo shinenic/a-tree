@@ -1,4 +1,4 @@
-import GenerateTokenGuide from 'components/Tour/GenerateTokenGuide'
+import TokenPageGuides from 'components/TourGuide/TokenPage'
 import { CONTAINER_ID, isLocalMode } from 'constants'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -61,7 +61,7 @@ const renderExtension = () => {
       <React.StrictMode>
         <QueryClientProvider client={queryClient}>
           <MainThemeProvider>
-            <GenerateTokenGuide />
+            <TokenPageGuides />
             <App />
             <SettingModal />
           </MainThemeProvider>
