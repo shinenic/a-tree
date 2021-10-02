@@ -52,7 +52,8 @@ export default function PullCommitMenu({
     handleClose,
     handleButtonClick,
     buttonText,
-    disabled,
+    error,
+    isLoading,
     menuStyles,
   } = usePullCommitMenu({ owner, repo, pull, commit: currentCommit })
 
@@ -69,11 +70,14 @@ export default function PullCommitMenu({
     })
   }, [data, pull])
 
-  if (!pull) return null
+  if (!pull || error) return null
 
   return (
     <div ref={menuRef}>
-      <Style.ToggleButton disabled={disabled} onClick={handleButtonClick}>
+      <Style.ToggleButton
+        disabled={error || isLoading}
+        onClick={handleButtonClick}
+      >
         {buttonText}
       </Style.ToggleButton>
       <AnimatedMenuContainer style={{ ...menuStyles, ...menuPositionStyle }}>

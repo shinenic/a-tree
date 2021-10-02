@@ -74,7 +74,7 @@ const usePullCommitMenu = ({ owner, repo, pull, commit }) => {
   return {
     data,
     isLoading,
-    disabled: error || isLoading,
+    error,
     handleClose,
     handleButtonClick,
     buttonText,
