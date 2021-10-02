@@ -77,6 +77,8 @@ const states = (set) => ({
     set((state) => reducer(state, { type, payload })),
 })
 
-const useStore = create(persist(states, { name: SETTING_KEY }))
+const useStore = create(
+  persist(states, { name: SETTING_KEY, blacklist: ['isModalOpening'] })
+)
 
 export default useStore
