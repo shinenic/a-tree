@@ -191,10 +191,9 @@ export const VisibilityCheckBoxes = ({ classes }) => {
             }
 
             return (
-              <Grid item xs={12}>
+              <Grid item xs={12} key={text}>
                 <FormControlLabel
-                  key={text}
-                  disabled={disabled}
+                  disabled={Boolean(disabled)}
                   control={
                     <Checkbox
                       name={text}
