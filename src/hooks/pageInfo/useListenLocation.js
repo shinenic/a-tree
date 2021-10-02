@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { GLOBAL_MESSAGE_TYPE, isLocalMode } from 'constants'
+import useRequestEnd from '../useRequestEnd'
 
 const useListenLocation = () => {
   const [currentLocation, setCurrentLocation] = useState({ ...window.location })
+  const requestTimestamp = useRequestEnd()
 
   useEffect(() => {
     const callback = (request) => {
@@ -15,6 +17,12 @@ const useListenLocation = () => {
 
     return () => window.chrome.runtime.onMessage.removeListener(callback)
   }, [])
+
+  useEffect(() => {
+    if (requestTimestamp) {
+      setCurrentLocation({ ...window.location })
+    }
+  }, [requestTimestamp])
 
   return currentLocation
 }
