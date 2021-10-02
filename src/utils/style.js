@@ -1,9 +1,17 @@
+import { DEFAULT_HEADER_HEIGHT } from 'constants'
+
 export const getNativeBodyStyles = () => {
   return window.getComputedStyle(document.body)
 }
 
 export const getHeaderHeight = () => {
-  return window.getComputedStyle(document.querySelector('header')).height
+  const header = document.querySelector('header')
+
+  if (document.querySelector('header')) {
+    return window.getComputedStyle(header).height
+  }
+
+  return `${DEFAULT_HEADER_HEIGHT}px`
 }
 
 export const getCommonScrollbarStyle = (theme) => ({

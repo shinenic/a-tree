@@ -1,6 +1,8 @@
 const path = require('path')
 const CopyPlugin = require('copy-webpack-plugin')
 const webpack = require('webpack')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
 module.exports = (_, { mode }) => {
   const isDev = mode === 'development'
@@ -19,8 +21,13 @@ module.exports = (_, { mode }) => {
       rules: [
         {
           test: /\.(js|jsx)$/,
-          use: 'babel-loader',
           exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              plugins: ['lodash'],
+            },
+          },
         },
       ],
     },
@@ -38,6 +45,8 @@ module.exports = (_, { mode }) => {
       new webpack.ProvidePlugin({
         process: 'process/browser',
       }),
+      new LodashModuleReplacementPlugin(),
+      ...(process.env.ANALYZER ? [new BundleAnalyzerPlugin()] : []),
     ],
     devtool: 'cheap-module-source-map',
   }

@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react'
 import { animated } from 'react-spring'
-import moment from 'moment'
 
 import { PJAX_ID } from 'constants/github'
-
 import useClickOutside from 'hooks/useClickOutside'
 import usePullCommitMenu from 'hooks/usePullCommitMenu'
+
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+
 import CopyIcon from './CopyIcon'
 import * as Style from './style'
+
+dayjs.extend(relativeTime)
 
 const AnimatedMenuContainer = animated(Style.MenuContainer)
 
@@ -29,7 +33,7 @@ const Commit = ({ commit, sha, author, date, link, selected, handleClose }) => {
         <Style.SmallAvatar src={author?.avatar_url ?? ''} alt={authorName} />
         <Style.Sha>{shortedSha}</Style.Sha>
         <div>{`${authorName} (${loginName})`}</div>
-        <div>{moment(date).fromNow()}</div>
+        <div>{dayjs(date).fromNow()}</div>
         <CopyIcon targetText={sha} />
       </Style.CommitDetail>
     </Style.StyledGithubLink>
@@ -48,7 +52,8 @@ export default function PullCommitMenu({
     handleClose,
     handleButtonClick,
     buttonText,
-    disabled,
+    error,
+    isLoading,
     menuStyles,
   } = usePullCommitMenu({ owner, repo, pull, commit: currentCommit })
 
@@ -65,11 +70,14 @@ export default function PullCommitMenu({
     })
   }, [data, pull])
 
-  if (!pull) return null
+  if (!pull || error) return null
 
   return (
     <div ref={menuRef}>
-      <Style.ToggleButton disabled={disabled} onClick={handleButtonClick}>
+      <Style.ToggleButton
+        disabled={error || isLoading}
+        onClick={handleButtonClick}
+      >
         {buttonText}
       </Style.ToggleButton>
       <AnimatedMenuContainer style={{ ...menuStyles, ...menuPositionStyle }}>
