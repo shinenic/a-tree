@@ -10,19 +10,31 @@ import TextField from '@material-ui/core/TextField'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import { isEmpty, intersection } from 'lodash'
-import { PAGE_TYPE } from 'constants'
+import { PAGE_TYPE, REPO_URL } from 'constants'
 import useStore from 'stores/setting'
 import { startTokenGuide } from 'utils/tokenGuide'
+import Link from '@material-ui/core/Link'
+import GithubIcon from '../GithubIcon'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(3),
+    position: 'relative',
   },
   typography: {
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(1),
     '&:nth-of-type(1)': {
       marginTop: theme.spacing(0),
+    },
+  },
+  link: {
+    position: 'absolute',
+    top: '20px',
+    right: '20px',
+    transition: 'opacity 0.1s',
+    '&:hover': {
+      opacity: 0.8,
     },
   },
 }))
@@ -32,6 +44,14 @@ export default function SettingForm() {
 
   return (
     <Paper variant="outlined" className={classes.paper}>
+      <Link
+        href={REPO_URL}
+        target="_blank"
+        rel="noopener noference"
+        className={classes.link}
+      >
+        <GithubIcon size="30" />
+      </Link>
       <VisibilityCheckBoxes classes={classes} />
       <FocusCheckBox classes={classes} />
       <TokenField classes={classes} />
