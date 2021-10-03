@@ -17,7 +17,7 @@ module.exports = (_, { mode }) => {
     output: {
       path: path.join(__dirname, '..', isDev ? 'dist' : 'build'),
       filename: '[name].js',
-      clean: !isDev,
+      clean: true,
     },
     module: {
       rules: [
@@ -42,7 +42,10 @@ module.exports = (_, { mode }) => {
     },
     plugins: [
       new CopyPlugin({
-        patterns: [{ from: 'extension', to: '.' }],
+        patterns: [
+          { from: './public/icon192.png', to: '.' },
+          { from: './manifest.json', to: '.' },
+        ],
       }),
       new webpack.ProvidePlugin({
         process: 'process/browser',
