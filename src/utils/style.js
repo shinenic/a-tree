@@ -35,4 +35,9 @@ export const getCommonScrollbarStyle = (theme) => ({
   '&::-webkit-scrollbar-thumb:hover': {
     background: theme.palette.type === 'dark' ? '#8886' : '#8888',
   },
+
+  /* x & y corner */
+  '&::-webkit-scrollbar-corner': {
+    background: theme.palette.type === 'dark' ? '#3b3b3b' : '#f1f1f188',
+  },
 })
