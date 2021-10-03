@@ -56,7 +56,7 @@ const usePullCommitMenu = ({ owner, repo, pull, commit }) => {
   }, [commit, hasData])
 
   const handleButtonClick = () => {
-    if (isLoading) return
+    if (isLoading || error) return
 
     setMenuOpened((prev) => !prev)
   }
