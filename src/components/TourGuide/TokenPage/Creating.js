@@ -36,6 +36,10 @@ const CREATING_STEPS = [
   },
 ]
 
+/**
+ * @TODO Replace `reactour` with other library due to it still needs `styled-components`
+ * ref: https://github.com/elrumordelaluz/reactour/tree/50a4e056b58795f07478b9579b2d108fe4008b78#install
+ */
 function CreatingTokenTourGuide({ prevUrl }) {
   const [isTourOpen, setIsTourOpen] = useState(false)
   const [steps, setSteps] = useState([])

@@ -97,7 +97,7 @@ const FileSearchModal = ({ isLoading, selectCallback, files, error }) => {
       overLayStyle={{ alignItems: 'start', paddingTop: '15vh' }}
     >
       <div className={classes.paper}>
-        <Style.Input
+        <Style.FileNameInput
           placeholder="Enter keyword to search files..."
           ref={inputRef}
           value={keyword}

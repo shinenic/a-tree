@@ -79,6 +79,7 @@ const usePullCommitMenu = ({ owner, repo, pull, commit }) => {
     handleButtonClick,
     buttonText,
     menuStyles,
+    menuOpened,
   }
 }
 
