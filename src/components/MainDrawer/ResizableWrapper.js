@@ -34,7 +34,7 @@ const ResizableWrapper = ({ children, drawerWidth, handleOnResize }) => {
         topLeft: false,
       }}
       maxWidth="40vw"
-      minWidth={10}
+      minWidth={200}
       handleStyles={{
         right: {
           width: '8px',
