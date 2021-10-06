@@ -20,6 +20,8 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(3),
     position: 'relative',
+    overflow: 'hidden',
+    border: 'none',
   },
   typography: {
     marginTop: theme.spacing(4),
@@ -37,6 +39,25 @@ const useStyles = makeStyles((theme) => ({
       opacity: 0.8,
     },
   },
+  linkTextWrapper: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: 246,
+    height: 32,
+    transform: 'rotate(45deg) translate(47px, -88px)',
+    paddingLeft: 29,
+    lineHeight: '32px',
+    transformOrigin: 'left',
+    background: theme.palette.primary.main,
+    color: theme.palette.common.white,
+    transition: 'opacity .ˋs',
+
+    '&:hover': {
+      opacity: 0.9,
+      textDecoration: 'none',
+    },
+  },
 }))
 
 export default function SettingForm() {
@@ -48,9 +69,16 @@ export default function SettingForm() {
         href={REPO_URL}
         target="_blank"
         rel="noopener noference"
-        className={classes.link}
+        className={classes.linkText}
+        classes={{ root: classes.linkTextWrapper }}
+        underline="none"
       >
-        <GithubIcon size="30" />
+        View docs and source
+        <GithubIcon
+          size="20"
+          color="#fff"
+          style={{ position: 'relative', top: '6px', left: '6px' }}
+        />
       </Link>
       <VisibilityCheckBoxes classes={classes} />
       <FocusCheckBox classes={classes} />
