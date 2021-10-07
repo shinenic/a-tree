@@ -1,3 +1,4 @@
+import ReactDOM from 'react-dom'
 import { useTransition, a, animated } from 'react-spring'
 import useLockBodyScroll from 'hooks/useLockBodyScroll'
 import useClickOutside from 'hooks/useClickOutside'
@@ -56,22 +57,26 @@ export const CustomModal = ({
   const modalRef = useClickOutside(onClose)
   useLockBodyScroll(isOpened)
 
-  return transition(
-    (style, item) =>
-      item && (
-        <AnimatedOverlay
-          style={{ opacity: style.opacity, ...overLayStyle }}
-          onClick={onClose}
-        >
-          <a.div
-            ref={modalRef}
-            onClick={(e) => e.stopPropagation()}
-            {...rest}
-            style={{ ...style, ...modalStyle }}
+  return ReactDOM.createPortal(
+    transition(
+      (style, item) =>
+        item && (
+          <AnimatedOverlay
+            style={{ opacity: style.opacity, ...overLayStyle }}
+            onClick={onClose}
+            id="overlap-test"
           >
-            {children}
-          </a.div>
-        </AnimatedOverlay>
-      )
+            <a.div
+              ref={modalRef}
+              onClick={(e) => e.stopPropagation()}
+              {...rest}
+              style={{ ...style, ...modalStyle }}
+            >
+              {children}
+            </a.div>
+          </AnimatedOverlay>
+        )
+    ),
+    document.querySelector('body')
   )
 }
