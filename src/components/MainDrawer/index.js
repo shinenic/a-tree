@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { PAGE_TYPE, ERROR_MESSAGE } from 'constants'
 
 import PullCommitMenu from 'components/Menu/PullCommit'
+import PullMenu from 'components/Menu/Pull'
 import { SettingButton } from 'components/Setting'
 import { compact, throttle } from 'lodash'
 import useStore from 'stores/setting'
@@ -40,14 +41,12 @@ const MainDrawer = ({
   error,
   isLoading,
 }) => {
-  const { drawerWidth, disablePageTypeList, dispatch, drawerPinned } = useStore(
-    (s) => ({
-      drawerWidth: s.drawerWidth,
-      disablePageTypeList: s.disablePageTypeList,
-      dispatch: s.dispatch,
-      drawerPinned: s.drawerPinned,
-    })
-  )
+  const drawerWidth = useStore((s) => s.drawerWidth)
+  const disablePageTypeList = useStore((s) => s.disablePageTypeList)
+  const dispatch = useStore((s) => s.dispatch)
+  const drawerPinned = useStore((s) => s.drawerPinned)
+  const pullMenuEnabled = useStore((s) => s.pullMenuEnabled)
+
   const classes = useStyles()
   const branch = branchFromUrl || defaultBranch
 
@@ -148,6 +147,9 @@ const MainDrawer = ({
             pull={pull}
             commit={commit}
           />
+          {pullMenuEnabled && (
+            <PullMenu owner={owner} repo={repo} pull={pull} />
+          )}
           <Style.DrawerContent>{renderContent()}</Style.DrawerContent>
           <Style.DrawerFooter>
             <SettingButton />

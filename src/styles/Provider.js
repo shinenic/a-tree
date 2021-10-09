@@ -1,10 +1,6 @@
-import {
-  ThemeProvider as MuiThemeProvider,
-  createTheme,
-} from '@material-ui/core/styles'
+import { ThemeProvider, createTheme } from '@material-ui/core/styles'
 import { getNativeBodyStyles } from 'utils/style'
 import tinycolor from 'tinycolor2'
-import { ThemeProvider } from 'styled-components'
 import { useMemo } from 'react'
 
 const defaultTheme = createTheme()
@@ -35,9 +31,6 @@ const getTheme = () => {
 function MainThemeProvider({ children }) {
   const themeConfig = getTheme()
 
-  /**
-   * @TODO Migrate Styled-components into Material-ui
-   */
   const theme = useMemo(
     () =>
       createTheme({
@@ -97,11 +90,7 @@ function MainThemeProvider({ children }) {
     []
   )
 
-  return (
-    <MuiThemeProvider theme={theme}>
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
-    </MuiThemeProvider>
-  )
+  return <ThemeProvider theme={theme}>{children}</ThemeProvider>
 }
 
 export default MainThemeProvider

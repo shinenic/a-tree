@@ -1,7 +1,7 @@
-import { useTransition, a } from 'react-spring'
-import styled from 'styled-components'
+import { useTransition, a, animated } from 'react-spring'
 import useLockBodyScroll from 'hooks/useLockBodyScroll'
 import useClickOutside from 'hooks/useClickOutside'
+import Box from '@material-ui/core/Box'
 
 import Dialog from '@material-ui/core/Dialog'
 
@@ -19,18 +19,23 @@ export default function NativeDialog({
   )
 }
 
-const AnimatedOverlay = a(styled.div`
-  background: #6668;
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  top: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999999;
-`)
+const AnimatedOverlay = animated((props) => (
+  <Box
+    sx={{
+      background: '#6668',
+      position: 'fixed',
+      height: '100%',
+      width: '100%',
+      top: 0,
+      left: 0,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 999999,
+    }}
+    {...props}
+  />
+))
 
 export const CustomModal = ({
   isOpened,

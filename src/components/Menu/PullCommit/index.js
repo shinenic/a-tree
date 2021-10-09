@@ -10,10 +10,11 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 
 import CopyIcon from './CopyIcon'
 import * as Style from './style'
+import * as BaseStyle from '../style'
 
 dayjs.extend(relativeTime)
 
-const AnimatedMenuContainer = animated(Style.MenuContainer)
+const AnimatedMenuContainer = animated(BaseStyle.MenuContainer)
 
 const Commit = ({ commit, sha, author, date, link, selected, handleClose }) => {
   const authorName = commit.author?.name ?? ''
@@ -22,21 +23,24 @@ const Commit = ({ commit, sha, author, date, link, selected, handleClose }) => {
   const shortedSha = sha.slice(0, 6)
 
   return (
-    <Style.StyledGithubLink
+    <BaseStyle.StyledGithubLink
       onClick={handleClose}
       href={link}
       pjaxId={PJAX_ID.PULL}
       selected={selected}
     >
-      <div>{message}</div>
+      <Style.TitleBox>{message}</Style.TitleBox>
       <Style.CommitDetail>
-        <Style.SmallAvatar src={author?.avatar_url ?? ''} alt={authorName} />
+        <BaseStyle.SmallAvatar
+          src={author?.avatar_url ?? ''}
+          alt={authorName}
+        />
         <Style.Sha>{shortedSha}</Style.Sha>
         <div>{`${authorName} (${loginName})`}</div>
         <div>{dayjs(date).fromNow()}</div>
         <CopyIcon targetText={sha} />
       </Style.CommitDetail>
-    </Style.StyledGithubLink>
+    </BaseStyle.StyledGithubLink>
   )
 }
 
@@ -55,6 +59,7 @@ export default function PullCommitMenu({
     error,
     isLoading,
     menuStyles,
+    menuOpened,
   } = usePullCommitMenu({ owner, repo, pull, commit: currentCommit })
 
   const menuRef = useClickOutside(handleClose)
@@ -68,26 +73,26 @@ export default function PullCommitMenu({
       top: buttonRect.bottom,
       left: buttonRect.left + 20,
     })
-  }, [data, pull])
+  }, [data, pull, menuOpened])
 
   if (!pull || error) return null
 
   return (
     <div ref={menuRef}>
-      <Style.ToggleButton
+      <BaseStyle.ToggleButton
         disabled={error || isLoading}
         onClick={handleButtonClick}
       >
         {buttonText}
-      </Style.ToggleButton>
+      </BaseStyle.ToggleButton>
       <AnimatedMenuContainer style={{ ...menuStyles, ...menuPositionStyle }}>
-        <Style.StyledGithubLink
+        <BaseStyle.StyledGithubLink
           onClick={handleClose}
           href={`/${owner}/${repo}/pull/${pull}/files`}
           pjaxId={PJAX_ID.CODE}
         >
           Show all changes ({data?.length ?? 0})
-        </Style.StyledGithubLink>
+        </BaseStyle.StyledGithubLink>
         {data &&
           data.map(({ commit, sha, author }) => (
             <Commit
