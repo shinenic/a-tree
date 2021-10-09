@@ -11,9 +11,9 @@ function useGithubQuery(
 ) {
   const token = useStore((s) => s.token)
   const baseUrl = useStore((s) => s.baseUrl)
+  const drawerPinned = useStore((s) => s.drawerPinned)
 
   const { url, placeholders = {} } = variables
-  const { enabled = true } = useQueryOptions
 
   return useQuery(
     [...queryKeys, { token }],
@@ -50,7 +50,7 @@ function useGithubQuery(
       return fullData
     },
     {
-      enabled: enabled && isValidQuery(url, placeholders),
+      enabled: isValidQuery(url, placeholders) && drawerPinned,
       refetchOnWindowFocus: false,
       ...useQueryOptions,
     }

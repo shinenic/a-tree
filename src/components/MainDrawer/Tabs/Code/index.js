@@ -34,7 +34,7 @@ const Code = ({ owner, branch, repo }) => {
         isLoading={isLoading}
         selectCallback={onItemClick}
       />
-      {isLoading ? (
+      {isLoading || !data ? (
         <Loading />
       ) : (
         <Tree
