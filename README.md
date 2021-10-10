@@ -29,7 +29,7 @@
 
 - Why the extension shows in some unexpected pages
 
-  If you encounter this problem, please help us improve our extension via creating `issues`,
+  If you encounter this problem, please help us improve our extension via creating [issues](https://github.com/shinenic/a-tree/issues/new/choose),
   it will be nice to have the `url` included.
 
 - How to create personal access token
@@ -45,10 +45,6 @@
   1. To access private or enterprise repositories
   2. Github limits requests to 60/hours without `token`
 
-
-- Why doesn't the extension support dark theme
-  
-  Yes, the feature is work in process.
 
 - How to trace code in a more efficient way
   
@@ -73,12 +69,7 @@ After the build finished, install the `/build` folder
 
 
 ### Develop in the local and dummy pages
-1. Start webpack server
-    ```shell=
-    yarn dev:local
-    ```
-
-2. Start mock API server via `Mockoon`
+1. Start mock API server via `Mockoon`
 
     a. With GUI
       Download [Mockoon](https://mockoon.com) and import the json for necessary APIs
@@ -95,8 +86,11 @@ After the build finished, install the `/build` folder
         - port: `5567`
         - cors: `enable` (https://mockoon.com/docs/latest/cors/)
 
-### Deploy
-> TBD
+2. Start webpack server
+    ```shell=
+    yarn dev:local
+    ```
+
 
 ### Build extension
 ```shell=

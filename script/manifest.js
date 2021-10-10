@@ -8,7 +8,6 @@ const output = {
   version: PACKAGE.version,
   description: PACKAGE.description,
   homepage_url: PACKAGE.homepage,
-  default_locale: 'en',
   manifest_version: 3,
   minimum_chrome_version: '88',
   permissions: ['webNavigation', 'contextMenus'],

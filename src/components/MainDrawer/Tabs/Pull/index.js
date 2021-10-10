@@ -22,7 +22,7 @@ const Pull = ({ owner, pull, repo, pageType }) => {
         isLoading={isLoading}
         selectCallback={onItemClick}
       />
-      {isLoading ? (
+      {isLoading || !data ? (
         <Loading isExpandedAll />
       ) : (
         <Tree

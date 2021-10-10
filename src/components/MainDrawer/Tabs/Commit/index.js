@@ -21,7 +21,7 @@ const Commit = ({ owner, commit, repo }) => {
         isLoading={isLoading}
         selectCallback={onItemClick}
       />
-      {isLoading ? (
+      {isLoading || !data ? (
         <Loading isExpandedAll />
       ) : (
         <Tree
