@@ -68,6 +68,16 @@ const SettingTourGuide = ({ anchorRef }) => {
     >
       <Box sx={{ paddingRight: 30, paddingBottom: 18 }}>
         <Typography variant="body1" color="textSecondary">
+          Hey there 👋
+        </Typography>
+        <Typography
+          variant="body1"
+          color="textSecondary"
+          style={{ marginBottom: 4 }}
+        >
+          Welcome to the A-Tree
+        </Typography>
+        <Typography variant="body1" color="textSecondary">
           By creating a new personal access token, you can
         </Typography>
         <Box sx={{ margin: '8px 0 6px 8px', '& > p': { marginTop: 4 } }}>
