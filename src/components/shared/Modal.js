@@ -64,7 +64,6 @@ export const CustomModal = ({
           <AnimatedOverlay
             style={{ opacity: style.opacity, ...overLayStyle }}
             onClick={onClose}
-            id="overlap-test"
           >
             <a.div
               ref={modalRef}
