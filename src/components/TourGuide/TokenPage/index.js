@@ -16,11 +16,11 @@ function GenerateTokenGuide() {
   const pathname = useMemo(() => window.location.pathname, [])
   const { phase, prevUrl } = useMemo(() => getCurrentPhase(), [])
 
-  if (phase === PHASE.START_TOUR || pathname === NEW_TOKEN_PATHNAME) {
+  if (phase === PHASE.START_TOUR && pathname === NEW_TOKEN_PATHNAME) {
     return <CreatingTokenTourGuide prevUrl={prevUrl} />
   }
 
-  if (phase === PHASE.START_CREATING || pathname === TOKENS_PATHNAME) {
+  if (phase === PHASE.START_CREATING && pathname === TOKENS_PATHNAME) {
     return <CreatedTokenTourGuide prevUrl={prevUrl} />
   }
 

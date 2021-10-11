@@ -60,6 +60,7 @@ function CreatingTokenTourGuide({ prevUrl }) {
 
   return (
     <ReactTour
+      closeWithMask={false}
       rounded={4}
       disableFocusLock
       steps={steps}
