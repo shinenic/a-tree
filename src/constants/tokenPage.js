@@ -8,7 +8,7 @@ export const DEFAULT_NOTE = '[Chrome Extension] A-Tree'
 
 export const TOKEN_GUIDE_LOCAL_STORAGE_KEY = `${LOCAL_STORAGE_KEY_PREFIX}token-guide`
 
-export const TOKEN_VALUE_TTL = 1000 * 60 * 2
+export const TOKEN_VALUE_TTL = 1000 * 60 * 5
 
 export const PHASE = {
   NONE: 0,
