@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import Modal from 'components/shared/Modal'
 import useStore from 'stores/setting'
-import SettingTourGuide from 'components/TourGuide/Setting'
+import SettingTourGuide from 'components/Guide/Setting'
 
 import SettingForm from './Form'
 
