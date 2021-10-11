@@ -14,7 +14,6 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
-    "@xstate/react": "^1.5.1",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.10.7",
     "github-reserved-names": "^2.0.4",
