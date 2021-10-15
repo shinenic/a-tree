@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { listenPjaxEnd } from 'utils/pjax'
 
 function useRequestEnd() {
   const [timestamp, setTimestamp] = useState(null)
@@ -6,9 +7,9 @@ function useRequestEnd() {
   useEffect(() => {
     const handler = () => setTimestamp(Date.now())
 
-    window.addEventListener('pjax:end', handler)
+    const unlisten = listenPjaxEnd(handler)
 
-    return () => window.removeEventListener('pjax:end', handler)
+    return () => unlisten()
   }, [])
 
   return timestamp

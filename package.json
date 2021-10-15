@@ -18,6 +18,7 @@
     "dayjs": "^1.10.7",
     "github-reserved-names": "^2.0.4",
     "lodash": "4.17.16",
+    "jquery": "^3.6.0",
     "match-sorter": "^6.3.0",
     "parse-link-header": "^1.0.1",
     "prop-types": "^15.7.2",

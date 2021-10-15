@@ -1,3 +1,4 @@
+import { listenPjaxEnd } from 'utils/pjax'
 import { scrollTo } from 'utils/scroll'
 import { GITHUB_PAGE_CONTAINER_ID } from 'constants/github'
 import { GITHUB_NAV_BAR_HEIGHT } from 'constants'
@@ -168,16 +169,17 @@ export const checkFileNodeExisting = (fileHashId, timeout = DEFAULT_TIMEOUT) =>
 
 export const checkPjaxEnd = (timeout = DEFAULT_TIMEOUT) =>
   new Promise((resolve, reject) => {
-    const handler = () => {
-      window.removeEventListener('pjax:end', handler)
+    let unlisten = null
 
+    const handler = () => {
+      unlisten && unlisten()
       resolve()
     }
 
-    window.addEventListener('pjax:end', handler)
+    unlisten = listenPjaxEnd(handler)
 
     setTimeout(() => {
-      window.removeEventListener('pjax:end', handler)
+      unlisten()
       reject()
     }, timeout)
   })
