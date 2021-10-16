@@ -6,6 +6,8 @@ export const SETTING_KEY = `${LOCAL_STORAGE_KEY_PREFIX}setting`
 
 export const DEFAULT_HEADER_HEIGHT = 62
 
+export const GITHUB_NAV_BAR_HEIGHT = 60
+
 export const CODE_PAGE_TYPE = {
   CODE: 'CODE',
   CODE_COMMIT: 'CODE.COMMIT',

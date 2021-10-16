@@ -1,5 +1,6 @@
 import { scrollTo } from 'utils/scroll'
 import { GITHUB_PAGE_CONTAINER_ID } from 'constants/github'
+import { GITHUB_NAV_BAR_HEIGHT } from 'constants'
 import { noop } from 'lodash'
 
 /**
@@ -89,8 +90,10 @@ export const resetFocusFiles = () => {
   loopFileNodes({ showAllFiles: true })
 }
 
-export const scrollToFile = (fileHash, options) => {
-  scrollTo(document.getElementById(fileHash), options)
+export const scrollToFile = (fileHash) => {
+  scrollTo(document.getElementById(fileHash), {
+    offsetY: GITHUB_NAV_BAR_HEIGHT,
+  })
 }
 
 /**
