@@ -41,8 +41,6 @@ const FileSearchModal = ({ isLoading, selectCallback, files, error }) => {
   const inputRef = useRef(null)
 
   useEffect(() => {
-    dispatch({ type: 'SET_IS_LOADING', payload: { isLoading } })
-
     if (!isLoading && !isEmpty(files)) {
       dispatch({
         type: 'UPDATE_SOURCE_DATA',
@@ -50,6 +48,8 @@ const FileSearchModal = ({ isLoading, selectCallback, files, error }) => {
           files: files?.filter(({ type }) => type !== 'tree') ?? [],
         },
       })
+    } else {
+      dispatch({ type: 'CLEAR_SOURCE_DATA' })
     }
   }, [isLoading, files])
 
