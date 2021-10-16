@@ -5,7 +5,6 @@ import { noop, isEmpty } from 'lodash'
  * @typedef FileSearchModalState
  * @type {object}
  * @property {boolean} isOpened is modal opened
- * @property {boolean} isLoading is modal opened
  * @property {object[]} files source of all files
  * @property {object[]} result result after filtered
  * @property {number} selectedIndex current selected index of result
@@ -17,7 +16,6 @@ import { noop, isEmpty } from 'lodash'
 /** @type {FileSearchModalState} */
 export const initialState = {
   isOpened: false,
-  isLoading: true,
   files: [],
   maxResultCount: 20,
   result: [],
@@ -29,7 +27,7 @@ export const initialState = {
 export const ACTION_TYPE = {
   OPEN: 'OPEN',
   CLOSE: 'CLOSE',
-  SET_IS_LOADING: 'SET_IS_LOADING',
+  CLEAR_SOURCE_DATA: 'CLEAR_SOURCE_DATA',
   UPDATE_SOURCE_DATA: 'UPDATE_SOURCE_DATA',
   UPDATE_KEYWORD: 'UPDATE_KEYWORD',
   UPDATE_SELECT_CALLBACK: 'UPDATE_SELECT_CALLBACK',
@@ -41,7 +39,7 @@ export const ACTION_TYPE = {
 const {
   OPEN,
   CLOSE,
-  SET_IS_LOADING,
+  CLEAR_SOURCE_DATA,
   UPDATE_SOURCE_DATA,
   SELECT_PREV,
   SELECT_NEXT,
@@ -69,10 +67,6 @@ export const reducer = (state, action) => {
         ...state,
         isOpened: false,
       }
-    case SET_IS_LOADING: {
-      const { isLoading } = action.payload
-      return { ...state, isLoading }
-    }
     case UPDATE_SELECT_CALLBACK: {
       const { selectCallback } = action.payload
       return { ...state, selectCallback }
@@ -82,8 +76,16 @@ export const reducer = (state, action) => {
       return {
         ...state,
         files,
-        isLoading: false,
         result: files.slice(0, state.maxResultCount),
+        keyword: '',
+        selectedIndex: 0,
+      }
+    }
+    case CLEAR_SOURCE_DATA: {
+      return {
+        ...state,
+        files: [],
+        result: [],
         keyword: '',
         selectedIndex: 0,
       }

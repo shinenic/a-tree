@@ -103,7 +103,7 @@ const usePageInfo = () => {
     }
   )
 
-  // This effect handle SPA by listening `pathname`, `data` is used to get default branch only
+  // This effect update `pageInfo` by listening `pathname` and `pjax` event
   useEffect(() => {
     if (!isLoading) {
       setPageInfo(getPageInfo(pathname, defaultBranch, title))

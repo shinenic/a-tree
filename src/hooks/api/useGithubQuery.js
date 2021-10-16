@@ -3,6 +3,29 @@ import { isValidQuery, createGithubQuery } from 'utils/api'
 import useStore from 'stores/setting'
 import parseLink from 'parse-link-header'
 
+const queryFullPageData = async (variables, token, baseUrl) => {
+  let fullData = []
+  let page = 1
+  let link
+
+  do {
+    const params = { ...variables.params, page }
+    const res = await createGithubQuery({
+      ...variables,
+      params,
+      token,
+      baseUrl,
+      page,
+    })
+
+    fullData = [...fullData, ...res.data]
+    link = parseLink(res.headers.link)
+    page += 1
+  } while (link && link.last)
+
+  return fullData
+}
+
 function useGithubQuery(
   queryKeys,
   variables = {},
@@ -11,9 +34,9 @@ function useGithubQuery(
 ) {
   const token = useStore((s) => s.token)
   const baseUrl = useStore((s) => s.baseUrl)
-  const drawerPinned = useStore((s) => s.drawerPinned)
 
   const { url, placeholders = {} } = variables
+  const { enabled, ...restOptions } = useQueryOptions
 
   return useQuery(
     [...queryKeys, { token }],
@@ -28,31 +51,13 @@ function useGithubQuery(
         return data
       }
 
-      let fullData = []
-      let page = 1
-      let link
-
-      do {
-        const params = { ...variables.params, page }
-        const res = await createGithubQuery({
-          ...variables,
-          params,
-          token,
-          baseUrl,
-          page,
-        })
-
-        fullData = [...fullData, ...res.data]
-        link = parseLink(res.headers.link)
-        page += 1
-      } while (link && link.last)
-
-      return fullData
+      return queryFullPageData(variables, token, baseUrl)
     },
     {
-      enabled: isValidQuery(url, placeholders) && drawerPinned,
+      enabled: isValidQuery(url, placeholders) && enabled,
       refetchOnWindowFocus: false,
-      ...useQueryOptions,
+      staleTime: 10000,
+      ...restOptions,
     }
   )
 }

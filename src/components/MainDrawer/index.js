@@ -11,11 +11,10 @@ import useStore from 'stores/setting'
 import GlobalStyle from 'GlobalStyle'
 import { getHeaderHeight } from 'utils/style'
 import FloatingButton from 'components/FloatingButton'
-import CodePage from './Tabs/Code'
-import PullPage from './Tabs/Pull'
-import PullCommit from './Tabs/PullCommit'
-import Commit from './Tabs/Commit'
+import FileSearch from 'components/FileSearchModal'
+
 import Error from './Tabs/Error'
+import TreeTab from './Tabs'
 import ResizableWrapper from './ResizableWrapper'
 
 import * as Style from './style'
@@ -29,18 +28,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const MainDrawer = ({
-  pageType,
-  owner,
-  repo,
-  commit,
-  pull,
-  branch: branchFromUrl,
-  filePath,
-  defaultBranch,
-  error,
-  isLoading,
-}) => {
+const MainDrawer = ({ pageInfo, error }) => {
+  const { pageType, owner, repo, commit, pull, branch, filePath } = pageInfo
+
   const drawerWidth = useStore((s) => s.drawerWidth)
   const disablePageTypeList = useStore((s) => s.disablePageTypeList)
   const dispatch = useStore((s) => s.dispatch)
@@ -48,7 +38,6 @@ const MainDrawer = ({
   const pullMenuEnabled = useStore((s) => s.pullMenuEnabled)
 
   const classes = useStyles()
-  const branch = branchFromUrl || defaultBranch
 
   const renderHeader = () => {
     const breadcrumb = [owner, repo]
@@ -87,22 +76,7 @@ const MainDrawer = ({
       return <Error errorMessage={error?.message} />
     }
 
-    switch (pageType) {
-      case PAGE_TYPE.PULL:
-      case PAGE_TYPE.PULL_FILES:
-        return (
-          <PullPage owner={owner} repo={repo} pull={pull} pageType={pageType} />
-        )
-      case PAGE_TYPE.PULL_COMMIT:
-      case PAGE_TYPE.PULL_COMMITS:
-        return (
-          <PullCommit owner={owner} repo={repo} commit={commit} pull={pull} />
-        )
-      case PAGE_TYPE.CODE_COMMIT:
-        return <Commit owner={owner} repo={repo} commit={commit} />
-      default:
-        return <CodePage owner={owner} repo={repo} branch={branch} />
-    }
+    return <TreeTab {...pageInfo} />
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -128,6 +102,7 @@ const MainDrawer = ({
     <>
       <GlobalStyle pl={drawerPinned ? drawerWidth : 0} />
       <FloatingButton pageType={pageType} />
+      <FileSearch {...pageInfo} />
       <Drawer
         anchor="left"
         open={drawerPinned}
