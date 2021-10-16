@@ -8,6 +8,11 @@ import {
 } from 'utils/fileSearch'
 import { isEmpty } from 'lodash'
 import { CustomModal } from 'components/shared/Modal'
+import useUpdateEffect from 'hooks/useUpdateEffect'
+import useSwitch from 'hooks/useSwitch'
+import useTreeItemClick from 'hooks/tree/useTreeItemClick'
+import useQueryTree from 'hooks/tree/useQueryTree'
+
 import { initialState, reducer } from './reducer'
 import * as Style from './style'
 
@@ -25,12 +30,37 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+const FileSearchWrapper = ({ ...pageInfo }) => {
+  const [isQueryEnabled, enable, disable] = useSwitch()
+
+  const { data, isLoading, error } = useQueryTree(pageInfo, isQueryEnabled)
+  const onItemClick = useTreeItemClick(pageInfo)
+
+  return (
+    <FileSearchModal
+      files={data?.files || data?.tree || data}
+      selectCallback={onItemClick}
+      isLoading={isLoading}
+      error={error}
+      onOpen={enable}
+      onClose={disable}
+    />
+  )
+}
+
 /**
  * @TODO Handle loading & error status
  * @TODO Handle SPA from page Pull-Conversation to page Pull-Files
  * @FIXME Can't apply focus file via press `enter`
  */
-const FileSearchModal = ({ isLoading, selectCallback, files, error }) => {
+const FileSearchModal = ({
+  isLoading,
+  selectCallback,
+  files,
+  error,
+  onOpen,
+  onClose,
+}) => {
   const [{ result = [], keyword = '', selectedIndex = 0, isOpened }, dispatch] =
     useReducer(reducer, {
       ...initialState,
@@ -73,6 +103,10 @@ const FileSearchModal = ({ isLoading, selectCallback, files, error }) => {
     const unlisten = generateHotkeyListener(dispatch, isOpened)
 
     return () => unlisten()
+  }, [isOpened])
+
+  useUpdateEffect(() => {
+    isOpened ? onOpen() : onClose()
   }, [isOpened])
 
   const handleInputChange = useCallback((e) => {
@@ -135,4 +169,4 @@ const FileSearchModal = ({ isLoading, selectCallback, files, error }) => {
   )
 }
 
-export default FileSearchModal
+export default FileSearchWrapper
