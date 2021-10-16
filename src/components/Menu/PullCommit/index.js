@@ -44,6 +44,10 @@ const Commit = ({ commit, sha, author, date, link, selected, handleClose }) => {
   )
 }
 
+/**
+ * @TODO Disable query when drawer unpinned
+ * @TODO Lazy load the rest pulls
+ */
 export default function PullCommitMenu({
   owner,
   repo,
