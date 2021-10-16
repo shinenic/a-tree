@@ -1,4 +1,4 @@
-import TokenPageGuides from 'components/TourGuide/TokenPage'
+import TokenPageGuides from 'components/Guide/TokenPage'
 import { CONTAINER_ID, isLocalMode } from 'constants'
 import React from 'react'
 import ReactDOM from 'react-dom'

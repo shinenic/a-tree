@@ -10,7 +10,6 @@ export const storePhase = (phase = 0, prevUrl) => {
   if (phase === PHASE.NONE || !values(PHASE).includes(phase)) {
     localStorage.removeItem(TOKEN_GUIDE_LOCAL_STORAGE_KEY)
   } else {
-    console.log({ prevUrl, a: window.location.href })
     const value = { phase, timestamp: new Date().getTime(), prevUrl }
     localStorage.setItem(TOKEN_GUIDE_LOCAL_STORAGE_KEY, JSON.stringify(value))
   }
