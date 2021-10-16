@@ -29,18 +29,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const MainDrawer = ({
-  pageType,
-  owner,
-  repo,
-  commit,
-  pull,
-  branch: branchFromUrl,
-  filePath,
-  defaultBranch,
-  error,
-  isLoading,
-}) => {
+const MainDrawer = ({ pageInfo, error }) => {
+  const { pageType, owner, repo, commit, pull, branch, filePath } = pageInfo
+
   const drawerWidth = useStore((s) => s.drawerWidth)
   const disablePageTypeList = useStore((s) => s.disablePageTypeList)
   const dispatch = useStore((s) => s.dispatch)
@@ -48,7 +39,6 @@ const MainDrawer = ({
   const pullMenuEnabled = useStore((s) => s.pullMenuEnabled)
 
   const classes = useStyles()
-  const branch = branchFromUrl || defaultBranch
 
   const renderHeader = () => {
     const breadcrumb = [owner, repo]
