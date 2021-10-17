@@ -1,20 +1,53 @@
-import { useMemo } from 'react'
-import { ERROR_MESSAGE } from 'constants'
+import { ERROR_MESSAGE, isGithubHost } from 'constants'
 import useStore from 'stores/setting'
 import { startTokenGuide } from 'utils/tokenGuide'
 import Typography from '@material-ui/core/Typography'
+import Link from '@material-ui/core/Link'
 
 import * as Style from './style'
 
-const Error = ({ errorMessage }) => {
+const Error = ({ errorMessage = ERROR_MESSAGE.API_RATE_LIMIT }) => {
   const token = useStore((s) => s.token)
-  const isGithubHost = useMemo(() => window.location.host === 'github.com', [])
+
+  const enterpriseHint = () => {
+    if (errorMessage === ERROR_MESSAGE.API_RATE_LIMIT) {
+      return (
+        <Typography
+          variant="body2"
+          color="textSecondary"
+          style={{ marginTop: 30 }}
+        >
+          If this issue happens on your enterprise account, please try the{' '}
+          <Link
+            href="https://docs.github.com/en/authentication/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on"
+            target="_blank"
+            rel="noopener noference"
+            underline="none"
+          >
+            follow official guide
+          </Link>{' '}
+          to enable SSO.
+        </Typography>
+      )
+    }
+
+    return (
+      <Typography
+        variant="body2"
+        color="textSecondary"
+        style={{ marginTop: 30 }}
+      >
+        If it's not a expected domain, please
+        <b> right-click</b> to disable it.
+      </Typography>
+    )
+  }
 
   return (
     <Style.ErrorContainer>
       <Typography variant="body2">
         {errorMessage === ERROR_MESSAGE.API_RATE_LIMIT &&
-          'API rate limit exceeded, please try to create a token to get a higher rate limit'}
+          'API rate limit exceeded, please try to create a new token to get a higher rate limit'}
         {errorMessage === ERROR_MESSAGE.TOKEN_INVALID &&
           `It seems that the token is expired or invalid, please try to create
             a new one.`}
@@ -25,16 +58,7 @@ const Error = ({ errorMessage }) => {
           !token &&
           'It seems that this is an private repository, please create a personal token to access this repository!'}
       </Typography>
-      {!isGithubHost && (
-        <Typography
-          variant="body2"
-          color="textSecondary"
-          style={{ marginTop: 30 }}
-        >
-          If it's not a expected domain, please
-          <b> right-click</b> to disable it.
-        </Typography>
-      )}
+      {!isGithubHost && enterpriseHint()}
       <Style.HintContent onClick={startTokenGuide}>
         How to create a new token?
       </Style.HintContent>

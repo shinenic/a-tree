@@ -3,6 +3,8 @@ import { GITHUB_PAGE_CONTAINER_ID } from 'constants/github'
 import { GITHUB_NAV_BAR_HEIGHT } from 'constants'
 import { noop } from 'lodash'
 
+const DEFAULT_TIMEOUT = 1000 * 6
+
 /**
  * DOM structure
  *
@@ -131,3 +133,45 @@ export const generateReviewCheckListener = (callback = noop) => {
     pageContainer.removeEventListener('click', handler)
   }
 }
+
+export const checkFileNodeExisting = (fileHash, timeout = DEFAULT_TIMEOUT) =>
+  new Promise((resolve, reject) => {
+    let observer = null
+
+    const handler = () => {
+      if (document.querySelector(`div[id="${fileHash}"]`)) {
+        observer && observer.disconnect()
+        resolve()
+      }
+    }
+
+    handler()
+    observer = new MutationObserver(handler)
+
+    observer.observe(document.querySelector('body'), {
+      childList: true,
+      subtree: true,
+      attributes: true,
+    })
+
+    setTimeout(() => {
+      observer.disconnect()
+      reject()
+    }, timeout)
+  })
+
+export const checkPjaxEnd = (timeout = DEFAULT_TIMEOUT) =>
+  new Promise((resolve, reject) => {
+    const handler = () => {
+      window.removeEventListener('pjax:end', handler)
+
+      resolve()
+    }
+
+    window.addEventListener('pjax:end', handler)
+
+    setTimeout(() => {
+      window.removeEventListener('pjax:end', handler)
+      reject()
+    }, timeout)
+  })
