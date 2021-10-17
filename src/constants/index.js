@@ -76,3 +76,5 @@ export const isLocalMode = process.env.LOCAL_MODE === 'true'
 export const localAPIPort = process.env.API_PORT
 
 export const REPO_URL = 'https://github.com/shinenic/a-tree'
+
+export const isGithubHost = window.location.host === 'github.com'

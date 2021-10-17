@@ -11,18 +11,16 @@ import {
 } from 'utils/pullPage'
 import useUpdateEffect from 'hooks/useUpdateEffect'
 
-import { PAGE_TYPE } from 'constants'
+import { PAGE_TYPE, isGithubHost } from 'constants'
 import { scrollToTabsNav } from 'utils/scroll'
 import { linkGithubPage } from 'utils/link'
-
-const isEnterprise = window.location.host !== 'github.com'
 
 const getFileHash = (filename) => `diff-${sha256(filename)}`
 
 const linkToFileHash = (basePathname, filename) => {
   linkGithubPage(
     `${basePathname}#${getFileHash(filename)}`,
-    isEnterprise ? '#js-repo-pjax-container' : undefined
+    isGithubHost ? undefined : '#js-repo-pjax-container'
   )
 }
 
