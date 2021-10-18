@@ -1,7 +1,6 @@
-import { CONTEXT_MENU_ITEM_ID } from 'constants'
+import { CONTEXT_MENU_ITEM_ID, GLOBAL_MESSAGE_TYPE } from 'constants/background'
 import { reject } from 'lodash'
 
-import { GLOBAL_MESSAGE_TYPE } from '../constants/index'
 import {
   getSettingFromLocalStorage,
   storeSettingIntoLocalStorage,

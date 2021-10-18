@@ -1,4 +1,4 @@
-import { GLOBAL_MESSAGE_TYPE, CONTEXT_MENU_ITEM_ID } from 'constants'
+import { GLOBAL_MESSAGE_TYPE, CONTEXT_MENU_ITEM_ID } from 'constants/background'
 
 const activeTabUrlMemo = {}
 
