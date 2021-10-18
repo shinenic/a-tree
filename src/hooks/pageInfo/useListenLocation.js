@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { GLOBAL_MESSAGE_TYPE, isLocalMode } from 'constants'
+import { isLocalMode } from 'constants'
+import { GLOBAL_MESSAGE_TYPE } from 'constants/background'
 import useRequestEnd from '../useRequestEnd'
 
 const useListenLocation = () => {
