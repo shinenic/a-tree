@@ -46,6 +46,11 @@
   2. Github limits requests to 60/hours without `token`
 
 
+- How to solve the `API rate limit exceeded` issue with enterprise account
+
+  Please refer to the [official documentation](https://docs.github.com/en/authentication/authenticating-with-saml-single-sign-on)
+
+
 - How to trace code in a more efficient way
   
   If you need to trace the code between files, we would recommend that use the **powerful built-in online VS Code in Github** (open via shortcut `.`)
