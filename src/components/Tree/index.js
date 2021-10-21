@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 import TreeView from '@material-ui/lab/TreeView'
 import { get, set, isEmpty, sortBy, compact } from 'lodash'
 import {
@@ -174,22 +174,49 @@ export default function CustomizedTreeView({
   tree,
   isExpandedAll = false,
   onItemClick,
-  treeId,
   isLoading,
+  currentFilePath,
 }) {
+  const [expandedIds, setExpandedIds] = useState([])
   const theme = useTheme()
   const classes = useStyles()
 
+  const [objectTree, folderNodeIds] = useMemo(() => generateTree(tree), [tree])
+
+  useEffect(() => {
+    setExpandedIds(isExpandedAll ? [...folderNodeIds] : [])
+  }, [folderNodeIds, isExpandedAll])
+
+  useEffect(() => {
+    if (!currentFilePath) return
+
+    setExpandedIds((prevIds) => {
+      if (prevIds.includes(currentFilePath)) {
+        return prevIds
+      }
+
+      const targetPaths = currentFilePath.split('/')
+      const targetIds = targetPaths.map((_, index) =>
+        targetPaths.slice(0, index + 1).join('/')
+      )
+
+      return targetIds.reduce(
+        (result, id) => (result.includes(id) ? result : [...result, id]),
+        prevIds
+      )
+    })
+  }, [currentFilePath])
+
   const treeView = useMemo(() => {
-    const [objectTree, expandedNodeIds] = generateTree(tree)
-    const defaultExpandedIds = isExpandedAll
-      ? [...expandedNodeIds, treeId]
-      : [treeId]
+    const onNodeToggle = (_, nodeIds) => {
+      setExpandedIds(nodeIds)
+    }
 
     return (
       <TreeView
         className={classes.root}
-        defaultExpanded={defaultExpandedIds}
+        expanded={expandedIds}
+        onNodeToggle={onNodeToggle}
         {...getDefaultIcon(isLoading, theme)}
       >
         <Tree
@@ -199,7 +226,7 @@ export default function CustomizedTreeView({
         />
       </TreeView>
     )
-  }, [treeId, onItemClick])
+  }, [objectTree, onItemClick, expandedIds, isLoading]) // eslint-disable-line
 
   return treeView
 }

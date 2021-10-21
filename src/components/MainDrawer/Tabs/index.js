@@ -16,7 +16,7 @@ const EXPANDED_TREE_TYPES = [
 
 const TreeTab = ({ ...pageInfo }) => {
   const drawerPinned = useStore((s) => s.drawerPinned)
-  const { pageType, owner, repo, commit, pull, branch } = pageInfo
+  const { pageType, owner, repo, commit, pull, branch, filePath } = pageInfo
 
   const { data, isLoading, error } = useQueryTree(pageInfo, drawerPinned)
   const onItemClick = useTreeItemClick(pageInfo)
@@ -33,8 +33,8 @@ const TreeTab = ({ ...pageInfo }) => {
     <Tree
       tree={data?.files || data?.tree || data}
       onItemClick={onItemClick}
-      treeId={`${owner}-${repo}-${commit}-${pull}-${branch}`}
       isExpandedAll={EXPANDED_TREE_TYPES.includes(pageType)}
+      currentFilePath={filePath}
     />
   )
 }
