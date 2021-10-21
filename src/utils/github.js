@@ -50,7 +50,9 @@ export const getPageInfo = (pathname = '', defaultBranch, title) => {
       ...basicInfo,
       pageType: CODE,
       ...(!isEmpty(third) &&
-        branch && { filePath: restPaths.join('').split(branch)[1] }),
+        branch && {
+          filePath: restPaths.slice(branch.split('/').length).join('/'),
+        }),
     }
   }
 
