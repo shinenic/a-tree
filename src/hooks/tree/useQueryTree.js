@@ -3,7 +3,7 @@ import {
   useQueryPull,
   useQueryCommit,
 } from 'hooks/api/useGithubQueries'
-import { PAGE_TYPE } from 'constants'
+import { PAGE_TYPE, PULL_PAGE_TYPE } from 'constants'
 
 const useQueryTree = (pageInfo, enabled = true) => {
   const { pageType, owner, repo, commit, pull, branch } = pageInfo
@@ -31,16 +31,7 @@ const useQueryTree = (pageInfo, enabled = true) => {
 
   const queryFiles = useQueryFiles(
     { owner, branch, repo },
-    {
-      enabled:
-        enabled &&
-        ![
-          PAGE_TYPE.PULL_FILES,
-          PAGE_TYPE.PULL,
-          PAGE_TYPE.PULL_COMMIT,
-          PAGE_TYPE.PULL_COMMITS,
-        ].includes(pageType),
-    }
+    { enabled: enabled && !PULL_PAGE_TYPE[pageType] }
   )
 
   const queryMap = {
