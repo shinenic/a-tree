@@ -15,7 +15,7 @@ const SvgMask = ({
   handleClick,
   isScrolling,
 }) => {
-  const [target, setTarget] = useState({ top: 0, left: 0, height: 0, width: 0 })
+  const [target, setTarget] = useState(/** @type {DOMRect} */ (null))
   const { height: windowHeight, width: windowWidth } = useWindowSize()
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const SvgMask = ({
         width: width + highlightPadding * 2,
       })
     }
-  }, [isScrolling, isStarting])
+  }, [isScrolling, isStarting]) // eslint-disable-line
 
   if (isEmpty(target)) return null
 
