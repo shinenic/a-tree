@@ -12,7 +12,7 @@ import StepBox from './StepBox'
 /**
  * @TODO Refactor `isScrolling` for better UX
  */
-function Tour({ isOpening = false, customSteps = [] }) {
+function Tour({ isOpening = false, customSteps = [], onFinish }) {
   const [isScrolling, setScrolling, setNotScrolling] = useSwitch()
   const { height: windowHeight } = useWindowSize()
   const [{ isStarting, steps, currentStep }, dispatch] = useReducer(
@@ -31,6 +31,12 @@ function Tour({ isOpening = false, customSteps = [] }) {
   }, [isOpening])
 
   useEffect(() => {
+    if (!isStarting && steps.length !== 0 && currentStep === steps.length - 1) {
+      onFinish?.()
+    }
+  }, [isStarting, steps, onFinish, currentStep])
+
+  useEffect(() => {
     if (!isStarting) return null
 
     setScrolling()
@@ -42,7 +48,7 @@ function Tour({ isOpening = false, customSteps = [] }) {
     })
 
     return () => setNotScrolling()
-  }, [isStarting, currentStep])
+  }, [isStarting, currentStep]) // eslint-disable-line
 
   useEffect(() => {
     const handleKeyDown = (e) => {

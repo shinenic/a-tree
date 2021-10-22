@@ -50,10 +50,15 @@ function CreatingTokenTourGuide({ prevUrl }) {
 
   useEffect(() => {
     open()
-    storePhase(PHASE.START_CREATING, prevUrl)
-  }, [])
+  }, []) // eslint-disable-line
 
-  return <Tour isOpening={isOpening} customSteps={CREATING_STEPS} />
+  return (
+    <Tour
+      isOpening={isOpening}
+      customSteps={CREATING_STEPS}
+      onFinish={() => storePhase(PHASE.START_CREATING, prevUrl)}
+    />
+  )
 }
 
 export default CreatingTokenTourGuide
