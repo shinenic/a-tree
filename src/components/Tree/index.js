@@ -226,7 +226,7 @@ export default function CustomizedTreeView({
         />
       </TreeView>
     )
-  }, [objectTree, onItemClick, expandedIds, isLoading]) // eslint-disable-line
+  }, [objectTree, onItemClick, expandedIds, isLoading, theme.palette.type]) // eslint-disable-line
 
   return treeView
 }
