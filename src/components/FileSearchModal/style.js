@@ -26,6 +26,29 @@ export const FileNameInput = forwardRef((props, ref) => {
 export const FileRow = ({ isSelected, ...props }) => {
   const theme = useTheme()
 
+  const colors = {
+    dark: {
+      backgroundColor: isSelected && '#007fff',
+      '&:hover': {
+        backgroundColor: '#007fff',
+      },
+      '& b': {
+        color: '#78b6f5',
+      },
+      color: 'white',
+    },
+    light: {
+      backgroundColor: isSelected && '#f0f7ff',
+      color: isSelected && '#007fff',
+      '&:hover': {
+        backgroundColor: theme.palette.action.hover,
+      },
+      '& b': {
+        color: '#007fff',
+      },
+    },
+  }[theme.palette.type]
+
   return (
     <Box
       sx={{
@@ -33,15 +56,9 @@ export const FileRow = ({ isSelected, ...props }) => {
         alignItems: 'center',
         padding: '3px 16px',
         cursor: 'pointer',
-        backgroundColor: isSelected && theme.palette.action.focus,
-        '&:hover': {
-          backgroundColor: theme.palette.action.hover,
-        },
+        ...colors,
         '&:nth-of-type(1)': {
           marginTop: 10,
-        },
-        '& b': {
-          color: theme.palette.text.primary,
         },
       }}
       {...props}
