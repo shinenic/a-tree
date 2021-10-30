@@ -1,19 +1,22 @@
 import React, { useCallback } from 'react'
 import Drawer from '@material-ui/core/Drawer'
 import { makeStyles } from '@material-ui/core/styles'
-import { PAGE_TYPE, ERROR_MESSAGE } from 'constants'
+import { Box } from '@material-ui/core'
+import { ERROR_MESSAGE } from 'constants'
 
 import PullCommitMenu from 'components/Menu/PullCommit'
 import PullMenu from 'components/Menu/Pull'
 import { SettingButton } from 'components/Setting'
-import { compact, throttle } from 'lodash'
+import { throttle } from 'lodash'
 import useStore from 'stores/setting'
 import GlobalStyle from 'GlobalStyle'
 import { getHeaderHeight } from 'utils/style'
 import FloatingButton from 'components/FloatingButton'
 import FileSearch from 'components/FileSearchModal'
 import Breadcrumb from 'components/Breadcrumb'
+import SearchBar from 'components/SearchBar'
 
+import useSwitch from 'hooks/useSwitch'
 import Error from './Tabs/Error'
 import TreeTab from './Tabs'
 import ResizableWrapper from './ResizableWrapper'
@@ -76,7 +79,12 @@ const MainDrawer = ({ pageInfo, error }) => {
     <>
       <GlobalStyle pl={drawerPinned ? drawerWidth : 0} />
       <FloatingButton pageType={pageType} />
-      <FileSearch {...pageInfo} />
+      <FileSearch
+        pageInfo={pageInfo}
+        isOpen={isFileSearchModalOpen}
+        onOpen={openFileSearchModal}
+        onClose={closeFileSearchModal}
+      />
       <Drawer
         anchor="left"
         open={drawerPinned}
@@ -88,8 +96,11 @@ const MainDrawer = ({ pageInfo, error }) => {
           handleOnResize={handleOnResize}
         >
           <Style.DrawerHeader height={getHeaderHeight()}>
-            {renderHeader()}
+            <Breadcrumb {...pageInfo} />
           </Style.DrawerHeader>
+          <Box padding="10px" height={55}>
+            <SearchBar onClick={() => toggleFileSearchModal()} />
+          </Box>
           <PullCommitMenu
             owner={owner}
             repo={repo}
