@@ -55,16 +55,8 @@ export default function PullCommitMenu({
   commit: currentCommit,
 }) {
   const [menuPositionStyle, setMenuPositionStyle] = useState({})
-  const {
-    data,
-    handleClose,
-    handleButtonClick,
-    buttonText,
-    error,
-    isLoading,
-    menuStyles,
-    menuOpened,
-  } = usePullCommitMenu({ owner, repo, pull, commit: currentCommit })
+  const { data, handleClose, error, menuStyles, menuOpened } =
+    usePullCommitMenu({ owner, repo, pull, commit: currentCommit })
 
   const menuRef = useClickOutside(handleClose)
 
@@ -83,12 +75,6 @@ export default function PullCommitMenu({
 
   return (
     <div ref={menuRef}>
-      <BaseStyle.ToggleButton
-        disabled={error || isLoading}
-        onClick={handleButtonClick}
-      >
-        {buttonText}
-      </BaseStyle.ToggleButton>
       <AnimatedMenuContainer style={{ ...menuStyles, ...menuPositionStyle }}>
         <BaseStyle.StyledGithubLink
           onClick={handleClose}
