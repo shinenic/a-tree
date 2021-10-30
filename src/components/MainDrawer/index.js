@@ -12,6 +12,7 @@ import GlobalStyle from 'GlobalStyle'
 import { getHeaderHeight } from 'utils/style'
 import FloatingButton from 'components/FloatingButton'
 import FileSearch from 'components/FileSearchModal'
+import Breadcrumb from 'components/Breadcrumb'
 
 import Error from './Tabs/Error'
 import TreeTab from './Tabs'
@@ -29,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const MainDrawer = ({ pageInfo, error }) => {
-  const { pageType, owner, repo, commit, pull, branch, filePath } = pageInfo
+  const { pageType, owner, repo, commit, pull } = pageInfo
 
   const drawerWidth = useStore((s) => s.drawerWidth)
   const disablePageTypeList = useStore((s) => s.disablePageTypeList)
@@ -43,38 +44,6 @@ const MainDrawer = ({ pageInfo, error }) => {
   ] = useSwitch()
 
   const classes = useStyles()
-
-  const renderHeader = () => {
-    const breadcrumb = [owner, repo]
-
-    switch (pageType) {
-      case PAGE_TYPE.CODE:
-      case PAGE_TYPE.PULLS:
-        breadcrumb.push(branch)
-        breadcrumb.push(filePath)
-        break
-
-      case PAGE_TYPE.CODE_COMMIT:
-        breadcrumb.push(branch)
-        breadcrumb.push(commit)
-        break
-
-      case PAGE_TYPE.PULL:
-      case PAGE_TYPE.PULL_FILES:
-        breadcrumb.push(pull)
-        break
-
-      case PAGE_TYPE.PULL_COMMIT:
-        breadcrumb.push(pull)
-        breadcrumb.push(commit)
-        break
-
-      default:
-        break
-    }
-
-    return compact(breadcrumb).join('  >  ')
-  }
 
   const renderContent = () => {
     if (error) {
