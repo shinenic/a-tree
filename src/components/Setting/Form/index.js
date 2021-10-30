@@ -5,9 +5,11 @@ import Paper from '@material-ui/core/Paper'
 import { REPO_URL } from 'constants'
 import Link from '@material-ui/core/Link'
 import GithubIcon from '../GithubIcon'
+
 import TokenField from './TokenField'
 import VisibilityCheckBoxes from './VisibilityCheckBoxes'
 import OptionBoxes from './OptionBoxes'
+import Hotkeys from './Hotkeys'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -68,6 +70,7 @@ export default function SettingForm() {
       </Link>
       <VisibilityCheckBoxes />
       <OptionBoxes />
+      <Hotkeys />
       <TokenField />
     </Paper>
   )

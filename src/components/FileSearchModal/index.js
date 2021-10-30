@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useReducer, useMemo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import useStore from 'stores/setting'
 
 import {
   buildUsedLetterMap,
@@ -61,6 +62,8 @@ const FileSearchModal = ({
   onOpen,
   onClose,
 }) => {
+  const fileSearchHotkey = useStore((s) => s.fileSearchHotkey)
+
   const [{ result = [], keyword = '', selectedIndex = 0, isOpened }, dispatch] =
     useReducer(reducer, {
       ...initialState,
@@ -100,10 +103,14 @@ const FileSearchModal = ({
    * Handle shortcuts
    */
   useEffect(() => {
-    const unlisten = generateHotkeyListener(dispatch, isOpened)
+    const unlisten = generateHotkeyListener(
+      dispatch,
+      isOpened,
+      fileSearchHotkey
+    )
 
     return () => unlisten()
-  }, [isOpened])
+  }, [fileSearchHotkey, isOpened])
 
   useUpdateEffect(() => {
     isOpened ? onOpen() : onClose()

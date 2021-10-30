@@ -68,3 +68,5 @@ export const localAPIPort = process.env.API_PORT
 export const REPO_URL = 'https://github.com/shinenic/a-tree'
 
 export const isGithubHost = window.location.host === 'github.com'
+
+export const IS_MAC = navigator.platform.toUpperCase().indexOf('MAC') >= 0
