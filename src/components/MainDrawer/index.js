@@ -35,7 +35,12 @@ const MainDrawer = ({ pageInfo, error }) => {
   const disablePageTypeList = useStore((s) => s.disablePageTypeList)
   const dispatch = useStore((s) => s.dispatch)
   const drawerPinned = useStore((s) => s.drawerPinned)
-  const pullMenuEnabled = useStore((s) => s.pullMenuEnabled)
+  const [
+    isFileSearchModalOpen,
+    openFileSearchModal,
+    closeFileSearchModal,
+    toggleFileSearchModal,
+  ] = useSwitch()
 
   const classes = useStyles()
 
@@ -122,9 +127,7 @@ const MainDrawer = ({ pageInfo, error }) => {
             pull={pull}
             commit={commit}
           />
-          {pullMenuEnabled && (
-            <PullMenu owner={owner} repo={repo} pull={pull} />
-          )}
+          <PullMenu owner={owner} repo={repo} pull={pull} />
           <Style.DrawerContent>{renderContent()}</Style.DrawerContent>
           <Style.DrawerFooter>
             <SettingButton />
