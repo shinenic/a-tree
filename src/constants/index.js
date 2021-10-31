@@ -26,7 +26,7 @@ export const PULL_PAGE_TYPE = {
 export const PAGE_TYPE = {
   ...CODE_PAGE_TYPE,
   ...PULL_PAGE_TYPE,
-  PULLS: 'PULLS',
+  PULLS: 'PULLS', // pull request list page
   ISSUES: 'ISSUES',
   /**
    * Pages which related to repositories but doesn't belong any of the types above.
@@ -34,6 +34,18 @@ export const PAGE_TYPE = {
    */
   OTHERS: 'OTHERS',
 }
+
+export const PAGES_WITH_CODE_TREE = [
+  CODE_PAGE_TYPE.CODE,
+  PAGE_TYPE.PULLS,
+  PAGE_TYPE.ISSUES,
+  PAGE_TYPE.OTHERS,
+]
+
+export const PAGES_WITH_FULL_PULL_TREE = [
+  PULL_PAGE_TYPE.PULL,
+  PULL_PAGE_TYPE.PULL_FILES,
+]
 
 /** @type {PageInfo} */
 export const DEFAULT_PAGE_INFO = {

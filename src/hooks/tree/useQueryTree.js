@@ -3,17 +3,14 @@ import {
   useQueryPull,
   useQueryCommit,
 } from 'hooks/api/useGithubQueries'
-import { PAGE_TYPE, PULL_PAGE_TYPE } from 'constants'
+import { PAGE_TYPE, PULL_PAGE_TYPE, PAGES_WITH_FULL_PULL_TREE } from 'constants'
 
 const useQueryTree = (pageInfo, enabled = true) => {
   const { pageType, owner, repo, commit, pull, branch } = pageInfo
 
   const queryPull = useQueryPull(
     { owner, pull, repo },
-    {
-      enabled:
-        enabled && [PAGE_TYPE.PULL_FILES, PAGE_TYPE.PULL].includes(pageType),
-    }
+    { enabled: enabled && PAGES_WITH_FULL_PULL_TREE.includes(pageType) }
   )
 
   const queryCommit = useQueryCommit(
