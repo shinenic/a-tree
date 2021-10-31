@@ -188,24 +188,31 @@ export default function CustomizedTreeView({
   }, [folderNodeIds, isExpandedAll])
 
   useEffect(() => {
-    if (!currentFilePath) return
+    if (isExpandedAll) return
+
+    if (!currentFilePath) {
+      setExpandedIds([])
+      return
+    }
 
     setExpandedIds((prevIds) => {
-      if (prevIds.includes(currentFilePath)) {
-        return prevIds
-      }
-
       const targetPaths = currentFilePath.split('/')
       const targetIds = targetPaths.map((_, index) =>
         targetPaths.slice(0, index + 1).join('/')
       )
 
-      return targetIds.reduce(
-        (result, id) => (result.includes(id) ? result : [...result, id]),
-        prevIds
+      return (
+        targetIds
+          // Add the nodes which are necessary to reach to the currentFilePath
+          .reduce(
+            (result, id) => (result.includes(id) ? result : [...result, id]),
+            prevIds
+          )
+          // Remove the deeper nodes beyond the currentFilePath
+          .filter((id) => id.indexOf(`${currentFilePath}/`) !== 0)
       )
     })
-  }, [currentFilePath])
+  }, [currentFilePath, isExpandedAll])
 
   const treeView = useMemo(() => {
     const onNodeToggle = (_, nodeIds) => {
