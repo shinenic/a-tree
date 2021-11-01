@@ -19,7 +19,7 @@ const DEFAULT_TIMEOUT = 1000 * 6
  *   <div class="js-diff-progressive-container">...</div>
  * </div>
  */
-const getFileNodes = () => {
+export const getFileNodes = () => {
   const diffContainer = document.getElementById('files')
   if (!diffContainer) {
     throw new Error('Can\'t find diff container DOM (id="files")')

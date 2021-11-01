@@ -82,3 +82,5 @@ export const REPO_URL = 'https://github.com/shinenic/a-tree'
 export const isGithubHost = window.location.host === 'github.com'
 
 export const IS_MAC = navigator.platform.toUpperCase().indexOf('MAC') >= 0
+
+export const MODIFIER_KEY_PROPERTY = IS_MAC ? 'metaKey' : 'ctrlKey'

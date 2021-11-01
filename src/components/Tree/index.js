@@ -12,9 +12,20 @@ import {
   IconSkeleton,
 } from 'components/MainDrawer/Tabs/Loading/placeholder'
 import tinycolor from 'tinycolor2'
+import { MODIFIER_KEY_PROPERTY } from 'constants'
+import { openInNewTab } from 'utils/chrome'
+import useContextMenu from 'stores/contextMenu'
 import TreeItem from './Item'
 import { MAIN_COLOR } from './constants'
 import LabelIcon from './LabelIcon'
+
+const isTreeContent = (e) => {
+  return [
+    '[class*="MuiTreeItem-content"]',
+    '[class*="MuiTreeItem-label"]',
+    'path',
+  ].some((selector) => e.target.matches(selector))
+}
 
 const useStyles = makeStyles({
   root: {
@@ -111,7 +122,9 @@ const setNodeIds = (tree, parentNodeId = '', folderNodeIds) => {
   })
 }
 
-const Tree = ({ tree, onItemClick, isLoading }) => {
+const Tree = ({ tree, onItemClick, isLoading, getNodeHref }) => {
+  const { openContextMenu } = useContextMenu()
+
   if (isEmpty(tree)) return null
 
   return sortBy(Object.keys(tree), [
@@ -125,43 +138,56 @@ const Tree = ({ tree, onItemClick, isLoading }) => {
     const hasChildren = !isEmpty(node.children)
     const status = node.status || 'normal'
 
-    const handleClick = (e) => {
+    /**
+     * Tree view has no official api to set `onContextMenu` for `tree item content` directly,
+     * so in order to limit the clickable area,
+     * detect only tree item content or it will won't stop propagation
+     */
+    const handleContextMenu = (e) => {
+      if (!isTreeContent(e)) return
+
+      e.preventDefault()
       e.stopPropagation()
 
-      if (onItemClick) onItemClick(node, e)
-    }
-
-    const handleNodeClick = (e) => {
-      if (isLoading) {
-        e.preventDefault()
-      }
+      if (isLoading) return
+      openContextMenu(e, node)
     }
 
     if (hasChildren) {
       return (
-        <div key={node.nodeId} onClick={handleClick}>
+        <div key={node.nodeId}>
           <TreeItem
             nodeId={node.nodeId}
             label={isLoading ? <LabelTextSkeleton /> : label}
-            onIconClick={handleNodeClick}
-            onLabelClick={handleNodeClick}
+            onContextMenu={handleContextMenu}
           >
             <Tree
               tree={node.children}
               onItemClick={onItemClick}
               isLoading={isLoading}
+              getNodeHref={getNodeHref}
             />
           </TreeItem>
         </div>
       )
     }
 
-    const originalPath = node.path || node.filename
+    const handleClick = (e) => {
+      e.stopPropagation()
+
+      if (e[MODIFIER_KEY_PROPERTY]) {
+        openInNewTab(getNodeHref(node))
+        return
+      }
+
+      if (onItemClick) onItemClick(node, e)
+    }
+
     return (
       <div key={node.nodeId} onClick={handleClick}>
         <TreeItem
+          onContextMenu={handleContextMenu}
           nodeId={node.nodeId}
-          originalPath={originalPath}
           label={isLoading ? <LabelTextSkeleton /> : label}
           icon={isLoading ? <IconSkeleton /> : <LabelIcon status={status} />}
         />
@@ -176,6 +202,7 @@ export default function CustomizedTreeView({
   onItemClick,
   isLoading,
   currentFilePath,
+  getNodeHref,
 }) {
   const [expandedIds, setExpandedIds] = useState([])
   const theme = useTheme()
@@ -216,6 +243,8 @@ export default function CustomizedTreeView({
 
   const treeView = useMemo(() => {
     const onNodeToggle = (_, nodeIds) => {
+      if (isLoading) return // disable collapse / expand when loading
+
       setExpandedIds(nodeIds)
     }
 
@@ -229,6 +258,7 @@ export default function CustomizedTreeView({
         <Tree
           tree={objectTree}
           onItemClick={onItemClick}
+          getNodeHref={getNodeHref}
           isLoading={isLoading}
         />
       </TreeView>

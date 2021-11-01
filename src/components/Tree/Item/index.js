@@ -61,10 +61,10 @@ const useStyles = makeStyles((theme) =>
   })
 )
 
-const StyledTreeItem = ({ originalPath, ...rest }) => {
+const StyledTreeItem = ({ nodeId, ...rest }) => {
   const classes = useStyles()
 
-  const isViewed = useViewedFilesStore((s) => s.viewedFileMap[originalPath])
+  const isViewed = useViewedFilesStore((s) => s.viewedFileMap[nodeId])
 
   return (
     <TreeItem
@@ -78,6 +78,7 @@ const StyledTreeItem = ({ originalPath, ...rest }) => {
         transition: 'opacity 0.4s',
         ...(isViewed && { opacity: 0.5 }),
       }}
+      nodeId={nodeId}
       {...rest}
     />
   )

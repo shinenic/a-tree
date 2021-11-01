@@ -44,3 +44,21 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }, tabs) => {
     },
   })
 })
+
+/**
+ * To enable `Open link in new tab` but `STAY` on current page
+ */
+chrome.runtime.onMessage.addListener(({ type, payload }, sender) => {
+  switch (type) {
+    case GLOBAL_MESSAGE_TYPE.OPEN_LINK_IN_NEW_TAB: {
+      chrome.tabs.create({
+        url: payload,
+        active: false,
+        index: sender.tab.index + 1,
+      })
+      break
+    }
+    default:
+      break
+  }
+})

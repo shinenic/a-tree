@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 import Drawer from '@material-ui/core/Drawer'
 import { makeStyles } from '@material-ui/core/styles'
 import { PAGE_TYPE, ERROR_MESSAGE } from 'constants'
+import useContextMenu from 'stores/contextMenu'
 
 import PullCommitMenu from 'components/Menu/PullCommit'
 import PullMenu from 'components/Menu/Pull'
@@ -12,6 +13,7 @@ import GlobalStyle from 'GlobalStyle'
 import { getHeaderHeight } from 'utils/style'
 import FloatingButton from 'components/FloatingButton'
 import FileSearch from 'components/FileSearchModal'
+import ContextMenu from 'components/ContextMenu'
 
 import Error from './Tabs/Error'
 import TreeTab from './Tabs'
@@ -36,6 +38,8 @@ const MainDrawer = ({ pageInfo, error }) => {
   const dispatch = useStore((s) => s.dispatch)
   const drawerPinned = useStore((s) => s.drawerPinned)
   const pullMenuEnabled = useStore((s) => s.pullMenuEnabled)
+
+  const { openContextMenu } = useContextMenu()
 
   const classes = useStyles()
 
@@ -103,11 +107,17 @@ const MainDrawer = ({ pageInfo, error }) => {
       <GlobalStyle pl={drawerPinned ? drawerWidth : 0} />
       <FloatingButton pageType={pageType} />
       <FileSearch {...pageInfo} />
+      <ContextMenu {...pageInfo} />
       <Drawer
         anchor="left"
         open={drawerPinned}
         variant="persistent"
         classes={classes}
+        onContextMenu={(event) => {
+          openContextMenu(event)
+          event.preventDefault()
+          event.stopPropagation()
+        }}
       >
         <ResizableWrapper
           drawerWidth={drawerWidth}
