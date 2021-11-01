@@ -2,6 +2,7 @@ import Grid from '@material-ui/core/Grid'
 import useStore from 'stores/setting'
 import { IS_MAC } from 'constants'
 import Typography from '@material-ui/core/Typography'
+import Chip from '@material-ui/core/Chip'
 
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
@@ -61,7 +62,8 @@ const Hotkeys = () => {
           color="textSecondary"
           style={{ marginTop: 8 }}
         >
-          {`⚠ Warning: ${ADORNMENT}k will block the native github command palette`}
+          ⚠ Warning: <Chip label={`${ADORNMENT}K`} size="small" /> will block
+          the native github command palette
         </Typography>
       )}
     </>
