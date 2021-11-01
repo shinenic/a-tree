@@ -34,12 +34,12 @@ const useStyles = makeStyles((theme) => ({
 const FileSearchWrapper = ({ ...pageInfo }) => {
   const [isQueryEnabled, enable, disable] = useSwitch()
 
-  const { data, isLoading, error } = useQueryTree(pageInfo, isQueryEnabled)
+  const { files, isLoading, error } = useQueryTree(pageInfo, isQueryEnabled)
   const onItemClick = useTreeItemClick(pageInfo)
 
   return (
     <FileSearchModal
-      files={data?.files || data?.tree || data}
+      files={files}
       selectCallback={onItemClick}
       isLoading={isLoading}
       error={error}

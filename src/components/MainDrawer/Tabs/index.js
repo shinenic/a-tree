@@ -15,7 +15,7 @@ const TreeTab = ({ ...pageInfo }) => {
   const drawerPinned = useStore((s) => s.drawerPinned)
   const { pageType, owner, repo, pull, filePath } = pageInfo
 
-  const { data, isLoading, error } = useQueryTree(pageInfo, drawerPinned)
+  const { files, isLoading, error } = useQueryTree(pageInfo, drawerPinned)
   const onItemClick = useTreeItemClick(pageInfo)
 
   useViewedFiles({ owner, pull, repo })
@@ -24,13 +24,13 @@ const TreeTab = ({ ...pageInfo }) => {
 
   if (error) return null
 
-  if (isLoading || !data) {
+  if (isLoading || !files) {
     return <Loading isExpandedAll={isExpandedAll} />
   }
 
   return (
     <Tree
-      tree={data?.files || data?.tree || data}
+      tree={files}
       onItemClick={onItemClick}
       isExpandedAll={isExpandedAll}
       currentFilePath={filePath}

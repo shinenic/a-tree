@@ -3,6 +3,7 @@ import {
   useQueryPull,
   useQueryCommit,
 } from 'hooks/api/useGithubQueries'
+import { useMemo } from 'react'
 import { PAGE_TYPE, PULL_PAGE_TYPE, PAGES_WITH_FULL_PULL_TREE } from 'constants'
 
 const useQueryTree = (pageInfo, enabled = true) => {
@@ -40,7 +41,21 @@ const useQueryTree = (pageInfo, enabled = true) => {
     [PAGE_TYPE.CODE_COMMIT]: queryCommit,
   }
 
-  return queryMap[pageType] ?? queryFiles
+  const { data, isLoading, error } = queryMap[pageType] ?? queryFiles
+
+  const hasData = Boolean(data)
+  const files = useMemo(
+    /**
+     * @note Files in each different API
+     *  commit: data.files
+     *  code:   data.tree
+     *  pull:   data
+     */
+    () => data?.files || data?.tree || data,
+    [Object.values(pageInfo), hasData] // eslint-disable-line
+  )
+
+  return { files, isLoading, error }
 }
 
 export default useQueryTree
