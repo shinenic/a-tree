@@ -1,5 +1,4 @@
 import { useCallback, useRef } from 'react'
-import sha256 from 'crypto-js/sha256'
 import useStore from 'stores/setting'
 
 import {
@@ -7,6 +6,7 @@ import {
   scrollToFile,
   resetFocusFiles,
   checkPjaxEnd,
+  getFileHashId,
   checkFileNodeExisting,
 } from 'utils/pullPage'
 import useUpdateEffect from 'hooks/useUpdateEffect'
@@ -15,11 +15,9 @@ import { PAGE_TYPE, isGithubHost } from 'constants'
 import { scrollToTabsNav } from 'utils/scroll'
 import { linkGithubPage } from 'utils/link'
 
-const getFileHash = (filename) => `diff-${sha256(filename)}`
-
 const linkToFileHash = (basePathname, filename) => {
   linkGithubPage(
-    `${basePathname}#${getFileHash(filename)}`,
+    `${basePathname}#${getFileHashId(filename)}`,
     isGithubHost ? undefined : '#js-repo-pjax-container'
   )
 }
@@ -33,19 +31,19 @@ const useLinkPullFile = ({ basePathname, pageType }) => {
    */
   const asyncCheckFileNode = useCallback(
     async (filename) =>
-      checkPjaxEnd().then(() => checkFileNodeExisting(getFileHash(filename))),
+      checkPjaxEnd().then(() => checkFileNodeExisting(getFileHashId(filename))),
     []
   )
 
   const handleFocusFileNode = useCallback((filename) => {
-    focusFile(getFileHash(filename))
+    focusFile(getFileHashId(filename))
     scrollToTabsNav()
     previousLockedFile.current = filename
   }, [])
 
   const handleUnFocus = useCallback((filename) => {
     resetFocusFiles()
-    scrollToFile(getFileHash(filename))
+    scrollToFile(getFileHashId(filename))
     previousLockedFile.current = null
   }, [])
 
@@ -86,13 +84,13 @@ const useLinkPullFile = ({ basePathname, pageType }) => {
         return
       }
 
-      scrollToFile(getFileHash(filename))
+      scrollToFile(getFileHashId(filename))
 
       if (!isFocusMode) return
 
       try {
         if (previousLockedFile.current !== filename) {
-          checkFileNodeExisting(getFileHash(filename), 0)
+          checkFileNodeExisting(getFileHashId(filename), 0)
             .then(() => {
               handleFocusFileNode(filename)
             })

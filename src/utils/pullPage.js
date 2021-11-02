@@ -54,13 +54,13 @@ export const getFileNodes = () => {
  * @param {boolean} option.showAllFiles if true, all of the nodes will be visible
  * @returns {HTMLElement} return the node of `filePath` if specified
  */
-const loopFileNodes = ({ fileHash, focusFile, showAllFiles } = {}) => {
+const loopFileNodes = ({ fileHashId, focusFile, showAllFiles } = {}) => {
   if (focusFile && showAllFiles) {
     throw new Error('"focusFile" and "showAllFiles" can\'t be used together')
   }
 
-  if (focusFile && !fileHash) {
-    throw new Error('"focusFile" and "fileHash" should be used together')
+  if (focusFile && !fileHashId) {
+    throw new Error('"focusFile" and "fileHashId" should be used together')
   }
 
   const fileNodes = getFileNodes()
@@ -68,7 +68,7 @@ const loopFileNodes = ({ fileHash, focusFile, showAllFiles } = {}) => {
   let target = null
 
   fileNodes.forEach((node) => {
-    if (node.id === fileHash) {
+    if (node.id === fileHashId) {
       target = node
 
       if (focusFile || showAllFiles) {
@@ -81,23 +81,23 @@ const loopFileNodes = ({ fileHash, focusFile, showAllFiles } = {}) => {
     }
   })
 
-  if (fileHash && !target) {
-    throw new Error(`Can't find HTML node for file path "${fileHash}"`)
+  if (fileHashId && !target) {
+    throw new Error(`Can't find HTML node for file path "${fileHashId}"`)
   }
 
   return target
 }
 
-export const focusFile = (fileHash) => {
-  loopFileNodes({ fileHash, focusFile: true })
+export const focusFile = (fileHashId) => {
+  loopFileNodes({ fileHashId, focusFile: true })
 }
 
 export const resetFocusFiles = () => {
   loopFileNodes({ showAllFiles: true })
 }
 
-export const scrollToFile = (fileHash) => {
-  scrollTo(document.getElementById(fileHash), {
+export const scrollToFile = (fileHashId) => {
+  scrollTo(document.getElementById(fileHashId), {
     offsetY: GITHUB_NAV_BAR_HEIGHT,
   })
 }

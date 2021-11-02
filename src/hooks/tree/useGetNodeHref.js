@@ -1,18 +1,16 @@
 import { PAGE_TYPE } from 'constants'
 import { useMemo } from 'react'
-import sha256 from 'crypto-js/sha256'
-
-const getFileHash = (filename) => `diff-${sha256(filename)}`
+import { getFileHashId } from 'utils/pullPage'
 
 const useGetNodeHref = (pageInfo) => {
   const { pageType, owner, repo, commit, pull, branch } = pageInfo
 
   const getNodeHref = useMemo(() => {
     const getPullNodeHref = ({ filename }) =>
-      `/${owner}/${repo}/pull/${pull}/files/#${getFileHash(filename)}`
+      `/${owner}/${repo}/pull/${pull}/files/#${getFileHashId(filename)}`
 
     const getPullCommitNodeHref = ({ filename }) =>
-      `/${owner}/${repo}/pull/${pull}/commits/${commit}#${getFileHash(
+      `/${owner}/${repo}/pull/${pull}/commits/${commit}#${getFileHashId(
         filename
       )}`
 
@@ -20,7 +18,7 @@ const useGetNodeHref = (pageInfo) => {
       `/${owner}/${repo}/blob/${branch}/${path}`
 
     const getCodeCommitNodeHref = ({ filename }) =>
-      `/${owner}/${repo}/commit/${commit}#${getFileHash(filename)}`
+      `/${owner}/${repo}/commit/${commit}#${getFileHashId(filename)}`
 
     const queryMap = {
       [PAGE_TYPE.PULL]: getPullNodeHref,
