@@ -40,6 +40,7 @@ module.exports = {
     'consistent-return': 'off',
     'no-unused-expressions': 'off',
     'no-console': 'off',
+    'no-bitwise': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/jsx-props-no-spreading': 'off',
     'no-await-in-loop': 'off',

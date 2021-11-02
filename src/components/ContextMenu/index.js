@@ -8,12 +8,20 @@ import useGetNodeHref from 'hooks/tree/useGetNodeHref'
 import { makeStyles } from '@material-ui/core/styles'
 import useClickOutside from 'hooks/useClickOutside'
 import useQueryTree from 'hooks/tree/useQueryTree'
-import { last, omit } from 'lodash'
+import { last, omit, without } from 'lodash'
 import { PULL_PAGE_TYPE } from 'constants'
 import useUpdateEffect from 'hooks/useUpdateEffect'
 import { download, copyToClipboard } from 'utils'
-import { getFileNodes } from 'utils/pullPage'
+import {
+  getFileNodes,
+  markAllFiles,
+  checkFileNodeExisting,
+  getFileHashId,
+  toggleViewedFilesFolding,
+} from 'utils/pullPage'
 import { openInNewTab } from 'utils/chrome'
+import { getRawContent, checkIsFileNode } from 'utils/tree'
+import useStore from 'stores/setting'
 
 import {
   MdOpenInNew,
@@ -24,6 +32,7 @@ import { FiDownload } from 'react-icons/fi'
 import { GrCopy } from 'react-icons/gr'
 import { FaRegCopy } from 'react-icons/fa'
 import { BsArrowsExpand, BsArrowsCollapse } from 'react-icons/bs'
+
 import { LoadingCircular } from './style'
 
 const useStyles = makeStyles({
@@ -51,32 +60,12 @@ const useStyles = makeStyles({
   },
 })
 
-const getRawContent = async (node) => {
-  // node from pull or commit tree
-  if (node?.raw_url) {
-    const response = await fetch(node.raw_url)
-    const result = await response.text()
-
-    return result
-  }
-
-  const nodeContentUrl = node?.url || node?.contents_url
-  const response = await fetch(nodeContentUrl)
-  const result = await response.json()
-
-  return window.atob(result.content.replace('\n', ''))
-}
-
-const checkIsFileNode = (node) => {
-  if (!node) return false
-
-  return node?.type === 'blob' || Boolean(node?.status)
-}
-
 export default function ContextMenu({ ...pageInfo }) {
-  const { files } = useQueryTree(pageInfo, false)
+  const token = useStore((s) => s.token)
+  const { files } = useQueryTree(pageInfo, true)
   const classes = useStyles()
   const [loading, setLoading] = useState(false)
+  const [loadingRows, setLoadingRows] = useState([])
 
   const { pageType } = pageInfo
   const { isContextMenuOpened, clickedTreeNode, position, closeContextMenu } =
@@ -89,12 +78,69 @@ export default function ContextMenu({ ...pageInfo }) {
   useEffect(() => {
     if (isContextMenuOpened) {
       setLoading(false)
+      setLoadingRows([])
     }
   }, [isContextMenuOpened])
 
   useUpdateEffect(() => {
     closeContextMenu()
   }, [pageType])
+
+  const setRowLoading = (rowText) => {
+    setLoadingRows((prev) => [...prev, rowText])
+  }
+
+  const setRowLoaded = (rowText) => {
+    setLoadingRows((prev) => without(prev, rowText))
+  }
+
+  const handleMarkingAllFiles = async (isViewed = true) => {
+    setLoading(true)
+
+    const currentVisibleFileNodes = getFileNodes()
+    const isAllNodeLoaded = files?.length === currentVisibleFileNodes.length
+
+    /**
+     * Toggle lazy load to ensure all files loaded
+     */
+    if (!isAllNodeLoaded) {
+      const lastFileHash = getFileHashId(last(files).filename)
+
+      await new Promise((resolve) => {
+        window.location.hash = lastFileHash
+        setTimeout(resolve)
+      })
+      await checkFileNodeExisting(lastFileHash)
+    }
+
+    await markAllFiles(isViewed)
+    setLoading(false)
+    closeContextMenu()
+  }
+
+  const handleViewedFilesFolding = async (shouldCollapse = true) => {
+    setLoading(true)
+
+    const currentVisibleFileNodes = getFileNodes()
+    const isAllNodeLoaded = files?.length === currentVisibleFileNodes.length
+
+    /**
+     * Toggle lazy load to ensure all files loaded
+     */
+    if (!isAllNodeLoaded) {
+      const lastFileHash = getFileHashId(last(files).filename)
+
+      await new Promise((resolve) => {
+        window.location.hash = lastFileHash
+        setTimeout(resolve)
+      })
+      await checkFileNodeExisting(lastFileHash)
+    }
+
+    await toggleViewedFilesFolding(shouldCollapse)
+    setLoading(false)
+    closeContextMenu()
+  }
 
   const isFileNode = checkIsFileNode(clickedTreeNode)
 
@@ -121,13 +167,21 @@ export default function ContextMenu({ ...pageInfo }) {
       text: 'Download File',
       onClick: async () => {
         setLoading(true)
-        const text = await getRawContent(clickedTreeNode)
-        const fileName = last(clickedTreeNode.nodeId.split('/'))
-        closeContextMenu()
+        setRowLoading('Download File')
+        try {
+          const text = await getRawContent(clickedTreeNode, token)
+          const fileName = last(clickedTreeNode.nodeId.split('/'))
+          closeContextMenu()
 
-        setTimeout(() => {
-          download(fileName, text)
-        }, 150)
+          setTimeout(() => {
+            download(fileName, text)
+          }, 150)
+        } catch {
+          closeContextMenu()
+          setLoading(false)
+        } finally {
+          setRowLoaded('Download File')
+        }
       },
       icon: FiDownload,
       enabled: isFileNode,
@@ -146,12 +200,17 @@ export default function ContextMenu({ ...pageInfo }) {
       text: 'Copy Full File Content',
       onClick: async () => {
         setLoading(true)
-        const text = await getRawContent(clickedTreeNode)
-        await copyToClipboard(text)
-        setLoading(false)
-        setTimeout(() => {
+        try {
+          const text = await getRawContent(clickedTreeNode, token)
+          await copyToClipboard(text)
+          setLoading(false)
+          setTimeout(() => {
+            closeContextMenu()
+          }, 300)
+        } catch {
           closeContextMenu()
-        }, 300)
+          setLoading(false)
+        }
       },
       icon: GrCopy,
       enabled: isFileNode,
@@ -160,16 +219,7 @@ export default function ContextMenu({ ...pageInfo }) {
     {
       text: 'Mark All Files as viewed',
       onClick: () => {
-        const currentVisibleFileNodes = getFileNodes()
-        const isAllNodeLoaded =
-          files?.length ?? currentVisibleFileNodes.length === 0
-
-        if (isAllNodeLoaded) {
-          document
-            .querySelectorAll('.js-reviewed-checkbox')
-            .forEach((input) => input.checked || input.click())
-        }
-        closeContextMenu()
+        handleMarkingAllFiles(true)
       },
       icon: MdOutlineCheckCircleOutline,
       enabled: PULL_PAGE_TYPE.PULL_FILES === pageType,
@@ -177,30 +227,25 @@ export default function ContextMenu({ ...pageInfo }) {
     {
       text: 'Mark All Files as not viewed',
       onClick: () => {
-        const currentVisibleFileNodes = getFileNodes()
-        const isAllNodeLoaded =
-          files?.length ?? currentVisibleFileNodes.length === 0
-
-        if (isAllNodeLoaded) {
-          document
-            .querySelectorAll('.js-reviewed-checkbox')
-            .forEach((input) => !input.checked || input.click())
-        }
-        closeContextMenu()
+        handleMarkingAllFiles(false)
       },
       icon: MdOutlineRemoveCircleOutline,
       enabled: PULL_PAGE_TYPE.PULL_FILES === pageType,
       insertDivider: true,
     },
     {
-      text: 'Expand all viewed files', // Not implemented
-      onClick: closeContextMenu,
+      text: 'Expand all viewed files',
+      onClick: () => {
+        handleViewedFilesFolding(false)
+      },
       icon: BsArrowsExpand,
       enabled: PULL_PAGE_TYPE.PULL_FILES === pageType,
     },
     {
-      text: 'Collapse all viewed files', // Not implemented
-      onClick: closeContextMenu,
+      text: 'Collapse all viewed files',
+      onClick: () => {
+        handleViewedFilesFolding(true)
+      },
       icon: BsArrowsCollapse,
       enabled: PULL_PAGE_TYPE.PULL_FILES === pageType,
     },
