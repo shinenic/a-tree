@@ -106,6 +106,9 @@ export default function ContextMenu({ ...pageInfo }) {
 
   const isFileNode = checkIsFileNode(clickedTreeNode)
 
+  /**
+   * @TODO Handle `no-token` warning via a toast
+   */
   const items = [
     {
       key: CONTEXT_ITEM.PATHNAME,
@@ -113,7 +116,7 @@ export default function ContextMenu({ ...pageInfo }) {
       insertDivider: true,
       disableRipple: true,
       classes: { root: classes.staticMenuItem },
-      enabled: clickedTreeNode,
+      isVisible: clickedTreeNode,
     },
     {
       key: CONTEXT_ITEM.OPEN_LINK_IN_NEW_TAB,
@@ -124,11 +127,11 @@ export default function ContextMenu({ ...pageInfo }) {
           openInNewTab(href)
         }, 150)
       },
-      enabled: clickedTreeNode,
+      isVisible: clickedTreeNode,
     },
     {
       key: CONTEXT_ITEM.DOWNLOAD_FILE,
-      text: 'Download File',
+      text: token ? 'Download File' : 'Download File (Token Required)',
       onClick: async () => {
         addItemLoading(CONTEXT_ITEM.DOWNLOAD_FILE)
         try {
@@ -144,7 +147,8 @@ export default function ContextMenu({ ...pageInfo }) {
           removeItemLoaded(CONTEXT_ITEM.DOWNLOAD_FILE)
         }
       },
-      enabled: isFileNode,
+      disabled: !token,
+      isVisible: isFileNode,
       insertDivider: true,
     },
     {
@@ -154,11 +158,13 @@ export default function ContextMenu({ ...pageInfo }) {
         await copyToClipboard(clickedTreeNode.nodeId)
         closeContextMenu()
       },
-      enabled: clickedTreeNode,
+      isVisible: clickedTreeNode,
     },
     {
       key: CONTEXT_ITEM.COPY_FILE_CONTENT,
-      text: 'Copy Full File Content',
+      text: token
+        ? 'Copy Full File Content'
+        : 'Copy Full File Content (Token Required)',
       onClick: async () => {
         addItemLoading(CONTEXT_ITEM.COPY_FILE_CONTENT)
         try {
@@ -172,7 +178,8 @@ export default function ContextMenu({ ...pageInfo }) {
           removeItemLoaded(CONTEXT_ITEM.COPY_FILE_CONTENT)
         }
       },
-      enabled: isFileNode,
+      disabled: !token,
+      isVisible: isFileNode,
       insertDivider: true,
     },
     {
@@ -181,7 +188,7 @@ export default function ContextMenu({ ...pageInfo }) {
       onClick: () => {
         handleMarkingAllFiles(true, CONTEXT_ITEM.MARK_ALL_FILES_AS_VIEWED)
       },
-      enabled: PULL_PAGE_TYPE.PULL_FILES === pageType,
+      isVisible: PULL_PAGE_TYPE.PULL_FILES === pageType,
     },
     {
       key: CONTEXT_ITEM.MARK_ALL_FILES_AS_NOT_VIEWED,
@@ -189,7 +196,7 @@ export default function ContextMenu({ ...pageInfo }) {
       onClick: () => {
         handleMarkingAllFiles(false, CONTEXT_ITEM.MARK_ALL_FILES_AS_NOT_VIEWED)
       },
-      enabled: PULL_PAGE_TYPE.PULL_FILES === pageType,
+      isVisible: PULL_PAGE_TYPE.PULL_FILES === pageType,
       insertDivider: true,
     },
     {
@@ -198,7 +205,7 @@ export default function ContextMenu({ ...pageInfo }) {
       onClick: () => {
         handleViewedFilesFolding(false, CONTEXT_ITEM.EXPAND_ALL_VIEWED_FILES)
       },
-      enabled: PULL_PAGE_TYPE.PULL_FILES === pageType,
+      isVisible: PULL_PAGE_TYPE.PULL_FILES === pageType,
     },
     {
       key: CONTEXT_ITEM.COLLAPSE_ALL_VIEWED_FILES,
@@ -206,15 +213,15 @@ export default function ContextMenu({ ...pageInfo }) {
       onClick: () => {
         handleViewedFilesFolding(true, CONTEXT_ITEM.COLLAPSE_ALL_VIEWED_FILES)
       },
-      enabled: PULL_PAGE_TYPE.PULL_FILES === pageType,
+      isVisible: PULL_PAGE_TYPE.PULL_FILES === pageType,
     },
   ]
 
-  const enabledItems = items
-    .filter(({ enabled }) => enabled)
-    .map((item) => omit(item, ['enabled']))
+  const visibleItems = items
+    .filter(({ isVisible }) => isVisible)
+    .map((item) => omit(item, ['isVisible']))
 
-  if (enabledItems.length === 0) return null
+  if (visibleItems.length === 0) return null
 
   return createPortal(
     <Menu
@@ -235,7 +242,7 @@ export default function ContextMenu({ ...pageInfo }) {
       }}
       MenuListProps={{ ref: modalRef, classes: { root: classes.menuList } }}
     >
-      {enabledItems.map(
+      {visibleItems.map(
         (
           {
             key,
@@ -243,11 +250,12 @@ export default function ContextMenu({ ...pageInfo }) {
             onClick,
             insertDivider,
             classes: customClasses,
+            disabled,
             ...rest
           },
           index
         ) => {
-          const isLast = index === enabledItems.length - 1
+          const isLast = index === visibleItems.length - 1
           const Icon = CONTEXT_ICON_MAP[key]
           const isLoading = loadingItems.includes(key)
 
@@ -256,7 +264,7 @@ export default function ContextMenu({ ...pageInfo }) {
               key={key}
               onClick={onClick}
               divider={insertDivider && !isLast}
-              disabled={isLoading}
+              disabled={disabled || isLoading}
               selected={isLoading}
               classes={{ gutters: classes.menuItemGutters, ...customClasses }}
               {...rest}
