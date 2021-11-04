@@ -198,8 +198,8 @@ export const markAllFiles = async (isMarkAllViewed = true, chunkSize = 3) => {
 
       const checkboxes = checkboxChunks.pop()
 
-      checkboxes.forEach((checkbox) => {
-        if (isMarkAllViewed ^ checkbox.checked) {
+      checkboxes.filter(Boolean).forEach((checkbox) => {
+        if (isMarkAllViewed ^ checkbox?.checked) {
           checkbox.click()
         }
       })
@@ -230,10 +230,10 @@ export const toggleViewedFilesFolding = async (
 
       const fileNodes = fileNodeChunks.pop()
 
-      fileNodes.forEach((fileNode) => {
+      fileNodes.filter(Boolean).forEach((fileNode) => {
         const button = shouldCollapse
-          ? fileNode.querySelector('button[aria-expanded="true"]')
-          : fileNode.querySelector('button[aria-expanded="false"]')
+          ? fileNode?.querySelector?.('button[aria-expanded="true"]')
+          : fileNode?.querySelector?.('button[aria-expanded="false"]')
 
         if (button) {
           button.click()
