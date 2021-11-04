@@ -89,7 +89,10 @@ export default function PullCommitMenu({
       >
         {buttonText}
       </BaseStyle.ToggleButton>
-      <AnimatedMenuContainer style={{ ...menuStyles, ...menuPositionStyle }}>
+      <AnimatedMenuContainer
+        style={{ ...menuStyles, ...menuPositionStyle }}
+        onContextMenu={(e) => e.stopPropagation()}
+      >
         <BaseStyle.StyledGithubLink
           onClick={handleClose}
           href={`/${owner}/${repo}/pull/${pull}/files`}

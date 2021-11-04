@@ -143,7 +143,10 @@ export default function PullMenu({ owner, repo, pull }) {
       >
         Show all pull requests
       </BaseStyle.ToggleButton>
-      <AnimatedMenuContainer style={{ ...menuStyles, ...menuPositionStyle }}>
+      <AnimatedMenuContainer
+        style={{ ...menuStyles, ...menuPositionStyle }}
+        onContextMenu={(e) => e.stopPropagation()}
+      >
         <BaseStyle.StyledGithubLink
           onClick={close}
           href={`/${owner}/${repo}/pulls`}
