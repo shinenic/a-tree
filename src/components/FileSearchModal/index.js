@@ -9,10 +9,10 @@ import {
 import { isEmpty } from 'lodash'
 import { CustomModal } from 'components/shared/Modal'
 import useUpdateEffect from 'hooks/useUpdateEffect'
-import useSwitch from 'hooks/useSwitch'
 import useTreeItemClick from 'hooks/tree/useTreeItemClick'
 import useQueryTree from 'hooks/tree/useQueryTree'
 
+import SearchBar from 'components/SearchBar'
 import { initialState, reducer } from './reducer'
 import * as Style from './style'
 
@@ -20,8 +20,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     backgroundColor: theme.palette.background.paper,
     color: theme.palette.text.secondary,
-    border: '1px solid #666',
-    borderRadius: '4px',
+    borderRadius: '12px',
     boxShadow: theme.shadows[5],
     padding: '8px 0',
     width: '650px',
@@ -30,10 +29,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const FileSearchWrapper = ({ ...pageInfo }) => {
-  const [isQueryEnabled, enable, disable] = useSwitch()
-
-  const { data, isLoading, error } = useQueryTree(pageInfo, isQueryEnabled)
+const FileSearchWrapper = ({ pageInfo, isOpen, onOpen, onClose }) => {
+  const { data, isLoading, error } = useQueryTree(pageInfo, isOpen)
   const onItemClick = useTreeItemClick(pageInfo)
 
   return (
@@ -42,8 +39,9 @@ const FileSearchWrapper = ({ ...pageInfo }) => {
       selectCallback={onItemClick}
       isLoading={isLoading}
       error={error}
-      onOpen={enable}
-      onClose={disable}
+      onOpen={onOpen}
+      onClose={onClose}
+      isOpen={isOpen}
     />
   )
 }
@@ -60,6 +58,7 @@ const FileSearchModal = ({
   error,
   onOpen,
   onClose,
+  isOpen,
 }) => {
   const [{ result = [], keyword = '', selectedIndex = 0, isOpened }, dispatch] =
     useReducer(reducer, {
@@ -82,6 +81,10 @@ const FileSearchModal = ({
       dispatch({ type: 'CLEAR_SOURCE_DATA' })
     }
   }, [isLoading, files])
+
+  useEffect(() => {
+    dispatch({ type: isOpen ? 'OPEN' : 'CLOSE' })
+  }, [isOpen])
 
   useEffect(() => {
     dispatch({ type: 'UPDATE_SELECT_CALLBACK', payload: { selectCallback } })
@@ -127,14 +130,20 @@ const FileSearchModal = ({
   return (
     <CustomModal
       isOpened={isOpened}
-      onClose={() => dispatch({ type: 'CLOSE' })}
+      onClose={() => {
+        dispatch({ type: 'CLOSE' })
+        if (onClose) onClose()
+      }}
       overLayStyle={{ alignItems: 'start', paddingTop: '15vh' }}
     >
       <div className={classes.paper}>
-        <Style.FileNameInput
+        <SearchBar
+          withBorder={false}
+          showHints={false}
           placeholder="Enter keyword to search files..."
-          ref={inputRef}
+          inputRef={inputRef}
           value={keyword}
+          withoutBorder
           onChange={handleInputChange}
         />
         {result.map((file, index) => {
@@ -160,6 +169,7 @@ const FileSearchModal = ({
                 dangerouslySetInnerHTML={{
                   __html: highlightText(path, highlightMap),
                 }}
+                tooltip={path}
               />
             </Style.FileRow>
           )

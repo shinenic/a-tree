@@ -3,18 +3,22 @@ import { getCommonScrollbarStyle } from 'utils/style'
 import { styled as muiStyled } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Box from '@material-ui/core/Box'
+import { useTheme } from '@material-ui/core'
 
 export const DrawerHeader = ({ selected, height, ...props }) => {
+  const theme = useTheme()
+
+  const bgColor = theme.palette.type === 'dark' ? '#141a1e' : 'rgb(55, 62, 67)'
+
   return (
     <Box
       sx={{
-        background: 'rgb(55, 62, 67)',
-        height: height || DEFAULT_HEADER_HEIGHT,
+        background: bgColor,
+        minHeight: height || DEFAULT_HEADER_HEIGHT,
         boxSizing: 'border-box',
         color: '#f9f9f9',
         display: 'flex',
         alignItems: 'center',
-        paddingLeft: 20,
       }}
       {...props}
     />
@@ -29,7 +33,7 @@ export const DrawerFooter = muiStyled(Box)({
 })
 
 export const DrawerContent = muiStyled(Paper)(({ theme }) => ({
-  padding: '14px',
+  padding: '0 14px 14px 14px',
   flex: 1,
   overflow: 'auto',
   boxShadow: 'none',

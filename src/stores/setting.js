@@ -19,7 +19,6 @@ const { LEFT, RIGHT } = DRAWER_POSITION
  * @property {number} floatingButtonPositionY position Y of floating button (px)
  * @property {string} baseUrl record host string for api endpoint
  * @property {boolean} isTokenHintShowed
- * @property {boolean} pullMenuEnabled visibility of pull requests' menu
  */
 
 /** @type {SettingState} */
@@ -35,7 +34,6 @@ export const initialState = {
   floatingButtonPositionY: 500,
   baseUrl: null,
   isTokenHintShowed: false,
-  pullMenuEnabled: false,
 }
 
 /**
@@ -68,8 +66,6 @@ export const reducer = (state, { type, payload }) => {
       return { ...state, drawerPinned: !state.drawerPinned }
     case 'SET_TOKEN_HINT_SHOWED':
       return { ...state, isTokenHintShowed: true }
-    case 'TOGGLE_PULL_MENU':
-      return { ...state, pullMenuEnabled: !state.pullMenuEnabled }
     default:
       throw new Error(`Unknown Type: ${type}`)
   }

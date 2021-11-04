@@ -56,7 +56,8 @@ const useStyles = makeStyles((theme) =>
     label: {
       backgroundColor: 'transparent !important',
       userSelect: 'none',
-      wordBreak: 'break-word'
+      wordBreak: 'break-word',
+      width: 'calc(100% - 19px)',
     },
   })
 )
