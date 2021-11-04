@@ -203,11 +203,19 @@ export default function CustomizedTreeView({
   currentFilePath,
   getNodeHref,
 }) {
+  const clickedTreeNode = useContextMenu((s) => s.clickedTreeNode)
+  const [selectedId, setSelectedId] = useState(null)
   const [expandedIds, setExpandedIds] = useState([])
   const theme = useTheme()
   const classes = useStyles()
 
   const [objectTree, folderNodeIds] = useMemo(() => generateTree(tree), [tree])
+
+  useEffect(() => {
+    if (clickedTreeNode && clickedTreeNode.nodeId) {
+      setSelectedId(clickedTreeNode.nodeId)
+    }
+  }, [clickedTreeNode])
 
   useEffect(() => {
     setExpandedIds(isExpandedAll ? [...folderNodeIds] : [])
@@ -247,11 +255,15 @@ export default function CustomizedTreeView({
       setExpandedIds(nodeIds)
     }
 
+    const onNodeSelect = (_, value) => setSelectedId(value)
+
     return (
       <TreeView
         className={classes.root}
         expanded={expandedIds}
+        selected={selectedId}
         onNodeToggle={onNodeToggle}
+        onNodeSelect={onNodeSelect}
         {...getDefaultIcon(isLoading, theme)}
       >
         <Tree
@@ -259,10 +271,20 @@ export default function CustomizedTreeView({
           onItemClick={onItemClick}
           getNodeHref={getNodeHref}
           isLoading={isLoading}
+          shouldSortFiles={shouldSortFiles}
         />
       </TreeView>
     )
-  }, [objectTree, onItemClick, expandedIds, isLoading, theme.palette.type]) // eslint-disable-line
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    objectTree,
+    onItemClick,
+    expandedIds,
+    selectedId,
+    isLoading,
+    theme.palette.type,
+  ])
 
   return treeView
 }
