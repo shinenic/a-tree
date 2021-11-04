@@ -5,6 +5,15 @@ export const getFileLink = ({ owner, repo, type, branch, filePath }) => {
   return `/${owner}/${repo}/${type}/${branch}/${filePath}`
 }
 
+export const getRepoLink = ({ owner, repo }) => {
+  return `/${owner}/${repo}`
+}
+
+export const getBranchLink = ({ owner, repo, branch }) =>
+  `/${owner}/${repo}/tree/${branch}/`
+
+export const getOwnerLink = ({ owner }) => `/${owner}`
+
 const generatePjaxLink = () => {
   let isPjaxStart = false
 
