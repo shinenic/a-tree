@@ -39,7 +39,7 @@ const MainDrawer = ({ pageInfo, error }) => {
   const drawerPinned = useStore((s) => s.drawerPinned)
   const pullMenuEnabled = useStore((s) => s.pullMenuEnabled)
 
-  const { openContextMenu } = useContextMenu()
+  const openContextMenu = useContextMenu((s) => s.openContextMenu)
 
   const classes = useStyles()
 

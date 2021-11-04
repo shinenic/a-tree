@@ -122,8 +122,7 @@ const setNodeIds = (tree, parentNodeId = '', folderNodeIds) => {
   })
 }
 
-const Tree = ({ tree, onItemClick, isLoading, getNodeHref }) => {
-  const { openContextMenu } = useContextMenu()
+  const openContextMenu = useContextMenu((s) => s.openContextMenu)
 
   if (isEmpty(tree)) return null
 
