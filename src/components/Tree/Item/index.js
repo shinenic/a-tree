@@ -39,8 +39,8 @@ const useStyles = makeStyles((theme) =>
       padding: '5px 6px',
       borderRadius: '3px',
     },
-    root: {
-      '&:focus > $content, &$selected > $content': {
+    selected: {
+      '& > div:first-of-type': {
         backgroundColor:
           theme.palette.type === 'light'
             ? SELECT_BG
@@ -48,6 +48,8 @@ const useStyles = makeStyles((theme) =>
                 .mix(SELECT_BG, theme.palette.background.paper, 80)
                 .toHexString(),
       },
+    },
+    root: {
       '&:focus > $content $label, &:hover > $content $label, &$selected > $content $label':
         {
           backgroundColor: 'transparent',
@@ -56,7 +58,7 @@ const useStyles = makeStyles((theme) =>
     label: {
       backgroundColor: 'transparent !important',
       userSelect: 'none',
-      wordBreak: 'break-word'
+      wordBreak: 'break-word',
     },
   })
 )
@@ -72,6 +74,7 @@ const StyledTreeItem = ({ nodeId, ...rest }) => {
         root: classes.root,
         content: classes.content,
         label: classes.label,
+        selected: classes.selected,
       }}
       TransitionComponent={TransitionComponent}
       style={{
