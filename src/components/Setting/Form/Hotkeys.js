@@ -1,6 +1,6 @@
 import Grid from '@material-ui/core/Grid'
 import useStore from 'stores/setting'
-import { IS_MAC } from 'constants'
+import { HOTKEY_ADORNMENT } from 'constants'
 import Typography from '@material-ui/core/Typography'
 import Chip from '@material-ui/core/Chip'
 
@@ -10,13 +10,11 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import BlockTitle from './BlockTitle'
 
-const ADORNMENT = IS_MAC ? 'Cmd ⌘ + ' : 'Ctrl + '
-
 const ALPHABET = [...'abcdefghijklmnopqrstuvwxyz', ...'1234567890']
 
 const HOTKEY_OPTIONS = ALPHABET.map((key) => ({
   value: key,
-  text: `${ADORNMENT}${key.toUpperCase()}`,
+  text: `${HOTKEY_ADORNMENT}${key.toUpperCase()}`,
 }))
 
 const useInputStyles = makeStyles({
@@ -62,8 +60,8 @@ const Hotkeys = () => {
           color="textSecondary"
           style={{ marginTop: 8 }}
         >
-          ⚠ Warning: <Chip label={`${ADORNMENT}K`} size="small" /> will block
-          the native github command palette
+          ⚠ Warning: <Chip label={`${HOTKEY_ADORNMENT}K`} size="small" /> will
+          block the native github command palette
         </Typography>
       )}
     </>

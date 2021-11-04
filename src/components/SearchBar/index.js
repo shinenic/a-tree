@@ -3,8 +3,8 @@ import InputBase from '@material-ui/core/InputBase'
 import Box from '@material-ui/core/Box'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import { AiOutlineSearch } from 'react-icons/ai'
-import { BsCommand } from 'react-icons/bs'
-import { isWindows } from 'utils/userAgent'
+import useStore from 'stores/setting'
+import { HOTKEY_ADORNMENT } from 'constants'
 
 const useStyles = makeStyles((theme) => ({
   inputRoot: {
@@ -24,6 +24,7 @@ const SearchBar = ({
   inputRef,
   placeholder = 'Search...',
 }) => {
+  const fileSearchHotkey = useStore((s) => s.fileSearchHotkey)
   const classes = useStyles()
   const theme = useTheme()
   const borderStyle =
@@ -65,17 +66,11 @@ const SearchBar = ({
         inputProps={{ 'aria-label': 'search' }}
       />
       {showHints && (
-        <>
-          {isWindows() ? (
-            <Box fontWeight="300">Ctrl</Box>
-          ) : (
-            <BsCommand size="1rem" />
-          )}
-          <Box fontWeight="300" margin="0 3px">
-            +
-          </Box>
-          <Box fontWeight="300">K</Box>
-        </>
+        <Box
+          style={{ whiteSpace: 'nowrap' }}
+          fontWeight="300"
+        >{`${HOTKEY_ADORNMENT}${fileSearchHotkey.toUpperCase()}`}
+        </Box>
       )}
     </Box>
   )
