@@ -4,6 +4,7 @@ import Box from '@material-ui/core/Box'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { BsCommand } from 'react-icons/bs'
+import { isWindows } from 'utils/userAgent'
 
 const useStyles = makeStyles((theme) => ({
   inputRoot: {
@@ -65,7 +66,11 @@ const SearchBar = ({
       />
       {showHints && (
         <>
-          <BsCommand size="1rem" />
+          {isWindows() ? (
+            <Box fontWeight="300">Ctrl</Box>
+          ) : (
+            <BsCommand size="1rem" />
+          )}
           <Box fontWeight="300" margin="0 3px">
             +
           </Box>
