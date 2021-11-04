@@ -169,6 +169,7 @@ const FileSearchModal = ({
                 dangerouslySetInnerHTML={{
                   __html: highlightText(path, highlightMap),
                 }}
+                tooltip={path}
               />
             </Style.FileRow>
           )

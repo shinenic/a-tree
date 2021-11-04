@@ -1,6 +1,7 @@
 import Box from '@material-ui/core/Box'
 import { useTheme, makeStyles } from '@material-ui/core/styles'
 import { forwardRef } from 'react'
+import EllipsisBox from 'components/EllipsisBox'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -70,4 +71,12 @@ export const FileName = (props) => (
   <Box sx={{ fontSize: 15, marginRight: 8 }} {...props} />
 )
 
-export const FilePath = (props) => <Box sx={{ fontSize: 12 }} {...props} />
+export const FilePath = (props) => (
+  <EllipsisBox
+    sx={{
+      fontSize: 12,
+    }}
+    withTooltip
+    {...props}
+  />
+)

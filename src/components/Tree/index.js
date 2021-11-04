@@ -12,6 +12,7 @@ import {
   IconSkeleton,
 } from 'components/MainDrawer/Tabs/Loading/placeholder'
 import tinycolor from 'tinycolor2'
+import EllipsisBox from 'components/EllipsisBox'
 import TreeItem from './Item'
 import { MAIN_COLOR } from './constants'
 import LabelIcon from './LabelIcon'
@@ -137,12 +138,16 @@ const Tree = ({ tree, onItemClick, isLoading }) => {
       }
     }
 
+    const Text = () => {
+      return <EllipsisBox maxWidth="100%" text={label} withTooltip />
+    }
+
     if (hasChildren) {
       return (
         <div key={node.nodeId} onClick={handleClick}>
           <TreeItem
             nodeId={node.nodeId}
-            label={isLoading ? <LabelTextSkeleton /> : label}
+            label={isLoading ? <LabelTextSkeleton /> : <Text />}
             onIconClick={handleNodeClick}
             onLabelClick={handleNodeClick}
           >
@@ -162,7 +167,7 @@ const Tree = ({ tree, onItemClick, isLoading }) => {
         <TreeItem
           nodeId={node.nodeId}
           originalPath={originalPath}
-          label={isLoading ? <LabelTextSkeleton /> : label}
+          label={isLoading ? <LabelTextSkeleton /> : <Text />}
           icon={isLoading ? <IconSkeleton /> : <LabelIcon status={status} />}
         />
       </div>
