@@ -4,6 +4,7 @@ import { useGlobalContext } from 'providers/GlobalProvider'
 import Box from '@material-ui/core/Box'
 import {
   AiOutlineBranches,
+  AiOutlineFolder,
   AiOutlineFile,
   AiOutlineAppstore,
   AiOutlineGithub,
@@ -11,6 +12,14 @@ import {
   AiOutlineFieldNumber,
   AiOutlineRight,
 } from 'react-icons/ai'
+import {
+  linkGithubPage,
+  getOwnerLink,
+  getRepoLink,
+  getFileLink,
+  getBranchLink,
+} from 'utils/link'
+import EllipsisBox from 'components/EllipsisBox'
 
 const Breadcrumb = ({
   pageType,
@@ -24,12 +33,23 @@ const Breadcrumb = ({
   const { togglePullMenu, togglePullCommitMenu } = useGlobalContext()
 
   const items = [
-    { text: owner, icon: AiOutlineGithub },
-    { text: repo, icon: AiOutlineAppstore },
+    {
+      text: owner,
+      icon: AiOutlineGithub,
+      onClick: () => linkGithubPage(getOwnerLink({ owner })),
+    },
+    {
+      text: repo,
+      icon: AiOutlineAppstore,
+      onClick: () => linkGithubPage(getRepoLink({ owner, repo })),
+    },
   ]
 
-  const branchItem = { text: branch, icon: AiOutlineBranches }
-  const fileItem = { text: filePath, icon: AiOutlineFile }
+  const branchItem = {
+    text: branch,
+    icon: AiOutlineBranches,
+    onClick: () => linkGithubPage(getBranchLink({ owner, repo, branch })),
+  }
   const commitItem = {
     text: commit,
     icon: AiOutlineFieldNumber,
@@ -44,7 +64,26 @@ const Breadcrumb = ({
   switch (pageType) {
     case PAGE_TYPE.CODE:
       items.push(branchItem)
-      if (filePath) items.push(fileItem)
+      if (filePath) {
+        const files = filePath.split('/')
+        const fileItems = files.map((file, index) => {
+          const isTreeLeaf = index === files.length - 1
+          const fileLink = getFileLink({
+            owner,
+            repo,
+            branch,
+            filePath: file,
+            type: isTreeLeaf ? 'blob' : 'tree',
+          })
+
+          return {
+            text: file,
+            icon: isTreeLeaf ? AiOutlineFile : AiOutlineFolder,
+            onClick: () => linkGithubPage(fileLink),
+          }
+        })
+        items.push(...fileItems)
+      }
       break
 
     case PAGE_TYPE.PULLS:
@@ -70,6 +109,7 @@ const Breadcrumb = ({
       break
 
     case PAGE_TYPE.PULL_COMMIT:
+    case PAGE_TYPE.PULL_COMMITS:
       items.push(pullItem)
       items.push(commitItem)
       break
@@ -81,7 +121,6 @@ const Breadcrumb = ({
   return (
     <Box
       sx={{
-        overflowX: 'scroll',
         display: 'flex',
         height: '100%',
         width: '100%',
@@ -117,7 +156,14 @@ const Breadcrumb = ({
                 }}
               >
                 {Icon && <Icon style={{ marginRight: '3px' }} />}
-                {text}
+                <EllipsisBox
+                  text={text}
+                  maxWidth="150px"
+                  withTooltip
+                  TooltipProps={{
+                    arrow: true,
+                  }}
+                />
               </Box>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
