@@ -59,6 +59,7 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: 'transparent !important',
       userSelect: 'none',
       wordBreak: 'break-word',
+      width: 'calc(100% - 19px)',
     },
   })
 )

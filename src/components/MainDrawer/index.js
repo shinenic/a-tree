@@ -1,20 +1,24 @@
 import React, { useCallback } from 'react'
 import Drawer from '@material-ui/core/Drawer'
 import { makeStyles } from '@material-ui/core/styles'
-import { PAGE_TYPE, ERROR_MESSAGE } from 'constants'
+import { ERROR_MESSAGE } from 'constants'
 import useContextMenu from 'stores/contextMenu'
+import { Box } from '@material-ui/core'
 
 import PullCommitMenu from 'components/Menu/PullCommit'
 import PullMenu from 'components/Menu/Pull'
 import { SettingButton } from 'components/Setting'
-import { compact, throttle } from 'lodash'
+import { throttle } from 'lodash'
 import useStore from 'stores/setting'
 import GlobalStyle from 'GlobalStyle'
 import { getHeaderHeight } from 'utils/style'
 import FloatingButton from 'components/FloatingButton'
 import FileSearch from 'components/FileSearchModal'
 import ContextMenu from 'components/ContextMenu'
+import Breadcrumb from 'components/Breadcrumb'
+import SearchBar from 'components/SearchBar'
 
+import useSwitch from 'hooks/useSwitch'
 import Error from './Tabs/Error'
 import TreeTab from './Tabs'
 import ResizableWrapper from './ResizableWrapper'
@@ -31,49 +35,22 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const MainDrawer = ({ pageInfo, error }) => {
-  const { pageType, owner, repo, commit, pull, branch, filePath } = pageInfo
+  const { pageType, owner, repo, commit, pull } = pageInfo
 
   const drawerWidth = useStore((s) => s.drawerWidth)
   const disablePageTypeList = useStore((s) => s.disablePageTypeList)
   const dispatch = useStore((s) => s.dispatch)
   const drawerPinned = useStore((s) => s.drawerPinned)
-  const pullMenuEnabled = useStore((s) => s.pullMenuEnabled)
+  const [
+    isFileSearchModalOpen,
+    openFileSearchModal,
+    closeFileSearchModal,
+    toggleFileSearchModal,
+  ] = useSwitch()
 
   const openContextMenu = useContextMenu((s) => s.openContextMenu)
 
   const classes = useStyles()
-
-  const renderHeader = () => {
-    const breadcrumb = [owner, repo]
-
-    switch (pageType) {
-      case PAGE_TYPE.CODE:
-      case PAGE_TYPE.PULLS:
-        breadcrumb.push(branch)
-        breadcrumb.push(filePath)
-        break
-
-      case PAGE_TYPE.CODE_COMMIT:
-        breadcrumb.push(branch)
-        breadcrumb.push(commit)
-        break
-
-      case PAGE_TYPE.PULL:
-      case PAGE_TYPE.PULL_FILES:
-        breadcrumb.push(pull)
-        break
-
-      case PAGE_TYPE.PULL_COMMIT:
-        breadcrumb.push(pull)
-        breadcrumb.push(commit)
-        break
-
-      default:
-        break
-    }
-
-    return compact(breadcrumb).join('  >  ')
-  }
 
   const renderContent = () => {
     if (error) {
@@ -106,8 +83,13 @@ const MainDrawer = ({ pageInfo, error }) => {
     <>
       <GlobalStyle pl={drawerPinned ? drawerWidth : 0} />
       <FloatingButton pageType={pageType} />
-      <FileSearch {...pageInfo} />
       <ContextMenu {...pageInfo} />
+      <FileSearch
+        pageInfo={pageInfo}
+        isOpen={isFileSearchModalOpen}
+        onOpen={openFileSearchModal}
+        onClose={closeFileSearchModal}
+      />
       <Drawer
         anchor="left"
         open={drawerPinned}
@@ -124,17 +106,18 @@ const MainDrawer = ({ pageInfo, error }) => {
           handleOnResize={handleOnResize}
         >
           <Style.DrawerHeader height={getHeaderHeight()}>
-            {renderHeader()}
+            <Breadcrumb {...pageInfo} />
           </Style.DrawerHeader>
+          <Box padding="10px" height={55}>
+            <SearchBar onClick={() => toggleFileSearchModal()} />
+          </Box>
           <PullCommitMenu
             owner={owner}
             repo={repo}
             pull={pull}
             commit={commit}
           />
-          {pullMenuEnabled && (
-            <PullMenu owner={owner} repo={repo} pull={pull} />
-          )}
+          <PullMenu owner={owner} repo={repo} pull={pull} />
           <Style.DrawerContent>{renderContent()}</Style.DrawerContent>
           <Style.DrawerFooter>
             <SettingButton />

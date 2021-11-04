@@ -15,6 +15,7 @@ import tinycolor from 'tinycolor2'
 import { MODIFIER_KEY_PROPERTY } from 'constants'
 import { openInNewTab } from 'utils/chrome'
 import useContextMenu from 'stores/contextMenu'
+import EllipsisBox from 'components/EllipsisBox'
 import TreeItem from './Item'
 import { MAIN_COLOR } from './constants'
 import LabelIcon from './LabelIcon'
@@ -122,6 +123,7 @@ const setNodeIds = (tree, parentNodeId = '', folderNodeIds) => {
   })
 }
 
+const Tree = ({ tree, onItemClick, isLoading, handleNodeClick, getNodeHref }) => {
   const openContextMenu = useContextMenu((s) => s.openContextMenu)
 
   if (isEmpty(tree)) return null
@@ -152,13 +154,19 @@ const setNodeIds = (tree, parentNodeId = '', folderNodeIds) => {
       openContextMenu(e, node)
     }
 
+    const Text = () => {
+      return <EllipsisBox maxWidth="100%" text={label} withTooltip />
+    }
+
     if (hasChildren) {
       return (
         <div key={node.nodeId}>
           <TreeItem
             nodeId={node.nodeId}
-            label={isLoading ? <LabelTextSkeleton /> : label}
             onContextMenu={handleContextMenu}
+            label={isLoading ? <LabelTextSkeleton /> : <Text />}
+            onIconClick={handleNodeClick}
+            onLabelClick={handleNodeClick}
           >
             <Tree
               tree={node.children}
@@ -187,7 +195,7 @@ const setNodeIds = (tree, parentNodeId = '', folderNodeIds) => {
         <TreeItem
           onContextMenu={handleContextMenu}
           nodeId={node.nodeId}
-          label={isLoading ? <LabelTextSkeleton /> : label}
+          label={isLoading ? <LabelTextSkeleton /> : <Text />}
           icon={isLoading ? <IconSkeleton /> : <LabelIcon status={status} />}
         />
       </div>
@@ -271,7 +279,6 @@ export default function CustomizedTreeView({
           onItemClick={onItemClick}
           getNodeHref={getNodeHref}
           isLoading={isLoading}
-          shouldSortFiles={shouldSortFiles}
         />
       </TreeView>
     )

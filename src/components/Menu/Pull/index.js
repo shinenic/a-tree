@@ -9,9 +9,11 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
 import { useQueryPulls } from 'hooks/api/useGithubQueries'
-import useSwitch from 'hooks/useSwitch'
+import Skeleton from '@material-ui/lab/Skeleton'
 import Chip from '@material-ui/core/Chip'
 import tinycolor from 'tinycolor2'
+import { useGlobalContext } from 'providers/GlobalProvider'
+import Loading from './Loading'
 
 import * as Style from './style'
 import * as BaseStyle from '../style'
@@ -98,12 +100,12 @@ function Label({ name, color }) {
  * @TODO Lazy load the rest pulls
  */
 export default function PullMenu({ owner, repo, pull }) {
-  const [isOpening, _, close, toggle] = useSwitch()
+  const { isPullMenuOpen, closePullMenu } = useGlobalContext()
   const [menuPositionStyle, setMenuPositionStyle] = useState({})
   const menuProps = useSpring({
-    transform: isOpening ? 'scale(1)' : 'scale(0.9)',
+    transform: isPullMenuOpen ? 'scale(1)' : 'scale(0.9)',
     transformOrigin: 'top',
-    opacity: isOpening ? 1 : 0,
+    opacity: isPullMenuOpen ? 1 : 0,
     reset: true,
   })
   const menuStyles = {
@@ -111,11 +113,14 @@ export default function PullMenu({ owner, repo, pull }) {
     // To keep dom alive
     visibility: menuProps.opacity.to((v) => (v === 0 ? 'hidden' : 'visible')),
   }
-  const { data, isLoading, error } = useQueryPulls({
-    owner,
-    repo,
-  })
-  const menuRef = useClickOutside(close)
+  const { data, isLoading, error } = useQueryPulls(
+    {
+      owner,
+      repo,
+    },
+    { enabled: isPullMenuOpen }
+  )
+  const menuRef = useClickOutside(closePullMenu)
 
   useEffect(() => {
     if (!menuRef.current) return
@@ -125,69 +130,63 @@ export default function PullMenu({ owner, repo, pull }) {
       top: buttonRect.bottom,
       left: buttonRect.left + 20,
     })
-  }, [data, pull, isOpening])
+  }, [data, pull, isPullMenuOpen])
 
   if (error) return null
 
-  const handleButtonClick = () => {
-    if (isLoading || error) return
-
-    toggle()
-  }
-
   return (
     <div ref={menuRef}>
-      <BaseStyle.ToggleButton
-        disabled={error || isLoading}
-        onClick={handleButtonClick}
-      >
-        Show all pull requests
-      </BaseStyle.ToggleButton>
       <AnimatedMenuContainer
         style={{ ...menuStyles, ...menuPositionStyle }}
         onContextMenu={(e) => e.stopPropagation()}
       >
-        <BaseStyle.StyledGithubLink
-          onClick={close}
-          href={`/${owner}/${repo}/pulls`}
-          pjaxId={PJAX_ID.CODE}
-        >
-          All pull requests list
-        </BaseStyle.StyledGithubLink>
-        {data &&
-          data.map(
-            ({
-              html_url: link,
-              number,
-              title,
-              user: { login: userName, avatar_url: avatarUrl },
-              created_at: createAt,
-              labels = [],
-              head,
-              base,
-            }) => {
-              const isFork = head?.repo?.fork
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <>
+            <BaseStyle.StyledGithubLink
+              onClick={closePullMenu}
+              href={`/${owner}/${repo}/pulls`}
+              pjaxId={PJAX_ID.CODE}
+            >
+              All pull requests list
+            </BaseStyle.StyledGithubLink>
+            {data &&
+              data.map(
+                ({
+                  html_url: link,
+                  number,
+                  title,
+                  user: { login: userName, avatar_url: avatarUrl },
+                  created_at: createAt,
+                  labels = [],
+                  head,
+                  base,
+                }) => {
+                  const isFork = head?.repo?.fork
 
-              const fromBranch = isFork ? head.label : head.ref
-              const toBranch = isFork ? base.label : base.ref
-              return (
-                <Pull
-                  key={number}
-                  number={number}
-                  createAt={createAt}
-                  userName={userName}
-                  avatarUrl={avatarUrl}
-                  link={link}
-                  handleClose={close}
-                  selected={pull === number}
-                  fromBranch={fromBranch}
-                  toBranch={toBranch}
-                  title={title}
-                  labels={labels}
-                />
-              )
-            }
-          )}
+                  const fromBranch = isFork ? head.label : head.ref
+                  const toBranch = isFork ? base.label : base.ref
+                  return (
+                    <Pull
+                      key={number}
+                      number={number}
+                      createAt={createAt}
+                      userName={userName}
+                      avatarUrl={avatarUrl}
+                      link={link}
+                      handleClose={closePullMenu}
+                      selected={pull === number}
+                      fromBranch={fromBranch}
+                      toBranch={toBranch}
+                      title={title}
+                      labels={labels}
+                    />
+                  )
+                }
+              )}
+          </>
+        )}
       </AnimatedMenuContainer>
     </div>
   )

@@ -25,7 +25,6 @@ const useStyles = ({ drawerPinned }) =>
       justifyContent: 'center',
       alignItems: 'center',
       boxShadow: theme.shadows[2],
-      border: theme.palette.type === 'dark' ? '2px solid #ffffff52' : 'none',
       borderLeft: 'none',
       borderRadius: '0 5px 5px 0',
       cursor: 'pointer',

@@ -1,5 +1,4 @@
 import { useRef } from 'react'
-import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
 import { AiOutlineSetting } from 'react-icons/ai'
 import { makeStyles } from '@material-ui/core/styles'
@@ -10,11 +9,12 @@ import SettingTourGuide from 'components/Guide/Setting'
 
 import SettingForm from './Form'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   button: {
     height: 'calc(100% - 1px)',
     width: '100%',
     borderRadius: '0',
+    color: theme.palette.type === 'dark' ? 'white' : '#505050',
   },
   container: {
     width: '100%',
@@ -32,16 +32,13 @@ export const SettingButton = () => {
 
   return (
     <div className={classes.container}>
-      <Divider variant="middle" />
       <Button
         className={classes.button}
         color="primary"
         endIcon={<AiOutlineSetting />}
         onClick={handleOpen}
         ref={buttonRef}
-      >
-        Setting
-      </Button>
+      />
       <SettingTourGuide anchorRef={buttonRef} />
     </div>
   )
