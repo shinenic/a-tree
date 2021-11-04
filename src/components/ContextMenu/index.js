@@ -70,9 +70,9 @@ export default function ContextMenu({ ...pageInfo }) {
 
       await new Promise((resolve) => {
         window.location.hash = lastFileHash
-        setTimeout(resolve)
+        setTimeout(resolve, 100)
       })
-      await checkFileNodeExisting(lastFileHash)
+      await checkFileNodeExisting(lastFileHash, 1000 * 10)
     }
 
     await markAllFiles(isViewed)
@@ -94,9 +94,9 @@ export default function ContextMenu({ ...pageInfo }) {
 
       await new Promise((resolve) => {
         window.location.hash = lastFileHash
-        setTimeout(resolve)
+        setTimeout(resolve, 100)
       })
-      await checkFileNodeExisting(lastFileHash)
+      await checkFileNodeExisting(lastFileHash, 1000 * 10)
     }
 
     await toggleViewedFilesFolding(shouldCollapse)
