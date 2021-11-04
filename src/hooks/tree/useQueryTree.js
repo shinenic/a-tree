@@ -52,7 +52,7 @@ const useQueryTree = (pageInfo, enabled = true) => {
      *  pull:   data
      */
     () => data?.files || data?.tree || data,
-    [Object.values(pageInfo), hasData] // eslint-disable-line
+    [...Object.values(pageInfo), hasData] // eslint-disable-line
   )
 
   return { files, isLoading, error }
