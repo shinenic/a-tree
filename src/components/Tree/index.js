@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useState } from 'react'
+import { useMemo, useEffect, useState, memo } from 'react'
 import TreeView from '@material-ui/lab/TreeView'
 import { get, set, isEmpty, sortBy, compact } from 'lodash'
 import {
@@ -24,6 +24,7 @@ const isTreeContent = (e) => {
   return [
     '[class*="MuiTreeItem-content"]',
     '[class*="MuiTreeItem-label"]',
+    '[class*="MuiBox-root"]',
     'path',
   ].some((selector) => e.target.matches(selector))
 }
@@ -123,85 +124,89 @@ const setNodeIds = (tree, parentNodeId = '', folderNodeIds) => {
   })
 }
 
-const Tree = ({ tree, onItemClick, isLoading, handleNodeClick, getNodeHref }) => {
-  const openContextMenu = useContextMenu((s) => s.openContextMenu)
+const Tree = memo(
+  ({ tree, onItemClick, isLoading, handleNodeClick, getNodeHref }) => {
+    const openContextMenu = useContextMenu((s) => s.openContextMenu)
 
-  if (isEmpty(tree)) return null
+    if (isEmpty(tree)) return null
 
-  return sortBy(Object.keys(tree), [
-    (key) => {
-      if (tree[key].children) return 0
-      return 1
-    },
-  ]).map((key) => {
-    const node = tree[key]
-    const label = key
-    const hasChildren = !isEmpty(node.children)
-    const status = node.status || 'normal'
+    return sortBy(Object.keys(tree), [
+      (key) => {
+        if (tree[key].children) return 0
+        return 1
+      },
+    ]).map((key) => {
+      const node = tree[key]
+      const label = key
+      const hasChildren = !isEmpty(node.children)
+      const status = node.status || 'normal'
 
-    /**
-     * Tree view has no official api to set `onContextMenu` for `tree item content` directly,
-     * so in order to limit the clickable area,
-     * detect only tree item content or it will won't stop propagation
-     */
-    const handleContextMenu = (e) => {
-      if (!isTreeContent(e)) return
+      /**
+       * Tree view has no official api to set `onContextMenu` for `tree item content` directly,
+       * so in order to limit the clickable area,
+       * detect only tree item content or it will won't stop propagation
+       */
+      const handleContextMenu = (e) => {
+        // console.log(e)
+        // console.log('isTreeContent', isTreeContent(e), e.target)
+        if (!isTreeContent(e)) return
 
-      e.preventDefault()
-      e.stopPropagation()
+        e.preventDefault()
+        e.stopPropagation()
 
-      if (isLoading) return
-      openContextMenu(e, node)
-    }
-
-    const Text = () => {
-      return <EllipsisBox maxWidth="100%" text={label} withTooltip />
-    }
-
-    if (hasChildren) {
-      return (
-        <div key={node.nodeId}>
-          <TreeItem
-            nodeId={node.nodeId}
-            onContextMenu={handleContextMenu}
-            label={isLoading ? <LabelTextSkeleton /> : <Text />}
-            onIconClick={handleNodeClick}
-            onLabelClick={handleNodeClick}
-          >
-            <Tree
-              tree={node.children}
-              onItemClick={onItemClick}
-              isLoading={isLoading}
-              getNodeHref={getNodeHref}
-            />
-          </TreeItem>
-        </div>
-      )
-    }
-
-    const handleClick = (e) => {
-      e.stopPropagation()
-
-      if (e[MODIFIER_KEY_PROPERTY]) {
-        openInNewTab(getNodeHref(node))
-        return
+        if (isLoading) return
+        openContextMenu(e, node)
       }
 
-      if (onItemClick) onItemClick(node, e)
-    }
+      const Text = () => {
+        return <EllipsisBox maxWidth="100%" text={label} withTooltip />
+      }
 
-    return (
-      <div key={node.nodeId} onClick={handleClick}>
-        <TreeItem
-          onContextMenu={handleContextMenu}
-          nodeId={node.nodeId}
-          label={isLoading ? <LabelTextSkeleton /> : <Text />}
-          icon={isLoading ? <IconSkeleton /> : <LabelIcon status={status} />}
-        />
-      </div>
-    )
-  })
-}
+      if (hasChildren) {
+        return (
+          <div key={node.nodeId}>
+            <TreeItem
+              nodeId={node.nodeId}
+              onContextMenu={handleContextMenu}
+              label={isLoading ? <LabelTextSkeleton /> : <Text />}
+              onIconClick={handleNodeClick}
+              onLabelClick={handleNodeClick}
+            >
+              <Tree
+                tree={node.children}
+                onItemClick={onItemClick}
+                isLoading={isLoading}
+                getNodeHref={getNodeHref}
+              />
+            </TreeItem>
+          </div>
+        )
+      }
+
+      const handleClick = (e) => {
+        e.stopPropagation()
+
+        if (e[MODIFIER_KEY_PROPERTY]) {
+          openInNewTab(getNodeHref(node))
+          return
+        }
+
+        if (onItemClick) onItemClick(node, e)
+      }
+
+      return (
+        <div key={node.nodeId} onClick={handleClick}>
+          <TreeItem
+            onContextMenu={handleContextMenu}
+            nodeId={node.nodeId}
+            label={isLoading ? <LabelTextSkeleton /> : <Text />}
+            icon={isLoading ? <IconSkeleton /> : <LabelIcon status={status} />}
+          />
+        </div>
+      )
+    })
+  }
+)
 
 export default function CustomizedTreeView({
   tree,

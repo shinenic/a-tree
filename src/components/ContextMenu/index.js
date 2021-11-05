@@ -45,6 +45,7 @@ export default function ContextMenu({ ...pageInfo }) {
 
   const modalRef = useClickOutside(closeContextMenu)
   const href = clickedTreeNode ? getNodeHref(clickedTreeNode) : null
+  console.log({ isContextMenuOpened, clickedTreeNode, position })
 
   useEffect(() => {
     if (!isContextMenuOpened) {

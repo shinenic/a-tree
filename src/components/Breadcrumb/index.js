@@ -21,6 +21,10 @@ import {
 } from 'utils/link'
 import EllipsisBox from 'components/EllipsisBox'
 
+const checkBlobPage = () => {
+  return window.location.pathname.split('/')[3] === 'blob'
+}
+
 const Breadcrumb = ({
   pageType,
   owner,
@@ -66,8 +70,10 @@ const Breadcrumb = ({
       items.push(branchItem)
       if (filePath) {
         const files = filePath.split('/')
+        const isBlobPage = checkBlobPage()
+
         const fileItems = files.map((file, index) => {
-          const isTreeLeaf = index === files.length - 1
+          const isTreeLeaf = index === files.length - 1 && isBlobPage // link wrong if tree page "https://github.com/shinenic/a-tree/tree/feature/add-context-menu/src/components"
           const fileLink = getFileLink({
             owner,
             repo,
@@ -75,6 +81,7 @@ const Breadcrumb = ({
             filePath: file,
             type: isTreeLeaf ? 'blob' : 'tree',
           })
+          console.log({ file, isTreeLeaf, fileLink })
 
           return {
             text: file,
@@ -148,6 +155,7 @@ const Breadcrumb = ({
                   display: 'flex',
                   alignItems: 'center',
                   margin: '0 5px',
+                  borderBottom: '1px solid transparent',
                   ...(isClickable && {
                     '&:hover': {
                       borderBottom: '1px solid white',

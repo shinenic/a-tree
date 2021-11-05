@@ -1,3 +1,4 @@
+import './wdyr'
 import TokenPageGuides from 'components/Guide/TokenPage'
 import { CONTAINER_ID, isLocalMode } from 'constants'
 import React from 'react'
