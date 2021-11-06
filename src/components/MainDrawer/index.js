@@ -17,8 +17,8 @@ import FileSearch from 'components/FileSearchModal'
 import ContextMenu from 'components/ContextMenu'
 import Breadcrumb from 'components/Breadcrumb'
 import SearchBar from 'components/SearchBar'
+import usePopperStore from 'stores/popper'
 
-import useSwitch from 'hooks/useSwitch'
 import Error from './Tabs/Error'
 import TreeTab from './Tabs'
 import ResizableWrapper from './ResizableWrapper'
@@ -41,14 +41,9 @@ const MainDrawer = ({ pageInfo, error }) => {
   const disablePageTypeList = useSettingStore((s) => s.disablePageTypeList)
   const dispatch = useSettingStore((s) => s.dispatch)
   const drawerPinned = useSettingStore((s) => s.drawerPinned)
-  const [
-    isFileSearchModalOpen,
-    openFileSearchModal,
-    closeFileSearchModal,
-    toggleFileSearchModal,
-  ] = useSwitch()
 
   const openContextMenu = useContextMenuStore((s) => s.openContextMenu)
+  const toggleFileSearch = usePopperStore((s) => s.toggleFileSearch)
 
   const classes = useStyles()
 
@@ -84,12 +79,7 @@ const MainDrawer = ({ pageInfo, error }) => {
       <GlobalStyle pl={drawerPinned ? drawerWidth : 0} />
       <FloatingButton pageType={pageType} />
       <ContextMenu {...pageInfo} />
-      <FileSearch
-        pageInfo={pageInfo}
-        isOpen={isFileSearchModalOpen}
-        onOpen={openFileSearchModal}
-        onClose={closeFileSearchModal}
-      />
+      <FileSearch pageInfo={pageInfo} />
       <Drawer
         anchor="left"
         open={drawerPinned}
@@ -109,7 +99,7 @@ const MainDrawer = ({ pageInfo, error }) => {
             <Breadcrumb {...pageInfo} />
           </Style.DrawerHeader>
           <Box padding="10px" height={55}>
-            <SearchBar onClick={() => toggleFileSearchModal()} />
+            <SearchBar onClick={() => toggleFileSearch(true)} />
           </Box>
           <PullCommitMenu
             owner={owner}

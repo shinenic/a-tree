@@ -16,9 +16,9 @@ import {
 } from 'utils/fileSearch'
 import { isEmpty, throttle } from 'lodash'
 import { CustomModal } from 'components/shared/Modal'
-import useUpdateEffect from 'hooks/useUpdateEffect'
 import useTreeItemClick from 'hooks/tree/useTreeItemClick'
 import useQueryTree from 'hooks/tree/useQueryTree'
+import usePopperStore from 'stores/popper'
 
 import SearchBar from 'components/SearchBar'
 import { initialState, reducer } from './reducer'
@@ -37,8 +37,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const FileSearchWrapper = ({ pageInfo, isOpen, onOpen, onClose }) => {
-  const { files, isLoading, error } = useQueryTree(pageInfo, isOpen)
+const FileSearchWrapper = ({ pageInfo }) => {
+  const isFileSearchOn = usePopperStore((s) => s.isFileSearchOn)
+  const { files, isLoading, error } = useQueryTree(pageInfo, isFileSearchOn)
   const onItemClick = useTreeItemClick(pageInfo)
 
   return (
@@ -47,9 +48,7 @@ const FileSearchWrapper = ({ pageInfo, isOpen, onOpen, onClose }) => {
       selectCallback={onItemClick}
       isLoading={isLoading}
       error={error}
-      onOpen={onOpen}
-      onClose={onClose}
-      isOpen={isOpen}
+      isOpen={isFileSearchOn}
     />
   )
 }
@@ -64,8 +63,6 @@ const FileSearchModal = ({
   selectCallback,
   files,
   error,
-  onOpen,
-  onClose,
   isOpen,
 }) => {
   const [input, setInput] = useState('')
@@ -129,10 +126,6 @@ const FileSearchModal = ({
     return () => unlisten()
   }, [fileSearchHotkey, isOpened])
 
-  useUpdateEffect(() => {
-    isOpened ? onOpen() : onClose()
-  }, [isOpened])
-
   const handleInputChange = useCallback((e) => {
     e.preventDefault()
     setInput(e.target.value)
@@ -152,10 +145,7 @@ const FileSearchModal = ({
   return (
     <CustomModal
       isOpened={isOpened}
-      onClose={() => {
-        dispatch({ type: 'CLOSE' })
-        if (onClose) onClose()
-      }}
+      onClose={() => dispatch({ type: 'CLOSE' })}
       overLayStyle={{ alignItems: 'start', paddingTop: '15vh' }}
     >
       <div className={classes.paper}>
