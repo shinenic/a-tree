@@ -27,13 +27,12 @@ const SettingTourGuide = ({ anchorRef }) => {
   const isTokenHintShowed = useSettingStore((s) => s.isTokenHintShowed)
   const token = useSettingStore((s) => s.token)
   const dispatch = useSettingStore((s) => s.dispatch)
-  const isModalOpening = useSettingStore((s) => s.isModalOpening)
 
   /**
    * Check visibility first time only.
    */
   useEffect(() => {
-    if (!isTokenHintShowed && !token && !isModalOpening) {
+    if (!isTokenHintShowed && !token) {
       setIsOpening(true)
     }
   }, [])
