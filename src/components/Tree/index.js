@@ -24,6 +24,7 @@ const isTreeContent = (e) => {
   return [
     '[class*="MuiTreeItem-content"]',
     '[class*="MuiTreeItem-label"]',
+    '[class*="MuiBox-root"]',
     'path',
   ].some((selector) => e.target.matches(selector))
 }
