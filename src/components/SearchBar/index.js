@@ -3,7 +3,7 @@ import InputBase from '@material-ui/core/InputBase'
 import Box from '@material-ui/core/Box'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import { AiOutlineSearch } from 'react-icons/ai'
-import useStore from 'stores/setting'
+import useSettingStore from 'stores/setting'
 import { HOTKEY_ADORNMENT } from 'constants'
 
 const useStyles = makeStyles((theme) => ({
@@ -24,7 +24,7 @@ const SearchBar = ({
   inputRef,
   placeholder = 'Search...',
 }) => {
-  const fileSearchHotkey = useStore((s) => s.fileSearchHotkey)
+  const fileSearchHotkey = useSettingStore((s) => s.fileSearchHotkey)
   const classes = useStyles()
   const theme = useTheme()
   const borderStyle =

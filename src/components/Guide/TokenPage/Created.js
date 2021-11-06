@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-import useStore from 'stores/setting'
+import useSettingStore from 'stores/setting'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
@@ -27,7 +27,7 @@ function CreatedTokenTourGuide({ prevUrl }) {
   const anchorRef = useRef()
   const [isOpening, setIsOpening] = useState(false)
 
-  const dispatch = useStore((s) => s.dispatch)
+  const dispatch = useSettingStore((s) => s.dispatch)
 
   useEffect(() => {
     anchorRef.current = document.querySelector(NEW_OAUTH_TOKEN_SELECTOR)

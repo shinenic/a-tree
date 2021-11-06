@@ -1,5 +1,5 @@
 import Grid from '@material-ui/core/Grid'
-import useStore from 'stores/setting'
+import useSettingStore from 'stores/setting'
 import { HOTKEY_ADORNMENT } from 'constants'
 import Typography from '@material-ui/core/Typography'
 import Chip from '@material-ui/core/Chip'
@@ -26,8 +26,8 @@ const useInputStyles = makeStyles({
 const Hotkeys = () => {
   const inputClasses = useInputStyles()
 
-  const dispatch = useStore((s) => s.dispatch)
-  const fileSearchHotkey = useStore((s) => s.fileSearchHotkey)
+  const dispatch = useSettingStore((s) => s.dispatch)
+  const fileSearchHotkey = useSettingStore((s) => s.fileSearchHotkey)
 
   const onChange = (event) => {
     dispatch({ type: 'UPDATE_FILE_SEARCH_HOTKEY', payload: event.target.value })

@@ -9,7 +9,7 @@ import PullCommitMenu from 'components/Menu/PullCommit'
 import PullMenu from 'components/Menu/Pull'
 import { SettingButton } from 'components/Setting'
 import { throttle } from 'lodash'
-import useStore from 'stores/setting'
+import useSettingStore from 'stores/setting'
 import GlobalStyle from 'GlobalStyle'
 import { getHeaderHeight } from 'utils/style'
 import FloatingButton from 'components/FloatingButton'
@@ -37,10 +37,10 @@ const useStyles = makeStyles((theme) => ({
 const MainDrawer = ({ pageInfo, error }) => {
   const { pageType, owner, repo, commit, pull } = pageInfo
 
-  const drawerWidth = useStore((s) => s.drawerWidth)
-  const disablePageTypeList = useStore((s) => s.disablePageTypeList)
-  const dispatch = useStore((s) => s.dispatch)
-  const drawerPinned = useStore((s) => s.drawerPinned)
+  const drawerWidth = useSettingStore((s) => s.drawerWidth)
+  const disablePageTypeList = useSettingStore((s) => s.disablePageTypeList)
+  const dispatch = useSettingStore((s) => s.dispatch)
+  const drawerPinned = useSettingStore((s) => s.drawerPinned)
   const [
     isFileSearchModalOpen,
     openFileSearchModal,

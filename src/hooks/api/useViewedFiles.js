@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import createGithubGqlQuery from 'utils/graphql'
-import useStore from 'stores/setting'
+import useSettingStore from 'stores/setting'
 import useViewedFilesStore from 'stores/pull'
 import { generateReviewCheckListener } from 'utils/pullPage'
 import { VIEWER_STATE } from 'constants/github'
 
 function useViewedFiles({ owner, repo, pull } = {}) {
-  const [token, baseUrl] = useStore((s) => [s.token, s.baseUrl])
+  const [token, baseUrl] = useSettingStore((s) => [s.token, s.baseUrl])
   const clearMap = useViewedFilesStore((s) => s.clearMap)
   const setFileStatus = useViewedFilesStore((s) => s.setFileStatus)
 

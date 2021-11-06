@@ -4,7 +4,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import { isEmpty, intersection } from 'lodash'
 import { PAGE_TYPE } from 'constants'
-import useStore from 'stores/setting'
+import useSettingStore from 'stores/setting'
 
 import BlockTitle from './BlockTitle'
 
@@ -16,8 +16,8 @@ const VISIBLE_PAGE_TYPE_OPTIONS = [
 ]
 
 const VisibilityCheckBoxes = () => {
-  const disablePageTypeList = useStore((s) => s.disablePageTypeList) ?? []
-  const dispatch = useStore((s) => s.dispatch)
+  const disablePageTypeList = useSettingStore((s) => s.disablePageTypeList) ?? []
+  const dispatch = useSettingStore((s) => s.dispatch)
 
   return (
     <>

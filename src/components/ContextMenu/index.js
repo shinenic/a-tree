@@ -20,7 +20,7 @@ import {
 } from 'utils/pullPage'
 import { openInNewTab } from 'utils/chrome'
 import { getRawContent, checkIsFileNode } from 'utils/tree'
-import useStore from 'stores/setting'
+import useSettingStore from 'stores/setting'
 import useArray from 'hooks/useArray'
 
 import {
@@ -31,8 +31,8 @@ import {
 } from './style'
 
 export default function ContextMenu({ ...pageInfo }) {
-  const token = useStore((s) => s.token)
-  const drawerPinned = useStore((s) => s.drawerPinned)
+  const token = useSettingStore((s) => s.token)
+  const drawerPinned = useSettingStore((s) => s.drawerPinned)
   const { files } = useQueryTree(pageInfo, drawerPinned)
   const classes = useStyles()
   const [loadingItems, addItemLoading, removeItemLoaded, _, clearLoadingItems] =

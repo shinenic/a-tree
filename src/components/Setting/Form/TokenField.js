@@ -4,14 +4,14 @@ import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import { isEmpty } from 'lodash'
-import useStore from 'stores/setting'
+import useSettingStore from 'stores/setting'
 import { startTokenGuide } from 'utils/tokenGuide'
 
 import BlockTitle from './BlockTitle'
 
 const TokenField = () => {
-  const dispatch = useStore((s) => s.dispatch)
-  const token = useStore((s) => s.token)
+  const dispatch = useSettingStore((s) => s.dispatch)
+  const token = useSettingStore((s) => s.token)
 
   const handleInputChange = (event) => {
     dispatch({ type: 'UPDATE_TOKEN', payload: event.target.value })

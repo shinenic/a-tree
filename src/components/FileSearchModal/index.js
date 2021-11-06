@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import useStore from 'stores/setting'
+import useSettingStore from 'stores/setting'
 
 import {
   buildUsedLetterMap,
@@ -69,7 +69,7 @@ const FileSearchModal = ({
   isOpen,
 }) => {
   const [input, setInput] = useState('')
-  const fileSearchHotkey = useStore((s) => s.fileSearchHotkey)
+  const fileSearchHotkey = useSettingStore((s) => s.fileSearchHotkey)
 
   const [{ result = [], keyword = '', selectedIndex = 0, isOpened }, dispatch] =
     useReducer(reducer, {

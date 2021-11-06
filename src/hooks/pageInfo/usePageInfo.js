@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getPageInfo, isGithubReservedUsername } from 'utils/github'
-import useStore from 'stores/setting'
+import useSettingStore from 'stores/setting'
 import { createGithubQuery } from 'utils/api'
 import { ERROR_MESSAGE } from 'constants'
 
@@ -39,8 +39,8 @@ const isGithubPage = (host) => host === 'github.com'
  * @returns {PageInfoHook}
  */
 const usePageInfo = () => {
-  const token = useStore((s) => s.token)
-  const dispatch = useStore((s) => s.dispatch)
+  const token = useSettingStore((s) => s.token)
+  const dispatch = useSettingStore((s) => s.dispatch)
 
   const { pathname, host } = useListenLocation()
   const [, firstPath, secondPath] = pathname.split('/')

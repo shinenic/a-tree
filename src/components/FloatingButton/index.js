@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback, useEffect, useRef } from 'react'
 import Box from '@material-ui/core/Box'
 import Draggable from 'react-draggable'
-import useStore from 'stores/setting'
+import useSettingStore from 'stores/setting'
 import { makeStyles } from '@material-ui/core/styles'
 import { getURL } from 'utils/chrome'
 import useWindowSize from 'hooks/useWindowSize'
@@ -42,9 +42,9 @@ const useStyles = ({ drawerPinned }) =>
  *       Or close drawer automatically on specific page types
  */
 const FloatingButton = () => {
-  const floatingButtonPositionY = useStore((s) => s.floatingButtonPositionY)
-  const drawerPinned = useStore((s) => s.drawerPinned)
-  const dispatch = useStore((s) => s.dispatch)
+  const floatingButtonPositionY = useSettingStore((s) => s.floatingButtonPositionY)
+  const drawerPinned = useSettingStore((s) => s.drawerPinned)
+  const dispatch = useSettingStore((s) => s.dispatch)
 
   const { height: windowHeight } = useWindowSize()
   const originY = useRef(floatingButtonPositionY)
