@@ -136,7 +136,10 @@ export default function PullMenu({ owner, repo, pull }) {
 
   return (
     <div ref={menuRef}>
-      <AnimatedMenuContainer style={{ ...menuStyles, ...menuPositionStyle }}>
+      <AnimatedMenuContainer
+        style={{ ...menuStyles, ...menuPositionStyle }}
+        onContextMenu={(e) => e.stopPropagation()}
+      >
         {isLoading ? (
           <Loading />
         ) : (

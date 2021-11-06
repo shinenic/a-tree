@@ -1,9 +1,13 @@
 import { scrollTo } from 'utils/scroll'
 import { GITHUB_PAGE_CONTAINER_ID } from 'constants/github'
 import { GITHUB_NAV_BAR_HEIGHT } from 'constants'
-import { noop } from 'lodash'
+import { noop, throttle, chunk } from 'lodash'
+import sha256 from 'crypto-js/sha256'
 
 const DEFAULT_TIMEOUT = 1000 * 6
+
+export const getFileHash = (filename) => `${sha256(filename)}`
+export const getFileHashId = (filename) => `diff-${getFileHash(filename)}`
 
 /**
  * DOM structure
@@ -19,7 +23,7 @@ const DEFAULT_TIMEOUT = 1000 * 6
  *   <div class="js-diff-progressive-container">...</div>
  * </div>
  */
-const getFileNodes = () => {
+export const getFileNodes = () => {
   const diffContainer = document.getElementById('files')
   if (!diffContainer) {
     throw new Error('Can\'t find diff container DOM (id="files")')
@@ -50,13 +54,13 @@ const getFileNodes = () => {
  * @param {boolean} option.showAllFiles if true, all of the nodes will be visible
  * @returns {HTMLElement} return the node of `filePath` if specified
  */
-const loopFileNodes = ({ fileHash, focusFile, showAllFiles } = {}) => {
+const loopFileNodes = ({ fileHashId, focusFile, showAllFiles } = {}) => {
   if (focusFile && showAllFiles) {
     throw new Error('"focusFile" and "showAllFiles" can\'t be used together')
   }
 
-  if (focusFile && !fileHash) {
-    throw new Error('"focusFile" and "fileHash" should be used together')
+  if (focusFile && !fileHashId) {
+    throw new Error('"focusFile" and "fileHashId" should be used together')
   }
 
   const fileNodes = getFileNodes()
@@ -64,7 +68,7 @@ const loopFileNodes = ({ fileHash, focusFile, showAllFiles } = {}) => {
   let target = null
 
   fileNodes.forEach((node) => {
-    if (node.id === fileHash) {
+    if (node.id === fileHashId) {
       target = node
 
       if (focusFile || showAllFiles) {
@@ -77,23 +81,23 @@ const loopFileNodes = ({ fileHash, focusFile, showAllFiles } = {}) => {
     }
   })
 
-  if (fileHash && !target) {
-    throw new Error(`Can't find HTML node for file path "${fileHash}"`)
+  if (fileHashId && !target) {
+    throw new Error(`Can't find HTML node for file path "${fileHashId}"`)
   }
 
   return target
 }
 
-export const focusFile = (fileHash) => {
-  loopFileNodes({ fileHash, focusFile: true })
+export const focusFile = (fileHashId) => {
+  loopFileNodes({ fileHashId, focusFile: true })
 }
 
 export const resetFocusFiles = () => {
   loopFileNodes({ showAllFiles: true })
 }
 
-export const scrollToFile = (fileHash) => {
-  scrollTo(document.getElementById(fileHash), {
+export const scrollToFile = (fileHashId) => {
+  scrollTo(document.getElementById(fileHashId), {
     offsetY: GITHUB_NAV_BAR_HEIGHT,
   })
 }
@@ -134,12 +138,12 @@ export const generateReviewCheckListener = (callback = noop) => {
   }
 }
 
-export const checkFileNodeExisting = (fileHash, timeout = DEFAULT_TIMEOUT) =>
+export const checkFileNodeExisting = (fileHashId, timeout = DEFAULT_TIMEOUT) =>
   new Promise((resolve, reject) => {
     let observer = null
 
     const handler = () => {
-      if (document.querySelector(`div[id="${fileHash}"]`)) {
+      if (document.querySelector(`div[id="${fileHashId}"]`)) {
         observer && observer.disconnect()
         resolve()
       }
@@ -175,3 +179,105 @@ export const checkPjaxEnd = (timeout = DEFAULT_TIMEOUT) =>
       reject()
     }, timeout)
   })
+
+/**
+ * Execute each single `click()` within requestAnimationFrame is way too slow...,
+ * add chunk size for batch execution
+ */
+export const markAllFiles = async (isMarkAllViewed = true, chunkSize = 3) => {
+  return new Promise((resolve) => {
+    const checkboxChunks = chunk(
+      Array.from(document.querySelectorAll('.js-reviewed-checkbox')),
+      chunkSize
+    )
+
+    function check() {
+      if (!checkboxChunks.length) {
+        resolve()
+      }
+
+      const checkboxes = checkboxChunks.pop()
+
+      checkboxes.filter(Boolean).forEach((checkbox) => {
+        if (isMarkAllViewed ^ checkbox?.checked) {
+          checkbox.click()
+        }
+      })
+
+      window.requestAnimationFrame(check)
+    }
+
+    window.requestAnimationFrame(check)
+  })
+}
+
+export const toggleViewedFilesFolding = async (
+  shouldCollapse = true,
+  chunkSize = 3
+) => {
+  return new Promise((resolve) => {
+    const fileNodeChunks = chunk(
+      getFileNodes().filter(
+        (node) => node.querySelector('.js-reviewed-checkbox').checked
+      ),
+      chunkSize
+    )
+
+    function check() {
+      if (!fileNodeChunks.length) {
+        resolve()
+      }
+
+      const fileNodes = fileNodeChunks.pop()
+
+      fileNodes.filter(Boolean).forEach((fileNode) => {
+        const button = shouldCollapse
+          ? fileNode?.querySelector?.('button[aria-expanded="true"]')
+          : fileNode?.querySelector?.('button[aria-expanded="false"]')
+
+        if (button) {
+          button.click()
+        }
+      })
+
+      window.requestAnimationFrame(check)
+    }
+
+    window.requestAnimationFrame(check)
+  })
+}
+
+/**
+ * @TODO Enhance reliability
+ */
+export const getCurrentStickyFileNode = (callback) => {
+  const handler = throttle(() => {
+    const stuckNodes = document.querySelectorAll('div[class~="is-stuck"]')
+
+    if (!stuckNodes.length === 0) {
+      callback(null)
+
+      return
+    }
+
+    const lastStuckNode = stuckNodes[stuckNodes.length - 1]
+
+    const link = lastStuckNode.querySelector(
+      'a[href^="#diff"]:not([title*="Expand"])'
+    )
+
+    if (link) {
+      const filename = link.title.includes(' → ')
+        ? link.title.split(' → ')[1]
+        : link.title
+
+      callback(filename)
+    }
+  }, 600)
+
+  window.addEventListener('scroll', handler)
+
+  return () => {
+    window.removeEventListener('scroll', handler)
+  }
+}

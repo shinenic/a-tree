@@ -9,7 +9,7 @@ const useUpdateEffect = (effect, deps) => {
       return
     }
     effect()
-  }, deps)
+  }, deps) // eslint-disable-line
 }
 
 export default useUpdateEffect

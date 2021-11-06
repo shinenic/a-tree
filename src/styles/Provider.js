@@ -1,7 +1,7 @@
 import { ThemeProvider, createTheme } from '@material-ui/core/styles'
 import { getNativeBodyStyles } from 'utils/style'
 import tinycolor from 'tinycolor2'
-import { useMemo } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 
 const defaultTheme = createTheme()
 
@@ -29,11 +29,35 @@ const getTheme = () => {
 }
 
 function MainThemeProvider({ children }) {
-  const themeConfig = getTheme()
+  const [nativeColorMode, setNativeColorMode] = useState(null)
+
+  /**
+   * Listen github native color mode
+   */
+  useEffect(() => {
+    const callback = () => {
+      const newColorMode = document
+        .querySelector('html')
+        .getAttribute('data-color-mode')
+      setNativeColorMode(newColorMode)
+    }
+
+    const observer = new MutationObserver(callback)
+
+    observer.observe(document.querySelector('html'), {
+      attributes: true,
+      childList: false,
+      subtree: false,
+    })
+
+    return () => observer.disconnect()
+  }, [])
 
   const theme = useMemo(
-    () =>
-      createTheme({
+    () => {
+      const themeConfig = getTheme()
+
+      return createTheme({
         palette: {
           type: themeConfig.isDarkTheme ? 'dark' : 'light',
           primary: {
@@ -86,8 +110,10 @@ function MainThemeProvider({ children }) {
             },
           },
         },
-      }),
-    []
+      })
+    },
+    // Update theme only when native `data-color-mode` changed
+    [nativeColorMode] // eslint-disable-line
   )
 
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>

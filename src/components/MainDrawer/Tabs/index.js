@@ -1,6 +1,7 @@
 import Tree from 'components/Tree'
 import { PULL_PAGE_TYPE, CODE_PAGE_TYPE } from 'constants'
 import useTreeItemClick from 'hooks/tree/useTreeItemClick'
+import useGetNodeHref from 'hooks/tree/useGetNodeHref'
 import useQueryTree from 'hooks/tree/useQueryTree'
 import useViewedFiles from 'hooks/api/useViewedFiles'
 import useStore from 'stores/setting'
@@ -15,8 +16,9 @@ const TreeTab = ({ ...pageInfo }) => {
   const drawerPinned = useStore((s) => s.drawerPinned)
   const { pageType, owner, repo, pull, filePath } = pageInfo
 
-  const { data, isLoading, error } = useQueryTree(pageInfo, drawerPinned)
+  const { files, isLoading, error } = useQueryTree(pageInfo, drawerPinned)
   const onItemClick = useTreeItemClick(pageInfo)
+  const getNodeHref = useGetNodeHref(pageInfo)
 
   useViewedFiles({ owner, pull, repo })
 
@@ -24,16 +26,17 @@ const TreeTab = ({ ...pageInfo }) => {
 
   if (error) return null
 
-  if (isLoading || !data) {
+  if (isLoading || !files) {
     return <Loading isExpandedAll={isExpandedAll} />
   }
 
   return (
     <Tree
-      tree={data?.files || data?.tree || data}
+      tree={files}
       onItemClick={onItemClick}
       isExpandedAll={isExpandedAll}
       currentFilePath={filePath}
+      getNodeHref={getNodeHref}
     />
   )
 }

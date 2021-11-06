@@ -1,12 +1,20 @@
-import { useCallback, useEffect, useRef, useReducer, useMemo } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useReducer,
+  useMemo,
+  useState,
+} from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import useStore from 'stores/setting'
 
 import {
   buildUsedLetterMap,
   highlightText,
   generateHotkeyListener,
 } from 'utils/fileSearch'
-import { isEmpty } from 'lodash'
+import { isEmpty, throttle } from 'lodash'
 import { CustomModal } from 'components/shared/Modal'
 import useUpdateEffect from 'hooks/useUpdateEffect'
 import useTreeItemClick from 'hooks/tree/useTreeItemClick'
@@ -30,12 +38,12 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const FileSearchWrapper = ({ pageInfo, isOpen, onOpen, onClose }) => {
-  const { data, isLoading, error } = useQueryTree(pageInfo, isOpen)
+  const { files, isLoading, error } = useQueryTree(pageInfo, isOpen)
   const onItemClick = useTreeItemClick(pageInfo)
 
   return (
     <FileSearchModal
-      files={data?.files || data?.tree || data}
+      files={files}
       selectCallback={onItemClick}
       isLoading={isLoading}
       error={error}
@@ -60,11 +68,20 @@ const FileSearchModal = ({
   onClose,
   isOpen,
 }) => {
+  const [input, setInput] = useState('')
+  const fileSearchHotkey = useStore((s) => s.fileSearchHotkey)
+
   const [{ result = [], keyword = '', selectedIndex = 0, isOpened }, dispatch] =
     useReducer(reducer, {
       ...initialState,
       selectCallback,
     })
+  const throttledUpdateKeyword = useCallback(
+    throttle((newKeyword) => {
+      dispatch({ type: 'UPDATE_KEYWORD', payload: { keyword: newKeyword } })
+    }, 300),
+    []
+  )
 
   const classes = useStyles()
   const inputRef = useRef(null)
@@ -103,10 +120,14 @@ const FileSearchModal = ({
    * Handle shortcuts
    */
   useEffect(() => {
-    const unlisten = generateHotkeyListener(dispatch, isOpened)
+    const unlisten = generateHotkeyListener(
+      dispatch,
+      isOpened,
+      fileSearchHotkey
+    )
 
     return () => unlisten()
-  }, [isOpened])
+  }, [fileSearchHotkey, isOpened])
 
   useUpdateEffect(() => {
     isOpened ? onOpen() : onClose()
@@ -114,7 +135,8 @@ const FileSearchModal = ({
 
   const handleInputChange = useCallback((e) => {
     e.preventDefault()
-    dispatch({ type: 'UPDATE_KEYWORD', payload: { keyword: e.target.value } })
+    setInput(e.target.value)
+    throttledUpdateKeyword(e.target.value)
   }, [])
 
   const handleOptionClick = useCallback(
@@ -142,7 +164,7 @@ const FileSearchModal = ({
           showHints={false}
           placeholder="Enter keyword to search files..."
           inputRef={inputRef}
-          value={keyword}
+          value={input}
           withoutBorder
           onChange={handleInputChange}
         />

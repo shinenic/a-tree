@@ -39,8 +39,8 @@ const useStyles = makeStyles((theme) =>
       padding: '5px 6px',
       borderRadius: '3px',
     },
-    root: {
-      '&:focus > $content, &$selected > $content': {
+    selected: {
+      '& > div:first-of-type': {
         backgroundColor:
           theme.palette.type === 'light'
             ? SELECT_BG
@@ -48,6 +48,8 @@ const useStyles = makeStyles((theme) =>
                 .mix(SELECT_BG, theme.palette.background.paper, 80)
                 .toHexString(),
       },
+    },
+    root: {
       '&:focus > $content $label, &:hover > $content $label, &$selected > $content $label':
         {
           backgroundColor: 'transparent',
@@ -62,10 +64,10 @@ const useStyles = makeStyles((theme) =>
   })
 )
 
-const StyledTreeItem = ({ originalPath, ...rest }) => {
+const StyledTreeItem = ({ nodeId, ...rest }) => {
   const classes = useStyles()
 
-  const isViewed = useViewedFilesStore((s) => s.viewedFileMap[originalPath])
+  const isViewed = useViewedFilesStore((s) => s.viewedFileMap[nodeId])
 
   return (
     <TreeItem
@@ -73,12 +75,14 @@ const StyledTreeItem = ({ originalPath, ...rest }) => {
         root: classes.root,
         content: classes.content,
         label: classes.label,
+        selected: classes.selected,
       }}
       TransitionComponent={TransitionComponent}
       style={{
         transition: 'opacity 0.4s',
         ...(isViewed && { opacity: 0.5 }),
       }}
+      nodeId={nodeId}
       {...rest}
     />
   )

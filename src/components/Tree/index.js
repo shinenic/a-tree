@@ -12,10 +12,22 @@ import {
   IconSkeleton,
 } from 'components/MainDrawer/Tabs/Loading/placeholder'
 import tinycolor from 'tinycolor2'
+import { MODIFIER_KEY_PROPERTY } from 'constants'
+import { openInNewTab } from 'utils/chrome'
+import useContextMenu from 'stores/contextMenu'
 import EllipsisBox from 'components/EllipsisBox'
 import TreeItem from './Item'
 import { MAIN_COLOR } from './constants'
 import LabelIcon from './LabelIcon'
+
+const isTreeContent = (e) => {
+  return [
+    '[class*="MuiTreeItem-content"]',
+    '[class*="MuiTreeItem-label"]',
+    '[class*="MuiBox-root"]',
+    'path',
+  ].some((selector) => e.target.matches(selector))
+}
 
 const useStyles = makeStyles({
   root: {
@@ -112,7 +124,9 @@ const setNodeIds = (tree, parentNodeId = '', folderNodeIds) => {
   })
 }
 
-const Tree = ({ tree, onItemClick, isLoading }) => {
+const Tree = ({ tree, onItemClick, isLoading, handleNodeClick, getNodeHref }) => {
+  const openContextMenu = useContextMenu((s) => s.openContextMenu)
+
   if (isEmpty(tree)) return null
 
   return sortBy(Object.keys(tree), [
@@ -126,16 +140,19 @@ const Tree = ({ tree, onItemClick, isLoading }) => {
     const hasChildren = !isEmpty(node.children)
     const status = node.status || 'normal'
 
-    const handleClick = (e) => {
+    /**
+     * Tree view has no official api to set `onContextMenu` for `tree item content` directly,
+     * so in order to limit the clickable area,
+     * detect only tree item content or it will won't stop propagation
+     */
+    const handleContextMenu = (e) => {
+      if (!isTreeContent(e)) return
+
+      e.preventDefault()
       e.stopPropagation()
 
-      if (onItemClick) onItemClick(node, e)
-    }
-
-    const handleNodeClick = (e) => {
-      if (isLoading) {
-        e.preventDefault()
-      }
+      if (isLoading) return
+      openContextMenu(e, node)
     }
 
     const Text = () => {
@@ -144,9 +161,10 @@ const Tree = ({ tree, onItemClick, isLoading }) => {
 
     if (hasChildren) {
       return (
-        <div key={node.nodeId} onClick={handleClick}>
+        <div key={node.nodeId}>
           <TreeItem
             nodeId={node.nodeId}
+            onContextMenu={handleContextMenu}
             label={isLoading ? <LabelTextSkeleton /> : <Text />}
             onIconClick={handleNodeClick}
             onLabelClick={handleNodeClick}
@@ -155,18 +173,29 @@ const Tree = ({ tree, onItemClick, isLoading }) => {
               tree={node.children}
               onItemClick={onItemClick}
               isLoading={isLoading}
+              getNodeHref={getNodeHref}
             />
           </TreeItem>
         </div>
       )
     }
 
-    const originalPath = node.path || node.filename
+    const handleClick = (e) => {
+      e.stopPropagation()
+
+      if (e[MODIFIER_KEY_PROPERTY]) {
+        openInNewTab(getNodeHref(node))
+        return
+      }
+
+      if (onItemClick) onItemClick(node, e)
+    }
+
     return (
       <div key={node.nodeId} onClick={handleClick}>
         <TreeItem
+          onContextMenu={handleContextMenu}
           nodeId={node.nodeId}
-          originalPath={originalPath}
           label={isLoading ? <LabelTextSkeleton /> : <Text />}
           icon={isLoading ? <IconSkeleton /> : <LabelIcon status={status} />}
         />
@@ -181,7 +210,10 @@ export default function CustomizedTreeView({
   onItemClick,
   isLoading,
   currentFilePath,
+  getNodeHref,
 }) {
+  const clickedTreeNode = useContextMenu((s) => s.clickedTreeNode)
+  const [selectedId, setSelectedId] = useState(null)
   const [expandedIds, setExpandedIds] = useState([])
   const theme = useTheme()
   const classes = useStyles()
@@ -189,49 +221,78 @@ export default function CustomizedTreeView({
   const [objectTree, folderNodeIds] = useMemo(() => generateTree(tree), [tree])
 
   useEffect(() => {
+    if (clickedTreeNode && clickedTreeNode.nodeId) {
+      setSelectedId(clickedTreeNode.nodeId)
+    }
+  }, [clickedTreeNode])
+
+  useEffect(() => {
     setExpandedIds(isExpandedAll ? [...folderNodeIds] : [])
   }, [folderNodeIds, isExpandedAll])
 
   useEffect(() => {
-    if (!currentFilePath) return
+    if (isExpandedAll) return
+
+    if (!currentFilePath) {
+      setExpandedIds([])
+      return
+    }
 
     setExpandedIds((prevIds) => {
-      if (prevIds.includes(currentFilePath)) {
-        return prevIds
-      }
-
       const targetPaths = currentFilePath.split('/')
       const targetIds = targetPaths.map((_, index) =>
         targetPaths.slice(0, index + 1).join('/')
       )
 
-      return targetIds.reduce(
-        (result, id) => (result.includes(id) ? result : [...result, id]),
-        prevIds
+      return (
+        targetIds
+          // Add the nodes which are necessary to reach to the currentFilePath
+          .reduce(
+            (result, id) => (result.includes(id) ? result : [...result, id]),
+            prevIds
+          )
+          // Remove the deeper nodes beyond the currentFilePath
+          .filter((id) => id.indexOf(`${currentFilePath}/`) !== 0)
       )
     })
-  }, [currentFilePath])
+  }, [currentFilePath, isExpandedAll])
 
   const treeView = useMemo(() => {
     const onNodeToggle = (_, nodeIds) => {
+      if (isLoading) return // disable collapse / expand when loading
+
       setExpandedIds(nodeIds)
     }
+
+    const onNodeSelect = (_, value) => setSelectedId(value)
 
     return (
       <TreeView
         className={classes.root}
         expanded={expandedIds}
+        selected={selectedId}
         onNodeToggle={onNodeToggle}
+        onNodeSelect={onNodeSelect}
         {...getDefaultIcon(isLoading, theme)}
       >
         <Tree
           tree={objectTree}
           onItemClick={onItemClick}
+          getNodeHref={getNodeHref}
           isLoading={isLoading}
         />
       </TreeView>
     )
-  }, [objectTree, onItemClick, expandedIds, isLoading]) // eslint-disable-line
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    objectTree,
+    onItemClick,
+    expandedIds,
+    selectedId,
+    isLoading,
+    theme.palette.type,
+  ])
 
   return treeView
 }

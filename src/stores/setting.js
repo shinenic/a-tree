@@ -9,7 +9,7 @@ const { LEFT, RIGHT } = DRAWER_POSITION
  * @typedef SettingState
  * @type {object}
  * @property {string} token personal access token
- * @property {'left'|'right'} position position of main drawer
+ * @property {'left'|'right'} position position of main drawer (not implemented)
  * @property {boolean} isFocusMode repository name
  * @property {number} drawerWidth
  * @property {string[]} domains custom Enterprise domains
@@ -19,6 +19,7 @@ const { LEFT, RIGHT } = DRAWER_POSITION
  * @property {number} floatingButtonPositionY position Y of floating button (px)
  * @property {string} baseUrl record host string for api endpoint
  * @property {boolean} isTokenHintShowed
+ * @property {string} fileSearchHotkey single character(^[a-z0-9]$) with meta key
  */
 
 /** @type {SettingState} */
@@ -34,6 +35,7 @@ export const initialState = {
   floatingButtonPositionY: 500,
   baseUrl: null,
   isTokenHintShowed: false,
+  fileSearchHotkey: 'i',
 }
 
 /**
@@ -66,6 +68,8 @@ export const reducer = (state, { type, payload }) => {
       return { ...state, drawerPinned: !state.drawerPinned }
     case 'SET_TOKEN_HINT_SHOWED':
       return { ...state, isTokenHintShowed: true }
+    case 'UPDATE_FILE_SEARCH_HOTKEY':
+      return { ...state, fileSearchHotkey: payload }
     default:
       throw new Error(`Unknown Type: ${type}`)
   }

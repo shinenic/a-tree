@@ -1,28 +1,29 @@
 import { ACTION_TYPE } from 'components/FileSearchModal/reducer'
+import { IS_MAC } from 'constants'
 
 const { OPEN, CLOSE, SELECT_PREV, SELECT_NEXT, SELECT_INDEX } = ACTION_TYPE
 
-const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0
-
-const OPENED_SHORTCUT_ACTIONS = [
+const getOpenedHotkeyActions = (customToggleKey = 'i') => [
   { action: CLOSE, key: 'Escape' },
   { action: SELECT_PREV, key: 'ArrowUp' },
   { action: SELECT_NEXT, key: 'ArrowDown' },
   { action: SELECT_INDEX, key: 'Enter', preventDefault: true },
   {
     action: CLOSE,
-    key: ['k', 'p'],
-    modifier: isMac ? 'metaKey' : 'ctrlKey',
+    key: customToggleKey,
+    modifier: IS_MAC ? 'metaKey' : 'ctrlKey',
     preventDefault: true,
+    stopPropagation: true,
   },
 ]
 
-const CLOSED_SHORTCUT_ACTIONS = [
+const getClosedHotkeyActions = (customToggleKey = 'i') => [
   {
     action: OPEN,
-    key: ['k', 'p'],
-    modifier: isMac ? 'metaKey' : 'ctrlKey',
+    key: customToggleKey,
+    modifier: IS_MAC ? 'metaKey' : 'ctrlKey',
     preventDefault: true,
+    stopPropagation: true,
   },
 ]
 
@@ -38,21 +39,29 @@ const isKeyMatched = (event, key, modifier) => {
   return event.key === key
 }
 
-export const generateHotkeyListener = (dispatch, isModalOpened) => {
+export const generateHotkeyListener = (
+  dispatch,
+  isModalOpened,
+  customToggleKey
+) => {
   const actions = isModalOpened
-    ? OPENED_SHORTCUT_ACTIONS
-    : CLOSED_SHORTCUT_ACTIONS
+    ? getOpenedHotkeyActions(customToggleKey)
+    : getClosedHotkeyActions(customToggleKey)
 
   const handler = (event) => {
-    actions.some(({ action, key, modifier, preventDefault }) => {
-      if (isKeyMatched(event, key, modifier)) {
-        if (preventDefault) event.preventDefault()
-        dispatch({ type: action })
-        return true
-      }
+    actions.some(
+      ({ action, key, modifier, preventDefault, stopPropagation }) => {
+        if (isKeyMatched(event, key, modifier)) {
+          if (preventDefault) event.preventDefault()
+          if (stopPropagation) event.stopPropagation()
 
-      return false
-    })
+          dispatch({ type: action })
+          return true
+        }
+
+        return false
+      }
+    )
   }
 
   /**
