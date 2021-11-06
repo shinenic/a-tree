@@ -22,7 +22,6 @@ const TokenField = () => {
   }
 
   const handleStart = () => {
-    dispatch({ type: 'CLOSE_MODAL' })
     startTokenGuide()
   }
 

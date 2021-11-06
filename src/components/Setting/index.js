@@ -2,9 +2,9 @@ import { useRef } from 'react'
 import Button from '@material-ui/core/Button'
 import { AiOutlineSetting } from 'react-icons/ai'
 import { makeStyles } from '@material-ui/core/styles'
+import usePopperStore from 'stores/popper'
 
 import Modal from 'components/shared/Modal'
-import useSettingStore from 'stores/setting'
 import SettingTourGuide from 'components/Guide/Setting'
 
 import SettingForm from './Form'
@@ -25,10 +25,10 @@ const useStyles = makeStyles((theme) => ({
 
 export const SettingButton = () => {
   const buttonRef = useRef()
-  const dispatch = useSettingStore((s) => s.dispatch)
+  const toggleSetting = usePopperStore((s) => s.toggleSetting)
   const classes = useStyles()
 
-  const handleOpen = () => dispatch({ type: 'OPEN_MODAL' })
+  const handleOpen = () => toggleSetting(true)
 
   return (
     <div className={classes.container}>
@@ -45,13 +45,13 @@ export const SettingButton = () => {
 }
 
 export const SettingModal = () => {
-  const dispatch = useSettingStore((s) => s.dispatch)
-  const isModalOpening = useSettingStore((s) => s.isModalOpening)
+  const isSettingOn = usePopperStore((s) => s.isSettingOn)
+  const toggleSetting = usePopperStore((s) => s.toggleSetting)
 
-  const handleClose = () => dispatch({ type: 'CLOSE_MODAL' })
+  const handleClose = () => toggleSetting(false)
 
   return (
-    <Modal isOpened={isModalOpening} onClose={handleClose}>
+    <Modal isOpened={isSettingOn} onClose={handleClose}>
       <SettingForm />
     </Modal>
   )

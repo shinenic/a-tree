@@ -14,7 +14,6 @@ const { LEFT, RIGHT } = DRAWER_POSITION
  * @property {number} drawerWidth
  * @property {string[]} domains custom Enterprise domains
  * @property {string[]} disablePageTypeList stop drawer on specified page types
- * @property {boolean} isModalOpening
  * @property {boolean} drawerPinned
  * @property {number} floatingButtonPositionY position Y of floating button (px)
  * @property {string} baseUrl record host string for api endpoint
@@ -30,7 +29,6 @@ export const initialState = {
   drawerWidth: 300,
   domains: [],
   disablePageTypeList: [],
-  isModalOpening: false,
   drawerPinned: true,
   floatingButtonPositionY: 500,
   baseUrl: null,
@@ -58,10 +56,6 @@ export const reducer = (state, { type, payload }) => {
       return { ...state, baseUrl: payload }
     case 'UPDATE_DISABLE_PAGE_TYPE_LIST':
       return { ...state, disablePageTypeList: payload }
-    case 'OPEN_MODAL':
-      return { ...state, isModalOpening: true }
-    case 'CLOSE_MODAL':
-      return { ...state, isModalOpening: false }
     case 'UPDATE_FLOATING_BUTTON_POSITION_Y':
       return { ...state, floatingButtonPositionY: payload }
     case 'TOGGLE_DRAWER':
@@ -81,8 +75,6 @@ const states = (set) => ({
     set((state) => reducer(state, { type, payload })),
 })
 
-const useSettingStore = create(
-  persist(states, { name: SETTING_KEY, blacklist: ['isModalOpening'] })
-)
+const useSettingStore = create(persist(states, { name: SETTING_KEY }))
 
 export default useSettingStore

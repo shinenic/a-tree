@@ -9,10 +9,9 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
 import { useQueryPulls } from 'hooks/api/useGithubQueries'
-import Skeleton from '@material-ui/lab/Skeleton'
 import Chip from '@material-ui/core/Chip'
 import tinycolor from 'tinycolor2'
-import { useGlobalContext } from 'providers/GlobalProvider'
+import usePopperStore from 'stores/popper'
 import Loading from './Loading'
 
 import * as Style from './style'
@@ -100,12 +99,13 @@ function Label({ name, color }) {
  * @TODO Lazy load the rest pulls
  */
 export default function PullMenu({ owner, repo, pull }) {
-  const { isPullMenuOpen, closePullMenu } = useGlobalContext()
+  const isPullOn = usePopperStore((s) => s.isPullOn)
+  const togglePull = usePopperStore((s) => s.togglePull)
   const [menuPositionStyle, setMenuPositionStyle] = useState({})
   const menuProps = useSpring({
-    transform: isPullMenuOpen ? 'scale(1)' : 'scale(0.9)',
+    transform: isPullOn ? 'scale(1)' : 'scale(0.9)',
     transformOrigin: 'top',
-    opacity: isPullMenuOpen ? 1 : 0,
+    opacity: isPullOn ? 1 : 0,
     reset: true,
   })
   const menuStyles = {
@@ -113,14 +113,17 @@ export default function PullMenu({ owner, repo, pull }) {
     // To keep dom alive
     visibility: menuProps.opacity.to((v) => (v === 0 ? 'hidden' : 'visible')),
   }
+
   const { data, isLoading, error } = useQueryPulls(
     {
       owner,
       repo,
     },
-    { enabled: isPullMenuOpen }
+    { enabled: isPullOn }
   )
-  const menuRef = useClickOutside(closePullMenu)
+
+  const closeMenu = () => togglePull(false)
+  const menuRef = useClickOutside(closeMenu)
 
   useEffect(() => {
     if (!menuRef.current) return
@@ -130,7 +133,7 @@ export default function PullMenu({ owner, repo, pull }) {
       top: buttonRect.bottom,
       left: buttonRect.left + 20,
     })
-  }, [data, pull, isPullMenuOpen])
+  }, [data, pull, isPullOn])
 
   if (error) return null
 
@@ -145,7 +148,7 @@ export default function PullMenu({ owner, repo, pull }) {
         ) : (
           <>
             <BaseStyle.StyledGithubLink
-              onClick={closePullMenu}
+              onClick={closeMenu}
               href={`/${owner}/${repo}/pulls`}
               pjaxId={PJAX_ID.CODE}
             >
@@ -175,7 +178,7 @@ export default function PullMenu({ owner, repo, pull }) {
                       userName={userName}
                       avatarUrl={avatarUrl}
                       link={link}
-                      handleClose={closePullMenu}
+                      handleClose={closeMenu}
                       selected={pull === number}
                       fromBranch={fromBranch}
                       toBranch={toBranch}

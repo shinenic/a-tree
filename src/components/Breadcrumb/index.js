@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { PAGE_TYPE } from 'constants'
-import { useGlobalContext } from 'providers/GlobalProvider'
+import usePopperStore from 'stores/popper'
 import Box from '@material-ui/core/Box'
 import {
   AiOutlineBranches,
@@ -30,7 +30,8 @@ const Breadcrumb = ({
   branch,
   filePath,
 }) => {
-  const { togglePullMenu, togglePullCommitMenu } = useGlobalContext()
+  const togglePullCommit = usePopperStore((s) => s.togglePullCommit)
+  const togglePull = usePopperStore((s) => s.togglePull)
 
   const items = [
     {
@@ -53,12 +54,12 @@ const Breadcrumb = ({
   const commitItem = {
     text: commit,
     icon: AiOutlineFieldNumber,
-    onClick: () => togglePullCommitMenu(),
+    onClick: () => togglePullCommit(),
   }
   const pullItem = {
     text: pull,
     icon: AiOutlinePullRequest,
-    onClick: () => togglePullMenu(),
+    onClick: () => togglePull(),
   }
 
   switch (pageType) {
@@ -89,7 +90,7 @@ const Breadcrumb = ({
     case PAGE_TYPE.PULLS:
       items.push({
         text: 'All Pull Requests',
-        onClick: () => togglePullMenu(),
+        onClick: () => togglePull(),
         icon: AiOutlinePullRequest,
       })
       break
@@ -104,7 +105,7 @@ const Breadcrumb = ({
       items.push(pullItem)
       items.push({
         text: 'All Changes',
-        onClick: () => togglePullCommitMenu(),
+        onClick: () => togglePullCommit(),
       })
       break
 
