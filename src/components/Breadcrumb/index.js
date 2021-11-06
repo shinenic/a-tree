@@ -19,7 +19,7 @@ import {
   getFileLink,
   getBranchLink,
 } from 'utils/link'
-import EllipsisBox from 'components/EllipsisBox'
+import EllipsisBox from 'components/shared/EllipsisBox'
 
 const Breadcrumb = ({
   pageType,
