@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 
-import useContextMenu from 'stores/contextMenu'
+import useContextMenuStore from 'stores/contextMenu'
 import useGetNodeHref from 'hooks/tree/useGetNodeHref'
 import useClickOutside from 'hooks/useClickOutside'
 import useQueryTree from 'hooks/tree/useQueryTree'
@@ -40,7 +40,7 @@ export default function ContextMenu({ ...pageInfo }) {
 
   const { pageType } = pageInfo
   const { isContextMenuOpened, clickedTreeNode, position, closeContextMenu } =
-    useContextMenu()
+    useContextMenuStore()
   const getNodeHref = useGetNodeHref(pageInfo)
 
   const modalRef = useClickOutside(closeContextMenu)

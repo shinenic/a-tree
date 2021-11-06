@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import Drawer from '@material-ui/core/Drawer'
 import { makeStyles } from '@material-ui/core/styles'
 import { ERROR_MESSAGE } from 'constants'
-import useContextMenu from 'stores/contextMenu'
+import useContextMenuStore from 'stores/contextMenu'
 import { Box } from '@material-ui/core'
 
 import PullCommitMenu from 'components/Menu/PullCommit'
@@ -48,7 +48,7 @@ const MainDrawer = ({ pageInfo, error }) => {
     toggleFileSearchModal,
   ] = useSwitch()
 
-  const openContextMenu = useContextMenu((s) => s.openContextMenu)
+  const openContextMenu = useContextMenuStore((s) => s.openContextMenu)
 
   const classes = useStyles()
 
