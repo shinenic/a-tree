@@ -8,9 +8,8 @@ import {
   MdOutlineCheckCircleOutline,
 } from 'react-icons/md'
 import { FiDownload } from 'react-icons/fi'
-import { GrCopy } from 'react-icons/gr'
-import { FaRegCopy } from 'react-icons/fa'
 import { BsArrowsExpand, BsArrowsCollapse } from 'react-icons/bs'
+import { BiCopy, BiCopyAlt } from 'react-icons/bi'
 
 import { CONTEXT_ITEM } from 'constants'
 
@@ -22,11 +21,17 @@ export const useStyles = makeStyles({
     pointerEvents: 'auto',
   },
   staticMenuItem: {
+    backgroundColor: 'unset',
     '&:hover': {
       backgroundColor: 'unset',
     },
     userSelect: 'auto',
     cursor: 'auto',
+    '& > div': {
+      maxWidth: 300,
+      wordBreak: 'break-word',
+      whiteSpace: 'unset',
+    },
   },
   menuItemGutters: {
     marginLeft: 8,
@@ -42,8 +47,8 @@ export const useStyles = makeStyles({
 export const CONTEXT_ICON_MAP = {
   [CONTEXT_ITEM.OPEN_LINK_IN_NEW_TAB]: MdOpenInNew,
   [CONTEXT_ITEM.DOWNLOAD_FILE]: FiDownload,
-  [CONTEXT_ITEM.COPY_PATHNAME]: FaRegCopy,
-  [CONTEXT_ITEM.COPY_FILE_CONTENT]: GrCopy,
+  [CONTEXT_ITEM.COPY_PATHNAME]: BiCopy,
+  [CONTEXT_ITEM.COPY_FILE_CONTENT]: BiCopyAlt,
   [CONTEXT_ITEM.MARK_ALL_FILES_AS_VIEWED]: MdOutlineCheckCircleOutline,
   [CONTEXT_ITEM.MARK_ALL_FILES_AS_NOT_VIEWED]: MdOutlineRemoveCircleOutline,
   [CONTEXT_ITEM.EXPAND_ALL_VIEWED_FILES]: BsArrowsExpand,
