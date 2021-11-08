@@ -30,7 +30,7 @@ export const useStyles = makeStyles({
     '& > div': {
       maxWidth: 300,
       wordBreak: 'break-word',
-      whiteSpace: 'unset',
+      whiteSpace: 'normal',
     },
   },
   menuItemGutters: {
