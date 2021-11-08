@@ -2,13 +2,13 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
-import useStore from 'stores/setting'
+import useSettingStore from 'stores/setting'
 
 import BlockTitle from './BlockTitle'
 
 const OptionBoxes = () => {
-  const dispatch = useStore((s) => s.dispatch)
-  const isFocusMode = useStore((s) => s.isFocusMode)
+  const dispatch = useSettingStore((s) => s.dispatch)
+  const isFocusMode = useSettingStore((s) => s.isFocusMode)
 
   const handleFocusOptionChange = () => {
     dispatch({ type: 'TOGGLE_FOCUS_MODE' })

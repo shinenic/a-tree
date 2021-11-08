@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useQueryCommits } from 'hooks/api/useGithubQueries'
 import { useSpring } from 'react-spring'
-import { useGlobalContext } from 'providers/GlobalProvider'
+import usePopperStore from 'stores/popper'
 
 import { isEmpty } from 'lodash'
 
@@ -13,14 +13,15 @@ const DEFAULT_BUTTON_TEXT = 'Select commit to see changes'
  * we query the commits in both `PULL` and `PULL_COMMIT` page.
  */
 const usePullCommitMenu = ({ owner, repo, pull, commit }) => {
-  const { isPullCommitMenuOpen, closePullCommitMenu, togglePullCommitMenu } =
-    useGlobalContext()
+  const isPullCommitOn = usePopperStore((s) => s.isPullCommitOn)
+  const togglePullCommit = usePopperStore((s) => s.togglePullCommit)
+
   const [buttonText, setButtonText] = useState(DEFAULT_BUTTON_TEXT)
 
   const menuProps = useSpring({
-    transform: isPullCommitMenuOpen ? 'scale(1)' : 'scale(0.9)',
+    transform: isPullCommitOn ? 'scale(1)' : 'scale(0.9)',
     transformOrigin: 'top',
-    opacity: isPullCommitMenuOpen ? 1 : 0,
+    opacity: isPullCommitOn ? 1 : 0,
     reset: true,
   })
 
@@ -60,10 +61,10 @@ const usePullCommitMenu = ({ owner, repo, pull, commit }) => {
   const handleButtonClick = () => {
     if (isLoading || error) return
 
-    togglePullCommitMenu()
+    togglePullCommit()
   }
 
-  const handleClose = () => closePullCommitMenu()
+  const handleClose = () => togglePullCommit(false)
 
   const menuStyles = {
     ...menuProps,
@@ -79,7 +80,7 @@ const usePullCommitMenu = ({ owner, repo, pull, commit }) => {
     handleButtonClick,
     buttonText,
     menuStyles,
-    menuOpened: isPullCommitMenuOpen,
+    menuOpened: isPullCommitOn,
   }
 }
 

@@ -1,7 +1,7 @@
 import Box from '@material-ui/core/Box'
 import { useTheme, makeStyles } from '@material-ui/core/styles'
 import { forwardRef } from 'react'
-import EllipsisBox from 'components/EllipsisBox'
+import EllipsisBox from 'components/shared/EllipsisBox'
 
 const useStyles = makeStyles(() => ({
   root: {

@@ -4,7 +4,7 @@ import useTreeItemClick from 'hooks/tree/useTreeItemClick'
 import useGetNodeHref from 'hooks/tree/useGetNodeHref'
 import useQueryTree from 'hooks/tree/useQueryTree'
 import useViewedFiles from 'hooks/api/useViewedFiles'
-import useStore from 'stores/setting'
+import useSettingStore from 'stores/setting'
 import Loading from './Loading'
 
 const EXPANDED_TREE_TYPES = [
@@ -13,7 +13,7 @@ const EXPANDED_TREE_TYPES = [
 ]
 
 const TreeTab = ({ ...pageInfo }) => {
-  const drawerPinned = useStore((s) => s.drawerPinned)
+  const drawerPinned = useSettingStore((s) => s.drawerPinned)
   const { pageType, owner, repo, pull, filePath } = pageInfo
 
   const { files, isLoading, error } = useQueryTree(pageInfo, drawerPinned)

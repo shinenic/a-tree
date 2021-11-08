@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react'
-import useStore from 'stores/setting'
+import useSettingStore from 'stores/setting'
 
 import {
   focusFile,
@@ -23,7 +23,7 @@ const linkToFileHash = (basePathname, filename) => {
 }
 
 const useLinkPullFile = ({ basePathname, pageType }) => {
-  const isFocusMode = useStore((s) => s.isFocusMode)
+  const isFocusMode = useSettingStore((s) => s.isFocusMode)
   const previousLockedFile = useRef(null)
 
   /**

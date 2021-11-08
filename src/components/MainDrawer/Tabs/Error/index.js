@@ -1,5 +1,5 @@
 import { ERROR_MESSAGE, isGithubHost } from 'constants'
-import useStore from 'stores/setting'
+import useSettingStore from 'stores/setting'
 import { startTokenGuide } from 'utils/tokenGuide'
 import Typography from '@material-ui/core/Typography'
 import Link from '@material-ui/core/Link'
@@ -7,7 +7,7 @@ import Link from '@material-ui/core/Link'
 import * as Style from './style'
 
 const Error = ({ errorMessage = ERROR_MESSAGE.API_RATE_LIMIT }) => {
-  const token = useStore((s) => s.token)
+  const token = useSettingStore((s) => s.token)
 
   const enterpriseHint = () => {
     if (errorMessage === ERROR_MESSAGE.API_RATE_LIMIT) {

@@ -68,15 +68,17 @@ const loopFileNodes = ({ fileHashId, focusFile, showAllFiles } = {}) => {
   let target = null
 
   fileNodes.forEach((node) => {
+    const isNodeVisible = node.style.display !== 'none'
+
     if (node.id === fileHashId) {
       target = node
 
-      if (focusFile || showAllFiles) {
+      if ((focusFile || showAllFiles) && !isNodeVisible) {
         node.style.display = null
       }
-    } else if (showAllFiles) {
+    } else if (showAllFiles && !isNodeVisible) {
       node.style.display = null
-    } else if (focusFile) {
+    } else if (focusFile && isNodeVisible) {
       node.style.display = 'none'
     }
   })

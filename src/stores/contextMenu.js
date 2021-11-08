@@ -21,6 +21,6 @@ const states = (set) => ({
   },
 })
 
-const useContextMenu = create(states)
+const useContextMenuStore = create(states)
 
-export default useContextMenu
+export default useContextMenuStore

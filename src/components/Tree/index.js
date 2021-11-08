@@ -14,8 +14,8 @@ import {
 import tinycolor from 'tinycolor2'
 import { MODIFIER_KEY_PROPERTY } from 'constants'
 import { openInNewTab } from 'utils/chrome'
-import useContextMenu from 'stores/contextMenu'
-import EllipsisBox from 'components/EllipsisBox'
+import useContextMenuStore from 'stores/contextMenu'
+import EllipsisBox from 'components/shared/EllipsisBox'
 import TreeItem from './Item'
 import { MAIN_COLOR } from './constants'
 import LabelIcon from './LabelIcon'
@@ -125,7 +125,7 @@ const setNodeIds = (tree, parentNodeId = '', folderNodeIds) => {
 }
 
 const Tree = ({ tree, onItemClick, isLoading, handleNodeClick, getNodeHref }) => {
-  const openContextMenu = useContextMenu((s) => s.openContextMenu)
+  const openContextMenu = useContextMenuStore((s) => s.openContextMenu)
 
   if (isEmpty(tree)) return null
 
@@ -212,7 +212,7 @@ export default function CustomizedTreeView({
   currentFilePath,
   getNodeHref,
 }) {
-  const clickedTreeNode = useContextMenu((s) => s.clickedTreeNode)
+  const clickedTreeNode = useContextMenuStore((s) => s.clickedTreeNode)
   const [selectedId, setSelectedId] = useState(null)
   const [expandedIds, setExpandedIds] = useState([])
   const theme = useTheme()

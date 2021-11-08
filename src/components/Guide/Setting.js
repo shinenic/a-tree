@@ -5,7 +5,7 @@ import Box from '@material-ui/core/Box'
 import Typography from '@material-ui/core/Typography'
 import Popover from '@material-ui/core/Popover'
 
-import useStore from 'stores/setting'
+import useSettingStore from 'stores/setting'
 import { startTokenGuide } from 'utils/tokenGuide'
 import tinycolor from 'tinycolor2'
 
@@ -24,16 +24,15 @@ const SettingTourGuide = ({ anchorRef }) => {
   const [isOpening, setIsOpening] = useState(false)
   const classes = usePopoverStyles()
 
-  const isTokenHintShowed = useStore((s) => s.isTokenHintShowed)
-  const token = useStore((s) => s.token)
-  const dispatch = useStore((s) => s.dispatch)
-  const isModalOpening = useStore((s) => s.isModalOpening)
+  const isTokenHintShowed = useSettingStore((s) => s.isTokenHintShowed)
+  const token = useSettingStore((s) => s.token)
+  const dispatch = useSettingStore((s) => s.dispatch)
 
   /**
    * Check visibility first time only.
    */
   useEffect(() => {
-    if (!isTokenHintShowed && !token && !isModalOpening) {
+    if (!isTokenHintShowed && !token) {
       setIsOpening(true)
     }
   }, [])

@@ -1,24 +1,19 @@
 import React, { useCallback } from 'react'
 import Drawer from '@material-ui/core/Drawer'
 import { makeStyles } from '@material-ui/core/styles'
-import { ERROR_MESSAGE } from 'constants'
-import useContextMenu from 'stores/contextMenu'
+import useContextMenuStore from 'stores/contextMenu'
 import { Box } from '@material-ui/core'
 
 import PullCommitMenu from 'components/Menu/PullCommit'
 import PullMenu from 'components/Menu/Pull'
 import { SettingButton } from 'components/Setting'
 import { throttle } from 'lodash'
-import useStore from 'stores/setting'
-import GlobalStyle from 'GlobalStyle'
+import useSettingStore from 'stores/setting'
 import { getHeaderHeight } from 'utils/style'
-import FloatingButton from 'components/FloatingButton'
-import FileSearch from 'components/FileSearchModal'
-import ContextMenu from 'components/ContextMenu'
 import Breadcrumb from 'components/Breadcrumb'
 import SearchBar from 'components/SearchBar'
+import usePopperStore from 'stores/popper'
 
-import useSwitch from 'hooks/useSwitch'
 import Error from './Tabs/Error'
 import TreeTab from './Tabs'
 import ResizableWrapper from './ResizableWrapper'
@@ -35,20 +30,14 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const MainDrawer = ({ pageInfo, error }) => {
-  const { pageType, owner, repo, commit, pull } = pageInfo
+  const { owner, repo, commit, pull } = pageInfo
 
-  const drawerWidth = useStore((s) => s.drawerWidth)
-  const disablePageTypeList = useStore((s) => s.disablePageTypeList)
-  const dispatch = useStore((s) => s.dispatch)
-  const drawerPinned = useStore((s) => s.drawerPinned)
-  const [
-    isFileSearchModalOpen,
-    openFileSearchModal,
-    closeFileSearchModal,
-    toggleFileSearchModal,
-  ] = useSwitch()
+  const drawerWidth = useSettingStore((s) => s.drawerWidth)
+  const dispatch = useSettingStore((s) => s.dispatch)
+  const drawerPinned = useSettingStore((s) => s.drawerPinned)
 
-  const openContextMenu = useContextMenu((s) => s.openContextMenu)
+  const openContextMenu = useContextMenuStore((s) => s.openContextMenu)
+  const toggleFileSearch = usePopperStore((s) => s.toggleFileSearch)
 
   const classes = useStyles()
 
@@ -71,60 +60,36 @@ const MainDrawer = ({ pageInfo, error }) => {
     []
   )
 
-  if (
-    error?.message === ERROR_MESSAGE.NOT_SUPPORTED_PAGE ||
-    error?.message === ERROR_MESSAGE.NOT_FOUND_PAGE ||
-    disablePageTypeList.includes(pageType)
-  ) {
-    return <GlobalStyle pl={0} />
-  }
-
   return (
-    <>
-      <GlobalStyle pl={drawerPinned ? drawerWidth : 0} />
-      <FloatingButton pageType={pageType} />
-      <ContextMenu {...pageInfo} />
-      <FileSearch
-        pageInfo={pageInfo}
-        isOpen={isFileSearchModalOpen}
-        onOpen={openFileSearchModal}
-        onClose={closeFileSearchModal}
-      />
-      <Drawer
-        anchor="left"
-        open={drawerPinned}
-        variant="persistent"
-        classes={classes}
-        onContextMenu={(event) => {
-          openContextMenu(event)
-          event.preventDefault()
-          event.stopPropagation()
-        }}
+    <Drawer
+      anchor="left"
+      open={drawerPinned}
+      variant="persistent"
+      classes={classes}
+      onContextMenu={(event) => {
+        openContextMenu(event)
+        event.preventDefault()
+        event.stopPropagation()
+      }}
+    >
+      <ResizableWrapper
+        drawerWidth={drawerWidth}
+        handleOnResize={handleOnResize}
       >
-        <ResizableWrapper
-          drawerWidth={drawerWidth}
-          handleOnResize={handleOnResize}
-        >
-          <Style.DrawerHeader height={getHeaderHeight()}>
-            <Breadcrumb {...pageInfo} />
-          </Style.DrawerHeader>
-          <Box padding="10px" height={55}>
-            <SearchBar onClick={() => toggleFileSearchModal()} />
-          </Box>
-          <PullCommitMenu
-            owner={owner}
-            repo={repo}
-            pull={pull}
-            commit={commit}
-          />
-          <PullMenu owner={owner} repo={repo} pull={pull} />
-          <Style.DrawerContent>{renderContent()}</Style.DrawerContent>
-          <Style.DrawerFooter>
-            <SettingButton />
-          </Style.DrawerFooter>
-        </ResizableWrapper>
-      </Drawer>
-    </>
+        <Style.DrawerHeader height={getHeaderHeight()}>
+          <Breadcrumb {...pageInfo} />
+        </Style.DrawerHeader>
+        <Box padding="10px" height={55}>
+          <SearchBar onClick={() => toggleFileSearch(true)} />
+        </Box>
+        <PullCommitMenu owner={owner} repo={repo} pull={pull} commit={commit} />
+        <PullMenu owner={owner} repo={repo} pull={pull} />
+        <Style.DrawerContent>{renderContent()}</Style.DrawerContent>
+        <Style.DrawerFooter>
+          <SettingButton />
+        </Style.DrawerFooter>
+      </ResizableWrapper>
+    </Drawer>
   )
 }
 

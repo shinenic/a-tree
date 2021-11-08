@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query'
 import { isValidQuery, createGithubQuery } from 'utils/api'
-import useStore from 'stores/setting'
+import useSettingStore from 'stores/setting'
 import parseLink from 'parse-link-header'
 
 const queryFullPageData = async (variables, token, baseUrl) => {
@@ -32,8 +32,8 @@ function useGithubQuery(
   useQueryOptions = {},
   getFullPages = false
 ) {
-  const token = useStore((s) => s.token)
-  const baseUrl = useStore((s) => s.baseUrl)
+  const token = useSettingStore((s) => s.token)
+  const baseUrl = useSettingStore((s) => s.baseUrl)
 
   const { url, placeholders = {} } = variables
   const { enabled, ...restOptions } = useQueryOptions
