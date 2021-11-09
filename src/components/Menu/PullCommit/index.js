@@ -26,7 +26,7 @@ const Commit = ({ commit, sha, author, date, link, selected, handleClose }) => {
     <BaseStyle.StyledGithubLink
       onClick={handleClose}
       href={link}
-      pjaxId={PJAX_ID.PULL}
+      pjaxId={PJAX_ID.REPO}
       selected={selected}
     >
       <Style.TitleBox>{message}</Style.TitleBox>
@@ -82,7 +82,7 @@ export default function PullCommitMenu({
         <BaseStyle.StyledGithubLink
           onClick={handleClose}
           href={`/${owner}/${repo}/pull/${pull}/files`}
-          pjaxId={PJAX_ID.CODE}
+          pjaxId={PJAX_ID.CONTENT}
         >
           Show all changes ({data?.length ?? 0})
         </BaseStyle.StyledGithubLink>

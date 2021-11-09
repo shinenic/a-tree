@@ -25,7 +25,7 @@ const GithubLink = ({
   skipIfSamePathname = true,
   onClick,
   children,
-  pjaxId = PJAX_ID.CODE,
+  pjaxId = PJAX_ID.CONTENT,
   ...rest
 }) => {
   const handleClick = (e) => {

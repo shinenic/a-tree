@@ -12,7 +12,7 @@ export const getContainer = () => {
 }
 
 /**
- * @NOTE We should jquery-pjax to handle SPA,
+ * @NOTE We should use jquery-pjax to handle SPA,
  *       and use jquery to listen pjax events only.
  * @TODO Handle spa & pjax without `jquery`
  */

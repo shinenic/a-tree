@@ -37,7 +37,7 @@ const Pull = ({
   <BaseStyle.StyledGithubLink
     onClick={handleClose}
     href={link}
-    pjaxId={PJAX_ID.PULL}
+    pjaxId={PJAX_ID.REPO}
     selected={selected}
   >
     <div>
@@ -150,7 +150,7 @@ export default function PullMenu({ owner, repo, pull }) {
             <BaseStyle.StyledGithubLink
               onClick={closeMenu}
               href={`/${owner}/${repo}/pulls`}
-              pjaxId={PJAX_ID.CODE}
+              pjaxId={PJAX_ID.REPO}
             >
               All pull requests list
             </BaseStyle.StyledGithubLink>
