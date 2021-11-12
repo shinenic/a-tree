@@ -2,8 +2,8 @@
 
 ## :rocket: Quick Features
 - Tree view for both Github files and pull requests
-- Some handy tools for code review
-- Quick search files like VSCode does (*`command + k` or `ctrl + k`*)
+- Some handy tools for code review (collapse/expand files, mark all files as viewed, etc.)
+- Quick search files like VSCode does (*`command + i` or `ctrl + i`*, customizable)
 - Support SPA for Github Pages
 - Support private and [Enterprise](https://github.com/shinenic/a-tree#fq) repositories
 
@@ -20,7 +20,7 @@
 - How to enable extension for **Github Enterprise** pages
 
   After you install the extension, right-click on any Github Enterprise pages, then click the `Enable a-tree in this domain`.
-  <img src="https://github.com/shinenic/a-tree/blob/master/docs/contextmenu-enable-guide.jpg" width="450" />
+  <img src="docs/screenshots/context-menu-enable-guide.jpg" width="450" />
   
 
 - Why the extension shows in some unexpected pages
