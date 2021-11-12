@@ -1,27 +1,5 @@
 import { GLOBAL_MESSAGE_TYPE, CONTEXT_MENU_ITEM_ID } from 'constants/background'
 
-const activeTabUrlMemo = {}
-
-/**
- * To support Github SPA
- * ref: https://developer.chrome.com/docs/extensions/reference/webNavigation/
- */
-chrome.webNavigation.onHistoryStateUpdated.addListener(({ tabId, url }) => {
-  if (activeTabUrlMemo[tabId] !== url) {
-    activeTabUrlMemo[tabId] = url
-
-    chrome.tabs.sendMessage(tabId, {
-      type: GLOBAL_MESSAGE_TYPE.ON_HISTORY_UPDATED,
-    })
-  }
-})
-
-chrome.tabs.onRemoved.addListener((tabId) => {
-  if (activeTabUrlMemo[tabId]) {
-    delete activeTabUrlMemo[tabId]
-  }
-})
-
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: CONTEXT_MENU_ITEM_ID.ENABLE_EXTENSION,

@@ -10,13 +10,9 @@
 ## :memo: About A-Tree
 
 ### Permission requirements
-- webNavigation
-
-  We need to check whether the page navigated to support SPA,
-  for more detail, you can check the file `src/background.js`
-
 - contextMenus
-  For Github enterprise users, we provide a way to enable our extension via right click.
+
+  For Github enterprise users, we provide a simple way to enable our extension via right click.
 
 
 ### F&Q

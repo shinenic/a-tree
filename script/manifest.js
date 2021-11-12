@@ -10,7 +10,7 @@ const output = {
   homepage_url: PACKAGE.homepage,
   manifest_version: 3,
   minimum_chrome_version: '88',
-  permissions: ['webNavigation', 'contextMenus'],
+  permissions: ['contextMenus'],
   icons: {
     192: './icon192.png',
   },

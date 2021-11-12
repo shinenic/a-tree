@@ -1,29 +1,30 @@
 import { useState, useEffect } from 'react'
 import { isLocalMode } from 'constants'
-import { GLOBAL_MESSAGE_TYPE } from 'constants/background'
-import useRequestEnd from '../useRequestEnd'
+import { listenPjaxEvent } from 'utils/pjax'
+
+const listenLocation = (callback) => {
+  let currentLocation = { ...(window?.location ?? {}) }
+
+  const handleCallback = () => {
+    const newLocation = { ...(window?.location ?? {}) }
+
+    if (newLocation?.pathname !== currentLocation?.pathname) {
+      currentLocation = newLocation
+      callback({ ...newLocation })
+    }
+  }
+
+  return listenPjaxEvent('start', handleCallback)
+}
 
 const useListenLocation = () => {
   const [currentLocation, setCurrentLocation] = useState({ ...window.location })
-  const requestTimestamp = useRequestEnd()
 
   useEffect(() => {
-    const callback = (request) => {
-      if (request?.type === GLOBAL_MESSAGE_TYPE.ON_HISTORY_UPDATED) {
-        setCurrentLocation({ ...window.location })
-      }
-    }
+    const unlisten = listenLocation(setCurrentLocation)
 
-    window.chrome.runtime.onMessage.addListener(callback)
-
-    return () => window.chrome.runtime.onMessage.removeListener(callback)
+    return unlisten
   }, [])
-
-  useEffect(() => {
-    if (requestTimestamp) {
-      setCurrentLocation({ ...window.location })
-    }
-  }, [requestTimestamp])
 
   return currentLocation
 }
