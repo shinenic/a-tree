@@ -9,6 +9,15 @@
 
 ## :memo: About A-Tree
 
+### Screenshots
+| A tree preview | Open context menu to access files & toggle PR files |
+|-------------------------------------------|---------------------------------------------------|
+| <img src="docs/screenshots/f-code.jpg" /> | <img src="docs/screenshots/f-context-menu.jpg" /> |
+
+| Search files in both code & PR pages | Switch PR in a menu quickly |
+|-------------------------------------------|---------------------------------------------------|
+| <img src="docs/screenshots/f-file-search.jpg" /> | <img src="docs/screenshots/f-pull-menu.jpg" /> |                                  
+
 ### Permission requirements
 - contextMenus
 
