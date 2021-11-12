@@ -24,10 +24,10 @@ export const loadPjaxPage = (fullUrl = '') => {
   })
 }
 
-export const listenPjaxEnd = (callback = () => {}) => {
-  jQuery(window).on('pjax:end', callback)
+export const listenPjaxEvent = (event = '', callback = () => {}) => {
+  jQuery(window).on(`pjax:${event}`, callback)
 
   return () => {
-    jQuery(window).off('pjax:end', callback)
+    jQuery(window).off(`pjax:${event}`, callback)
   }
 }

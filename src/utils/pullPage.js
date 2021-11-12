@@ -1,4 +1,4 @@
-import { listenPjaxEnd } from 'utils/pjax'
+import { listenPjaxEvent } from 'utils/pjax'
 import { scrollTo } from 'utils/scroll'
 import { GITHUB_PAGE_CONTAINER_ID } from 'constants/github'
 import { GITHUB_NAV_BAR_HEIGHT } from 'constants'
@@ -176,7 +176,7 @@ export const checkPjaxEnd = (timeout = DEFAULT_TIMEOUT) =>
       resolve()
     }
 
-    unlisten = listenPjaxEnd(handler)
+    unlisten = listenPjaxEvent('end', handler)
 
     setTimeout(() => {
       unlisten()
