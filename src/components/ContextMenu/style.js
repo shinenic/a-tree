@@ -13,7 +13,7 @@ import { BiCopy, BiCopyAlt } from 'react-icons/bi'
 
 import { CONTEXT_ITEM } from 'constants'
 
-export const useStyles = makeStyles({
+export const useStyles = makeStyles((theme) => ({
   root: {
     pointerEvents: 'none', // To enable click outside
   },
@@ -28,6 +28,7 @@ export const useStyles = makeStyles({
     userSelect: 'auto',
     cursor: 'auto',
     '& > div': {
+      color: theme.palette.text.secondary,
       maxWidth: 300,
       wordBreak: 'break-word',
       whiteSpace: 'normal',
@@ -42,7 +43,7 @@ export const useStyles = makeStyles({
   menuList: {
     padding: '4px 0',
   },
-})
+}))
 
 export const CONTEXT_ICON_MAP = {
   [CONTEXT_ITEM.OPEN_LINK_IN_NEW_TAB]: MdOpenInNew,
