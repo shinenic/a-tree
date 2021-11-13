@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const MainDrawer = ({ pageInfo, error }) => {
-  const { owner, repo, commit, pull } = pageInfo
+  const { owner, repo, commit, pull, pageType } = pageInfo
 
   const drawerWidth = useSettingStore((s) => s.drawerWidth)
   const dispatch = useSettingStore((s) => s.dispatch)
@@ -82,7 +82,13 @@ const MainDrawer = ({ pageInfo, error }) => {
         <Box padding="10px" height={55}>
           <SearchBar onClick={() => toggleFileSearch(true)} />
         </Box>
-        <PullCommitMenu owner={owner} repo={repo} pull={pull} commit={commit} />
+        <PullCommitMenu
+          owner={owner}
+          repo={repo}
+          pull={pull}
+          commit={commit}
+          pageType={pageType}
+        />
         <PullMenu owner={owner} repo={repo} pull={pull} />
         <Style.DrawerContent>{renderContent()}</Style.DrawerContent>
         <Style.DrawerFooter>

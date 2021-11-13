@@ -19,6 +19,7 @@ const { LEFT, RIGHT } = DRAWER_POSITION
  * @property {string} baseUrl record host string for api endpoint
  * @property {boolean} isTokenHintShowed
  * @property {string} fileSearchHotkey single character(^[a-z0-9]$) with meta key
+ * @property {boolean} disableCommitSwitchHotkey used in pull pages
  */
 
 /** @type {SettingState} */
@@ -34,6 +35,7 @@ export const initialState = {
   baseUrl: null,
   isTokenHintShowed: false,
   fileSearchHotkey: 'i',
+  disableCommitSwitchHotkey: false,
 }
 
 /**
@@ -64,6 +66,11 @@ export const reducer = (state, { type, payload }) => {
       return { ...state, isTokenHintShowed: true }
     case 'UPDATE_FILE_SEARCH_HOTKEY':
       return { ...state, fileSearchHotkey: payload }
+    case 'TOGGLE_COMMIT_SWITCH_HOTKEY':
+      return {
+        ...state,
+        disableCommitSwitchHotkey: !state.disableCommitSwitchHotkey,
+      }
     default:
       throw new Error(`Unknown Type: ${type}`)
   }

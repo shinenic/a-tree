@@ -4,6 +4,8 @@ import { animated } from 'react-spring'
 import { PJAX_ID } from 'constants/github'
 import useClickOutside from 'hooks/useClickOutside'
 import usePullCommitMenu from 'hooks/usePullCommitMenu'
+import useSwitchCommit from 'hooks/useSwitchCommit'
+import { getPullCommitLink } from 'utils/link'
 
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -53,10 +55,14 @@ export default function PullCommitMenu({
   repo,
   pull,
   commit: currentCommit,
+  pageType,
 }) {
   const [menuPositionStyle, setMenuPositionStyle] = useState({})
+
   const { data, handleClose, error, menuStyles, menuOpened } =
     usePullCommitMenu({ owner, repo, pull })
+
+  useSwitchCommit({ owner, repo, pull, currentCommit, pageType })
 
   const menuRef = useClickOutside(handleClose)
 
@@ -69,7 +75,7 @@ export default function PullCommitMenu({
       top: buttonRect.bottom,
       left: buttonRect.left + 20,
     })
-  }, [data, pull, menuOpened])
+  }, [data, pull, menuOpened]) // eslint-disable-line
 
   if (!pull || error) return null
 
@@ -94,7 +100,7 @@ export default function PullCommitMenu({
               date={commit?.committer?.date}
               sha={sha}
               author={author}
-              link={`/${owner}/${repo}/pull/${pull}/commits/${sha}`}
+              link={getPullCommitLink({ owner, repo, pull, sha })}
               handleClose={handleClose}
               selected={currentCommit?.includes?.(sha)}
             />
