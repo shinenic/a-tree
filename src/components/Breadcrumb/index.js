@@ -20,6 +20,8 @@ import {
   getBranchLink,
 } from 'utils/link'
 import EllipsisBox from 'components/shared/EllipsisBox'
+import { useQueryCommits } from 'hooks/api/useGithubQueries'
+import useSettingStore from 'stores/setting'
 
 const Breadcrumb = ({
   pageType,
@@ -30,6 +32,12 @@ const Breadcrumb = ({
   branch,
   filePath,
 }) => {
+  const drawerPinned = useSettingStore((s) => s.drawerPinned)
+  const { data: commitsData } = useQueryCommits(
+    { owner, repo, pull },
+    { enabled: PAGE_TYPE.PULL_COMMIT === pageType && drawerPinned }
+  )
+
   const togglePullCommit = usePopperStore((s) => s.togglePullCommit)
   const togglePull = usePopperStore((s) => s.togglePull)
 
@@ -46,13 +54,32 @@ const Breadcrumb = ({
     },
   ]
 
+  const getCommitText = () => {
+    const slicedCommitSha = commit?.slice(0, 6)
+
+    if (
+      PAGE_TYPE.PULL_COMMIT === pageType &&
+      commitsData &&
+      commit &&
+      !Array.isArray(commit)
+    ) {
+      const commitIndex = commitsData.findIndex(({ sha }) =>
+        sha.includes(commit)
+      )
+
+      return `(${commitIndex + 1}/${commitsData.length}) ${slicedCommitSha}`
+    }
+
+    return slicedCommitSha
+  }
+
   const branchItem = {
     text: branch,
     icon: AiOutlineBranches,
     onClick: () => linkGithubPage(getBranchLink({ owner, repo, branch })),
   }
   const commitItem = {
-    text: commit,
+    text: getCommitText(),
     icon: AiOutlineFieldNumber,
     onClick: () => togglePullCommit(),
   }
