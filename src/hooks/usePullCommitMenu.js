@@ -1,22 +1,12 @@
-import { useState, useEffect } from 'react'
 import { useQueryCommits } from 'hooks/api/useGithubQueries'
 import { useSpring } from 'react-spring'
 import usePopperStore from 'stores/popper'
+import useSettingStore from 'stores/setting'
 
-import { isEmpty } from 'lodash'
-
-const DEFAULT_BUTTON_TEXT = 'Select commit to see changes'
-
-/**
- * In case the page is in `PULL_COMMIT`,
- * which means we need to get the full commits in the beginning,
- * we query the commits in both `PULL` and `PULL_COMMIT` page.
- */
-const usePullCommitMenu = ({ owner, repo, pull, commit }) => {
+const usePullCommitMenu = ({ owner, repo, pull }) => {
   const isPullCommitOn = usePopperStore((s) => s.isPullCommitOn)
   const togglePullCommit = usePopperStore((s) => s.togglePullCommit)
-
-  const [buttonText, setButtonText] = useState(DEFAULT_BUTTON_TEXT)
+  const isQueryEnable = useSettingStore((s) => s.drawerPinned)
 
   const menuProps = useSpring({
     transform: isPullCommitOn ? 'scale(1)' : 'scale(0.9)',
@@ -25,46 +15,10 @@ const usePullCommitMenu = ({ owner, repo, pull, commit }) => {
     reset: true,
   })
 
-  const { data, isLoading, error } = useQueryCommits({
-    owner,
-    repo,
-    pull,
-  })
-
-  const hasData = !isEmpty(data)
-  useEffect(() => {
-    /**
-     * @TODO support multiple commits
-     */
-    if (Array.isArray(commit)) return
-
-    if (!commit) {
-      setButtonText(DEFAULT_BUTTON_TEXT)
-    } else if (hasData && commit && Array.isArray(data)) {
-      const commitInfo = data.find(({ sha }) => sha === commit)
-
-      /**
-       * @TODO Handle latest commit when someone push commit to the branch.
-       */
-      if (commitInfo) {
-        const commitIndex = data.findIndex(({ sha }) => sha === commit) + 1
-
-        setButtonText(
-          `(${commitIndex}/${data.length}) ${commitInfo.sha.slice(0, 5)} ${
-            commitInfo.commit.message
-          }`
-        )
-      }
-    }
-  }, [commit, hasData])
-
-  const handleButtonClick = () => {
-    if (isLoading || error) return
-
-    togglePullCommit()
-  }
-
-  const handleClose = () => togglePullCommit(false)
+  const { data, isLoading, error } = useQueryCommits(
+    { owner, repo, pull },
+    { enabled: isQueryEnable }
+  )
 
   const menuStyles = {
     ...menuProps,
@@ -76,9 +30,7 @@ const usePullCommitMenu = ({ owner, repo, pull, commit }) => {
     data,
     isLoading,
     error,
-    handleClose,
-    handleButtonClick,
-    buttonText,
+    handleClose: () => togglePullCommit(false),
     menuStyles,
     menuOpened: isPullCommitOn,
   }

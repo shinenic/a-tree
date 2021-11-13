@@ -56,7 +56,7 @@ export default function PullCommitMenu({
 }) {
   const [menuPositionStyle, setMenuPositionStyle] = useState({})
   const { data, handleClose, error, menuStyles, menuOpened } =
-    usePullCommitMenu({ owner, repo, pull, commit: currentCommit })
+    usePullCommitMenu({ owner, repo, pull })
 
   const menuRef = useClickOutside(handleClose)
 
