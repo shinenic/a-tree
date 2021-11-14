@@ -37,26 +37,16 @@ const useStyles = makeStyles({
   },
 })
 
-const getDefaultIcon = (isLoading, theme) => {
+const getDefaultIcon = (isDarkTheme) => {
   const getIconColor = (color) => {
-    return theme.palette.type === 'dark'
-      ? tinycolor(color).brighten(60).toHexString()
-      : color
+    return isDarkTheme ? tinycolor(color).brighten(60).toHexString() : color
   }
 
-  return isLoading
-    ? {
-        defaultCollapseIcon: <IconSkeleton />,
-        defaultExpandIcon: <IconSkeleton />,
-        defaultEndIcon: <IconSkeleton />,
-      }
-    : {
-        defaultCollapseIcon: (
-          <AiFillFolderOpen color={getIconColor(MAIN_COLOR)} />
-        ),
-        defaultExpandIcon: <AiFillFolder color={getIconColor(MAIN_COLOR)} />,
-        defaultEndIcon: <AiOutlineFileText color={getIconColor(MAIN_COLOR)} />,
-      }
+  return {
+    defaultCollapseIcon: <AiFillFolderOpen color={getIconColor(MAIN_COLOR)} />,
+    defaultExpandIcon: <AiFillFolder color={getIconColor(MAIN_COLOR)} />,
+    defaultEndIcon: <AiOutlineFileText color={getIconColor(MAIN_COLOR)} />,
+  }
 }
 
 const generateTree = (tree) => {
@@ -124,7 +114,13 @@ const setNodeIds = (tree, parentNodeId = '', folderNodeIds) => {
   })
 }
 
-const Tree = ({ tree, onItemClick, isLoading, handleNodeClick, getNodeHref }) => {
+const Tree = ({
+  tree,
+  onItemClick,
+  isLoading,
+  handleNodeClick,
+  getNodeHref,
+}) => {
   const openContextMenu = useContextMenuStore((s) => s.openContextMenu)
 
   if (isEmpty(tree)) return null
@@ -216,6 +212,7 @@ export default function CustomizedTreeView({
   const [selectedId, setSelectedId] = useState(null)
   const [expandedIds, setExpandedIds] = useState([])
   const theme = useTheme()
+  const isDarkTheme = theme.palette.type === 'dark'
   const classes = useStyles()
 
   const [objectTree, folderNodeIds] = useMemo(() => generateTree(tree), [tree])
@@ -257,13 +254,26 @@ export default function CustomizedTreeView({
     })
   }, [currentFilePath, isExpandedAll])
 
+  const loadingTreeView = useMemo(() => {
+    const onNodeToggle = (e) => e.stopPropagation()
+
+    return (
+      <TreeView
+        className={classes.root}
+        defaultExpanded={expandedIds ? folderNodeIds : []}
+        selected={null}
+        onNodeToggle={onNodeToggle}
+        defaultCollapseIcon={<IconSkeleton />}
+        defaultExpandIcon={<IconSkeleton />}
+        defaultEndIcon={<IconSkeleton />}
+      >
+        <Tree tree={objectTree} isLoading />
+      </TreeView>
+    )
+  }, [objectTree, folderNodeIds]) // eslint-disable-line react-hooks/exhaustive-deps
+
   const treeView = useMemo(() => {
-    const onNodeToggle = (_, nodeIds) => {
-      if (isLoading) return // disable collapse / expand when loading
-
-      setExpandedIds(nodeIds)
-    }
-
+    const onNodeToggle = (_, nodeIds) => setExpandedIds(nodeIds)
     const onNodeSelect = (_, value) => setSelectedId(value)
 
     return (
@@ -273,26 +283,22 @@ export default function CustomizedTreeView({
         selected={selectedId}
         onNodeToggle={onNodeToggle}
         onNodeSelect={onNodeSelect}
-        {...getDefaultIcon(isLoading, theme)}
+        {...getDefaultIcon(isDarkTheme)}
       >
         <Tree
           tree={objectTree}
           onItemClick={onItemClick}
           getNodeHref={getNodeHref}
-          isLoading={isLoading}
         />
       </TreeView>
     )
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    objectTree,
-    onItemClick,
-    expandedIds,
-    selectedId,
-    isLoading,
-    theme.palette.type,
-  ])
+  }, [objectTree, onItemClick, expandedIds, selectedId, isDarkTheme])
 
-  return treeView
+  /**
+   * intentionally render two trees to reset the `defaultExpanded` state
+   * when finish / start loading
+   */
+  return isLoading ? loadingTreeView : treeView
 }

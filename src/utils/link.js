@@ -13,6 +13,9 @@ export const getBranchLink = ({ owner, repo, branch }) =>
 
 export const getOwnerLink = ({ owner }) => `/${owner}`
 
+export const getPullCommitLink = ({ owner, repo, pull, sha }) =>
+  `/${owner}/${repo}/pull/${pull}/commits/${sha}`
+
 export const linkGithubPage = (url) => {
   if (url === window.location?.pathname) return
 

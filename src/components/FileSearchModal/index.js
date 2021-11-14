@@ -48,7 +48,6 @@ const FileSearchWrapper = ({ pageInfo }) => {
       selectCallback={onItemClick}
       isLoading={isLoading}
       error={error}
-      isOpen={isFileSearchOn}
     />
   )
 }
@@ -58,20 +57,18 @@ const FileSearchWrapper = ({ pageInfo }) => {
  * @TODO Handle SPA from page Pull-Conversation to page Pull-Files
  * @FIXME Can't apply focus file via press `enter`
  */
-const FileSearchModal = ({
-  isLoading,
-  selectCallback,
-  files,
-  error,
-  isOpen,
-}) => {
+const FileSearchModal = ({ isLoading, selectCallback, files, error }) => {
   const [input, setInput] = useState('')
   const fileSearchHotkey = useSettingStore((s) => s.fileSearchHotkey)
 
-  const [{ result = [], keyword = '', selectedIndex = 0, isOpened }, dispatch] =
+  const toggleFileSearch = usePopperStore((s) => s.toggleFileSearch)
+  const isOpened = usePopperStore((s) => s.isFileSearchOn)
+  const [{ result = [], keyword = '', selectedIndex = 0 }, dispatch] =
     useReducer(reducer, {
       ...initialState,
       selectCallback,
+      onClose: () => toggleFileSearch(false),
+      onOpen: () => toggleFileSearch(true),
     })
   const throttledUpdateKeyword = useCallback(
     throttle((newKeyword) => {
@@ -95,10 +92,6 @@ const FileSearchModal = ({
       dispatch({ type: 'CLEAR_SOURCE_DATA' })
     }
   }, [isLoading, files])
-
-  useEffect(() => {
-    dispatch({ type: isOpen ? 'OPEN' : 'CLOSE' })
-  }, [isOpen])
 
   useEffect(() => {
     dispatch({ type: 'UPDATE_SELECT_CALLBACK', payload: { selectCallback } })
