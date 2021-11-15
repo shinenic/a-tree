@@ -22,11 +22,7 @@ const useGetFloatingButtonProps = ({
   const startYRef = useRef(null)
 
   const updatePositionY = useCallback(
-    (y) =>
-      dispatch({
-        type: 'UPDATE_FLOATING_BUTTON_POSITION_Y',
-        payload: y,
-      }),
+    (y) => dispatch({ type: 'UPDATE_FLOATING_BUTTON_POSITION_Y', payload: y }),
     [dispatch]
   )
 
@@ -100,7 +96,6 @@ const useGetFloatingButtonProps = ({
     onMouseDown,
     style: {
       transform: `translateY(${positionY}px)`,
-      transition: 'transform .1s',
       position: 'fixed',
       top: 0,
       left: 0,
