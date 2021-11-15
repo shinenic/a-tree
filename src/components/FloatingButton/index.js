@@ -44,30 +44,28 @@ const FloatingButton = () => {
   })
 
   return (
-    <Box {...getFloatingButtonProps()}>
-      <Box classes={containerClasses}>
-        <Box
-          component="img"
-          src={iconUrl}
-          width={IMG_WIDTH}
-          height={IMG_WIDTH}
-          style={{
-            userSelect: 'none',
-            userDrag: 'none',
-          }}
-        />
-        <Box
-          position="absolute"
-          width={BOX_SIZE}
-          height={BOX_SIZE}
-          top={0}
-          left={0}
-          component="span"
-          style={{
-            cursor: 'move',
-          }}
-        />
-      </Box>
+    <Box {...getFloatingButtonProps()} classes={containerClasses}>
+      <Box
+        component="img"
+        src={iconUrl}
+        width={IMG_WIDTH}
+        height={IMG_WIDTH}
+        style={{
+          userSelect: 'none',
+          userDrag: 'none',
+        }}
+      />
+      <Box
+        position="absolute"
+        width={BOX_SIZE}
+        height={BOX_SIZE}
+        top={0}
+        left={0}
+        component="span"
+        style={{
+          cursor: 'move',
+        }}
+      />
     </Box>
   )
 }
