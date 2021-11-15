@@ -96,8 +96,6 @@ const useGetFloatingButtonProps = ({
     }
   }, [windowHeight]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  console.log({ positionY, topBound })
-
   return () => ({
     onMouseDown,
     style: {
