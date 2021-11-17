@@ -1,7 +1,7 @@
 import useGithubQuery from './useGithubQuery'
 
 export const useQueryCommits = (
-  { owner, repo, pull, perPage = 50, ...rest },
+  { owner, repo, pull, perPage = 100, ...rest },
   useQueryOptions = {}
 ) => {
   return useGithubQuery(
