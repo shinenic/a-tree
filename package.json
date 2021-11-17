@@ -73,8 +73,6 @@
     "babel-loader": "^8.2.2",
     "babel-plugin-lodash": "^3.3.4",
     "copy-webpack-plugin": "^9.0.1",
-    "cypress": "^9.0.0",
-    "cypress-browser-extension-plugin": "^0.1.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-plugin-import": "^2.24.2",
