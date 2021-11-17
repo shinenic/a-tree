@@ -13,11 +13,7 @@ export default function useSwitchCommit({
   pageType,
 }) {
   const disableHotkey = useSettingStore((s) => s.disableCommitSwitchHotkey)
-  const isQueryEnable = useSettingStore((s) => s.drawerPinned)
-  const { data } = useQueryCommits(
-    { owner, repo, pull },
-    { enabled: isQueryEnable }
-  )
+  const { data } = useQueryCommits({ owner, repo, pull })
 
   const isPullPage = invert(PULL_PAGE_TYPE)[pageType]
 
