@@ -1,9 +1,11 @@
-import { useMemo, useEffect, useCallback, useRef } from 'react'
+import { useMemo, useEffect, useCallback, useRef, useState } from 'react'
 import { sortBy, keyBy } from 'lodash'
 import { FixedSizeTree } from 'react-vtree'
 import usePrevious from 'hooks/usePrevious'
 
 import TreeItem from './Item'
+
+export const DRAWER_CONTENT_ID = 'a-tree-tab-content'
 
 const generateSortableTree = (tree = []) => {
   const splittedFiles = tree.map(({ path, filename }) => {
@@ -75,6 +77,7 @@ export default function CustomizedTreeView({
   currentFilePath,
   getNodeHref,
 }) {
+  const [size, setSize] = useState({ width: 0, height: 0 })
   const treeInstance = useRef(null)
   const prevCurrentFilePath = usePrevious(currentFilePath)
 
@@ -116,6 +119,20 @@ export default function CustomizedTreeView({
   )
 
   useEffect(() => {
+    const target = document.getElementById(DRAWER_CONTENT_ID)
+    if (!target) return
+
+    const resizeObserver = new ResizeObserver(() => {
+      const rect = target.getBoundingClientRect()
+      setSize({ width: rect.width, height: rect.height })
+    })
+
+    resizeObserver.observe(target)
+
+    return () => resizeObserver.unobserve(target)
+  }, [])
+
+  useEffect(() => {
     if (isExpandedAll) return
 
     if (!currentFilePath && !prevCurrentFilePath) return
@@ -147,14 +164,14 @@ export default function CustomizedTreeView({
       <FixedSizeTree
         treeWalker={treeWalker}
         itemSize={34}
-        height={900}
-        width={300}
+        height={size.height}
+        width={size.width}
         ref={treeInstance}
       >
         {TreeItem}
       </FixedSizeTree>
     ),
-    [treeWalker]
+    [treeWalker, size.height, size.width]
   )
 
   return memoedTree

@@ -33,12 +33,15 @@ export const DrawerFooter = muiStyled(Box)({
 })
 
 export const DrawerContent = muiStyled(Paper)(({ theme }) => ({
-  padding: '0 14px 14px 14px',
   flex: 1,
-  overflow: 'auto',
   boxShadow: 'none',
   border: 'none',
   borderRadius: '0',
+  padding: 0,
+  overflow: 'hidden',
 
-  ...getCommonScrollbarStyle(theme),
+  // @FIXME The scrollbar with style will be a bit lag...
+  '& > div': {
+    ...getCommonScrollbarStyle(theme),
+  },
 }))

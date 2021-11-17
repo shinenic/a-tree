@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import Drawer from '@material-ui/core/Drawer'
 import { makeStyles } from '@material-ui/core/styles'
 import useContextMenuStore from 'stores/contextMenu'
@@ -13,6 +13,7 @@ import { getHeaderHeight } from 'utils/style'
 import Breadcrumb from 'components/Breadcrumb'
 import SearchBar from 'components/SearchBar'
 import usePopperStore from 'stores/popper'
+import { DRAWER_CONTENT_ID } from 'components/Tree'
 
 import Error from './Tabs/Error'
 import TreeTab from './Tabs'
@@ -90,7 +91,9 @@ const MainDrawer = ({ pageInfo, error }) => {
           pageType={pageType}
         />
         <PullMenu owner={owner} repo={repo} pull={pull} />
-        <Style.DrawerContent>{renderContent()}</Style.DrawerContent>
+        <Style.DrawerContent id={DRAWER_CONTENT_ID}>
+          {renderContent()}
+        </Style.DrawerContent>
         <Style.DrawerFooter>
           <SettingButton />
         </Style.DrawerFooter>

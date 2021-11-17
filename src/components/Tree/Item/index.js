@@ -115,7 +115,7 @@ const TreeItem = ({
       selected={isSelected}
       style={{
         ...style,
-        marginLeft: nestingLevel * 20,
+        marginLeft: nestingLevel * 20 + 10,
         transition: 'opacity 0.4s',
         ...(isViewed && { opacity: 0.5 }),
       }}

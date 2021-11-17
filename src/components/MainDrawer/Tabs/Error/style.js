@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button'
 
 export const ErrorContainer = muiStyled(Paper)({
   height: '100%',
+  padding: '0 14px 14px 14px',
   width: '100%',
   display: 'flex',
   justifyContent: 'center',
