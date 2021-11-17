@@ -1,91 +1,133 @@
-import React from 'react'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
-import TreeItem from '@material-ui/lab/TreeItem'
-import Collapse from '@material-ui/core/Collapse'
-import { useSpring, animated } from 'react-spring'
+import {
+  AiFillFolder,
+  AiFillFolderOpen,
+  AiOutlineFileText,
+} from 'react-icons/ai'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 import tinycolor from 'tinycolor2'
+import { MODIFIER_KEY_PROPERTY } from 'constants'
+import { openInNewTab } from 'utils/chrome'
+import useContextMenuStore from 'stores/contextMenu'
 import useViewedFilesStore from 'stores/pull'
 
-const TransitionComponent = (props) => {
-  const style = useSpring({
-    from: { opacity: 0, transform: 'translate3d(20px,0,0)' },
-    to: {
-      opacity: props.in ? 1 : 0,
-      transform: `translate3d(${props.in ? 0 : 20}px,0,0)`,
-    },
-  })
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
+import useTreeStore from 'stores/tree'
 
-  return (
-    <animated.div style={style}>
-      <Collapse {...props} />
-    </animated.div>
-  )
-}
+import { MAIN_COLOR } from './constants'
+import LabelIcon from './LabelIcon'
 
 const HOVER_BG = '#eff2f4'
 const SELECT_BG = '#d6e7fd'
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    content: {
-      '&:hover': {
-        backgroundColor:
-          theme.palette.type === 'light'
-            ? HOVER_BG
-            : tinycolor
-                .mix(HOVER_BG, theme.palette.background.paper, 80)
-                .toHexString(),
-      },
-      padding: '5px 6px',
-      borderRadius: '3px',
+const useNodeStyle = makeStyles((theme) => ({
+  iconRoot: {
+    minWidth: 'auto',
+    marginRight: 10,
+    marginLeft: 6,
+    fontSize: 18,
+  },
+  itemRoot: {
+    userSelect: 'none',
+    wordBreak: 'break-word',
+    borderRadius: 3,
+    '&:hover': {
+      backgroundColor:
+        theme.palette.type === 'light'
+          ? HOVER_BG
+          : tinycolor
+              .mix(HOVER_BG, theme.palette.background.paper, 80)
+              .toHexString(),
     },
-    selected: {
-      '& > div:first-of-type': {
-        backgroundColor:
-          theme.palette.type === 'light'
-            ? SELECT_BG
-            : tinycolor
-                .mix(SELECT_BG, theme.palette.background.paper, 80)
-                .toHexString(),
-      },
-    },
-    root: {
-      '&:focus > $content $label, &:hover > $content $label, &$selected > $content $label':
-        {
-          backgroundColor: 'transparent',
-        },
-    },
-    label: {
-      backgroundColor: 'transparent !important',
-      userSelect: 'none',
-      wordBreak: 'break-word',
-      width: 'calc(100% - 19px)',
-    },
-  })
-)
+  },
+  itemSelected: {
+    backgroundColor:
+      theme.palette.type === 'light'
+        ? SELECT_BG
+        : tinycolor
+            .mix(SELECT_BG, theme.palette.background.paper, 80)
+            .toHexString(),
+  },
+}))
 
-const StyledTreeItem = ({ nodeId, ...rest }) => {
-  const classes = useStyles()
+const NodeIcon = ({ isOpen, isLeaf, status }) => {
+  const theme = useTheme()
 
-  const isViewed = useViewedFilesStore((s) => s.viewedFileMap[nodeId])
+  const color =
+    theme.palette.type === 'dark'
+      ? tinycolor(MAIN_COLOR).brighten(60).toHexString()
+      : MAIN_COLOR
+
+  if (status) return <LabelIcon status={status} />
+  if (isLeaf) return <AiOutlineFileText color={color} />
+  if (isOpen) return <AiFillFolderOpen color={color} />
+  return <AiFillFolder color={color} />
+}
+
+const TreeItem = ({
+  data: { isLeaf, name, nestingLevel, id, meta, onItemClick, getNodeHref },
+  isOpen,
+  style,
+  setOpen,
+}) => {
+  const isViewed = useViewedFilesStore((s) => s.viewedFileMap[id])
+
+  const isSelected = useTreeStore((s) => s.selectedId === id)
+  const setSelectedId = useTreeStore((s) => s.setSelectedId)
+
+  const classes = useNodeStyle()
+
+  const openContextMenu = useContextMenuStore((s) => s.openContextMenu)
+
+  const handleContextMenu = (e) => {
+    setSelectedId(id)
+
+    if (!meta) return
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    openContextMenu(e, meta)
+  }
+
+  const handleClick = (e) => {
+    e.stopPropagation()
+    setSelectedId(id)
+
+    if (isLeaf) {
+      setOpen(!isOpen)
+    }
+
+    // Perform open link in new tab
+    if (e[MODIFIER_KEY_PROPERTY]) {
+      openInNewTab(getNodeHref(meta))
+      return
+    }
+
+    if (onItemClick) onItemClick(meta, e)
+  }
 
   return (
-    <TreeItem
-      classes={{
-        root: classes.root,
-        content: classes.content,
-        label: classes.label,
-        selected: classes.selected,
-      }}
-      TransitionComponent={TransitionComponent}
+    <ListItem
+      disableGutters
+      button
+      selected={isSelected}
       style={{
+        ...style,
+        marginLeft: nestingLevel * 20,
         transition: 'opacity 0.4s',
         ...(isViewed && { opacity: 0.5 }),
       }}
-      nodeId={nodeId}
-      {...rest}
-    />
+      onClick={handleClick}
+      onContextMenu={handleContextMenu}
+      classes={{ root: classes.itemRoot, selected: classes.itemSelected }}
+    >
+      <ListItemIcon classes={{ root: classes.iconRoot }}>
+        <NodeIcon isOpen={isOpen} isLeaf={isLeaf} status={meta?.status} />
+      </ListItemIcon>
+      <ListItemText primary={name} />
+    </ListItem>
   )
 }
-
-export default StyledTreeItem
+export default TreeItem
