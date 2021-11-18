@@ -9,17 +9,26 @@ import { MODIFIER_KEY_PROPERTY } from 'constants'
 import { openInNewTab } from 'utils/chrome'
 import useContextMenuStore from 'stores/contextMenu'
 import useViewedFilesStore from 'stores/pull'
+import EllipsisBox from 'components/shared/EllipsisBox'
 
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
 import useTreeStore from 'stores/tree'
+import useSettingStore from 'stores/setting'
+
+import {
+  LabelTextSkeleton,
+  IconSkeleton,
+} from 'components/MainDrawer/Tabs/Loading/placeholder'
 
 import { MAIN_COLOR } from './constants'
 import LabelIcon from './LabelIcon'
 
 const HOVER_BG = '#eff2f4'
 const SELECT_BG = '#d6e7fd'
+
+const BASE_PADDING = 10
+const LEVEL_ADDITIONAL_PADDING = 20
 
 const useNodeStyle = makeStyles((theme) => ({
   iconRoot: {
@@ -49,6 +58,10 @@ const useNodeStyle = makeStyles((theme) => ({
             .mix(SELECT_BG, theme.palette.background.paper, 80)
             .toHexString(),
   },
+  itemContent: {
+    maxWidth: '100%',
+    fontSize: '16px',
+  },
 }))
 
 const NodeIcon = ({ isOpen, isLeaf, status }) => {
@@ -71,6 +84,7 @@ const TreeItem = ({
   style,
   setOpen,
 }) => {
+  const drawerWidth = useSettingStore((s) => s.drawerWidth)
   const isViewed = useViewedFilesStore((s) => s.viewedFileMap[id])
 
   const isSelected = useTreeStore((s) => s.selectedId === id)
@@ -115,8 +129,11 @@ const TreeItem = ({
       selected={isSelected}
       style={{
         ...style,
-        marginLeft: nestingLevel * 20 + 10,
+        marginLeft: nestingLevel * LEVEL_ADDITIONAL_PADDING + BASE_PADDING,
         transition: 'opacity 0.4s',
+        width: `calc(100% - ${
+          nestingLevel * LEVEL_ADDITIONAL_PADDING + BASE_PADDING * 2
+        }px)`,
         ...(isViewed && { opacity: 0.5 }),
       }}
       onClick={handleClick}
@@ -126,8 +143,40 @@ const TreeItem = ({
       <ListItemIcon classes={{ root: classes.iconRoot }}>
         <NodeIcon isOpen={isOpen} isLeaf={isLeaf} status={meta?.status} />
       </ListItemIcon>
-      <ListItemText primary={name} />
+      <EllipsisBox
+        key={drawerWidth} // To force check if ellipsis is needed
+        text={name}
+        withTooltip
+        className={classes.itemContent}
+      />
     </ListItem>
   )
 }
+
+export const TreeItemPlaceholder = ({ data: { nestingLevel }, style }) => {
+  const classes = useNodeStyle()
+
+  return (
+    <ListItem
+      disableGutters
+      button
+      disabled
+      style={{
+        ...style,
+        marginLeft: nestingLevel * LEVEL_ADDITIONAL_PADDING + BASE_PADDING,
+        transition: 'opacity 0.4s',
+        width: `calc(100% - ${
+          nestingLevel * LEVEL_ADDITIONAL_PADDING + BASE_PADDING * 2
+        }px)`,
+        opacity: 1,
+      }}
+    >
+      <ListItemIcon classes={{ root: classes.iconRoot }}>
+        <IconSkeleton />
+      </ListItemIcon>
+      <LabelTextSkeleton />
+    </ListItem>
+  )
+}
+
 export default TreeItem

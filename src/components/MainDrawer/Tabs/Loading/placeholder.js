@@ -5,7 +5,7 @@ import Box from '@material-ui/core/Box'
 
 export const LabelTextSkeleton = () => {
   return (
-    <Box height="24px" display="flex" alignItems="center" ml="4px">
+    <Box height="24px" display="flex" alignItems="center" ml="4px" width="100%">
       <Skeleton variant="text" width={`${random(35, 90)}%`} height={14} />
     </Box>
   )

@@ -105,7 +105,7 @@ export default function ContextMenu({ ...pageInfo }) {
   }
 
   const isFileNode = checkIsFileNode(clickedTreeNode)
-  const fullPath = clickedTreeNode?.path || clickedTreeNode?.filename
+  const fullPath = clickedTreeNode?.id
 
   /**
    * @TODO Handle `no-token` warning via a toast

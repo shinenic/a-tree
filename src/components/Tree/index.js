@@ -1,74 +1,102 @@
-import { useMemo, useEffect, useCallback, useRef, useState } from 'react'
-import { sortBy, keyBy } from 'lodash'
+import { useMemo, useEffect, useCallback, useRef } from 'react'
+import { sortBy, isEmpty, compact, get, set } from 'lodash'
 import { FixedSizeTree } from 'react-vtree'
 import usePrevious from 'hooks/usePrevious'
 import AutoSizer from 'react-virtualized-auto-sizer'
 
-import TreeItem from './Item'
+import TreeItem, { TreeItemPlaceholder } from './Item'
 
 export const DRAWER_CONTENT_ID = 'a-tree-tab-content'
 
-const generateSortableTree = (tree = []) => {
-  const splittedFiles = tree.map(({ path, filename }) => {
-    return (filename || path).split('/')
-  })
+const generateTree = (tree) => {
+  const objTree = tree.reduce((result, node) => {
+    const originalPath = node.path || node.filename
+    const pathArray = originalPath.split('/')
+    const path = pathArray.join('/children/').split('/')
 
-  const result = buildParent(splittedFiles)
+    if (!get(result, path)) {
+      return set(result, path, node)
+    }
 
-  const treeMap = keyBy(tree, tree[0].filename ? 'filename' : 'path')
+    return result
+  }, {})
 
-  return [result, treeMap]
+  const folderNodeIds = []
+  setNodeIds(objTree, null, folderNodeIds)
+
+  return [objTree, folderNodeIds]
 }
 
-const buildParent = (availableNodes = [], depth = 0, currentPath = '') => {
-  if (availableNodes.length === 0) return []
+const isProxyNode = (node) => {
+  const hasChildNoSiblings = Object.keys(node.children).length === 1
 
-  const currentLevelNames = [
-    ...new Set(availableNodes.map((file) => file[depth])),
-  ]
+  if (!hasChildNoSiblings) return false
 
-  const result = []
-  currentLevelNames.forEach((name) => {
-    const fullPath = currentPath ? `${currentPath}/${name}` : name
+  const childKey = Object.keys(node.children)[0]
+  const child = node.children[childKey]
+  const isChildLeaf = isEmpty(child.children)
 
-    const nextLevelNodes = availableNodes.filter(
-      (paths) => paths[depth] === name && paths[depth + 1]
-    )
+  return !isChildLeaf
+}
 
-    result.push({
-      id: fullPath,
-      name,
-      children:
-        nextLevelNodes.length === 0
-          ? []
-          : buildParent(nextLevelNodes, depth + 1, fullPath),
-    })
+const setNodeIds = (tree, parentNodeId = '', folderNodeIds) => {
+  return Object.keys(tree).map((key) => {
+    let node = tree[key]
+    let label = key
+
+    const hasChildren = !isEmpty(node.children)
+    let id = compact([parentNodeId, key]).join('/')
+
+    node.id = id
+
+    if (hasChildren) {
+      while (isProxyNode(node)) {
+        const childKey = Object.keys(node.children)[0]
+        const child = node.children[childKey]
+
+        delete tree[label]
+
+        label = `${label}/${childKey}`
+
+        tree[label] = child
+        node = tree[label]
+
+        id = compact([parentNodeId, label]).join('/')
+        node.id = id
+      }
+
+      folderNodeIds.push(id)
+      return setNodeIds(node.children, id, folderNodeIds)
+    }
+
+    return id
   })
-
-  return sortBy(result, [(node) => !node?.children?.length])
 }
 
 const getNodeData = ({
+  name,
   node,
   nestingLevel,
-  meta,
   defaultOpen,
   onItemClick,
   getNodeHref,
-}) => ({
-  data: {
-    id: node.id,
-    isLeaf: !node?.children?.length,
-    isOpenByDefault: defaultOpen,
-    name: node.name,
+}) => {
+  const { id, children } = node
+  return {
+    data: {
+      id,
+      isLeaf: !children || isEmpty(children),
+      isOpenByDefault: defaultOpen,
+      name,
+      nestingLevel,
+      onItemClick,
+      getNodeHref,
+      meta: node,
+    },
     nestingLevel,
-    onItemClick,
-    getNodeHref,
-    meta,
-  },
-  nestingLevel,
-  node,
-})
+    node,
+  }
+}
 
 export default function CustomizedTreeView({
   tree,
@@ -78,23 +106,25 @@ export default function CustomizedTreeView({
   currentFilePath,
   getNodeHref,
 }) {
-  const [size, setSize] = useState({ width: 0, height: 0 })
   const treeInstance = useRef(null)
   const prevCurrentFilePath = usePrevious(currentFilePath)
 
-  const [fullTreeNodes, treeMap] = useMemo(
-    () => generateSortableTree(tree),
-    [tree]
-  )
+  const [objTree, folderNodeIds] = useMemo(() => generateTree(tree), [tree])
 
   // ref: https://github.com/Lodin/react-vtree#usage
   const treeWalker = useCallback(
     function* treeWalker() {
-      for (let i = 0; i < fullTreeNodes.length; i += 1) {
+      const rootEntries = sortBy(Object.entries(objTree), [
+        ([, node]) => isEmpty(node?.children),
+      ])
+
+      for (let i = 0; i < rootEntries.length; i += 1) {
+        const [name, node] = rootEntries[i]
+
         yield getNodeData({
-          node: fullTreeNodes[i],
+          name,
+          node,
           nestingLevel: 0,
-          meta: treeMap[fullTreeNodes[i].id],
           defaultOpen: isExpandedAll,
           onItemClick,
           getNodeHref,
@@ -104,11 +134,19 @@ export default function CustomizedTreeView({
       while (true) {
         const parent = yield
 
-        for (let i = 0; i < parent.node.children.length; i += 1) {
+        const childrenEntries = parent.node.children
+          ? sortBy(Object.entries(parent.node.children), [
+              ([, node]) => isEmpty(node?.children),
+            ])
+          : []
+
+        for (let i = 0; i < childrenEntries.length; i += 1) {
+          const [name, node] = childrenEntries[i]
+
           yield getNodeData({
-            node: parent.node.children[i],
+            name,
+            node,
             nestingLevel: parent.nestingLevel + 1,
-            meta: treeMap[parent.node.children[i].id],
             defaultOpen: isExpandedAll,
             onItemClick,
             getNodeHref,
@@ -116,22 +154,8 @@ export default function CustomizedTreeView({
         }
       }
     },
-    [fullTreeNodes, treeMap, isExpandedAll, onItemClick, getNodeHref]
+    [objTree, isExpandedAll, onItemClick, getNodeHref]
   )
-
-  useEffect(() => {
-    const target = document.getElementById(DRAWER_CONTENT_ID)
-    if (!target) return
-
-    const resizeObserver = new ResizeObserver(() => {
-      const rect = target.getBoundingClientRect()
-      setSize({ width: rect.width, height: rect.height })
-    })
-
-    resizeObserver.observe(target)
-
-    return () => resizeObserver.unobserve(target)
-  }, [])
 
   useEffect(() => {
     if (isExpandedAll) return
@@ -139,7 +163,7 @@ export default function CustomizedTreeView({
     if (!currentFilePath && !prevCurrentFilePath) return
 
     if (!currentFilePath && prevCurrentFilePath) {
-      const allClosedTreeMap = Object.keys(treeMap).reduce((result, key) => {
+      const allClosedTreeMap = folderNodeIds.reduce((result, key) => {
         result[key] = { open: false }
         return result
       }, {})
@@ -172,13 +196,13 @@ export default function CustomizedTreeView({
               width={width}
               ref={treeInstance}
             >
-              {TreeItem}
+              {isLoading ? TreeItemPlaceholder : TreeItem}
             </FixedSizeTree>
           )
         }}
       </AutoSizer>
     ),
-    [treeWalker]
+    [treeWalker, isLoading]
   )
 
   return memoedTree
