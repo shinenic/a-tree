@@ -10,6 +10,7 @@ import { openInNewTab } from 'utils/chrome'
 import useContextMenuStore from 'stores/contextMenu'
 import useViewedFilesStore from 'stores/pull'
 import EllipsisBox from 'components/shared/EllipsisBox'
+import Box from '@material-ui/core/Box'
 
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
@@ -61,6 +62,13 @@ const useNodeStyle = makeStyles((theme) => ({
   itemContent: {
     maxWidth: '100%',
     fontSize: '16px',
+  },
+  itemText: {
+    fontSize: '16px',
+    maxWidth: '100%',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
   },
 }))
 
@@ -122,6 +130,7 @@ const TreeItem = ({
     if (onItemClick) onItemClick(meta, e)
   }
 
+  // Don't use Mui's `Box` here, it's way slower than native `div`, IDK why
   return (
     <ListItem
       disableGutters
@@ -143,12 +152,9 @@ const TreeItem = ({
       <ListItemIcon classes={{ root: classes.iconRoot }}>
         <NodeIcon isOpen={isOpen} isLeaf={isLeaf} status={meta?.status} />
       </ListItemIcon>
-      <EllipsisBox
-        key={drawerWidth} // To force check if ellipsis is needed
-        text={name}
-        withTooltip
-        className={classes.itemContent}
-      />
+      <div className={classes.itemText} title={name}>
+        {name}
+      </div>
     </ListItem>
   )
 }
