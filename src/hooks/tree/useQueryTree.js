@@ -13,6 +13,7 @@ const useQueryTree = (pageInfo, enabled = true) => {
     { owner, pull, repo },
     { enabled: enabled && PAGES_WITH_FULL_PULL_TREE.includes(pageType) }
   )
+  console.log(queryPull)
 
   const queryCommit = useQueryCommit(
     { owner, commit, repo },
@@ -52,7 +53,7 @@ const useQueryTree = (pageInfo, enabled = true) => {
      *  pull:   data
      */
     () => data?.files || data?.tree || data,
-    [...Object.values(pageInfo), hasData] // eslint-disable-line
+    [pageType, owner, repo, commit, pull, branch, hasData] // eslint-disable-line
   )
 
   return { files, isLoading, error }
