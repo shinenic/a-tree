@@ -16,7 +16,8 @@ const CREATING_STEPS = [
     content: 'Fill in the note for the extension.',
     position: 'right',
     initAction: () => {
-      document.querySelector(NOTE_INPUT_SELECTOR).value = DEFAULT_NOTE
+      document.querySelector(NOTE_INPUT_SELECTOR).value =
+        `${DEFAULT_NOTE}-${new Date().getTime()}`
     },
   },
   {
