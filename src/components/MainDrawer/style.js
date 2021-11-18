@@ -41,7 +41,7 @@ export const DrawerContent = muiStyled(Paper)(({ theme }) => ({
   overflow: 'hidden',
 
   // @FIXME The scrollbar with style will be a bit lag...
-  '& > div': {
+  '& > div > div': {
     ...getCommonScrollbarStyle(theme),
   },
 }))

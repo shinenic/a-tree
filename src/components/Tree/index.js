@@ -2,6 +2,7 @@ import { useMemo, useEffect, useCallback, useRef, useState } from 'react'
 import { sortBy, keyBy } from 'lodash'
 import { FixedSizeTree } from 'react-vtree'
 import usePrevious from 'hooks/usePrevious'
+import AutoSizer from 'react-virtualized-auto-sizer'
 
 import TreeItem from './Item'
 
@@ -161,17 +162,23 @@ export default function CustomizedTreeView({
 
   const memoedTree = useMemo(
     () => (
-      <FixedSizeTree
-        treeWalker={treeWalker}
-        itemSize={34}
-        height={size.height}
-        width={size.width}
-        ref={treeInstance}
-      >
-        {TreeItem}
-      </FixedSizeTree>
+      <AutoSizer>
+        {({ height, width }) => {
+          return (
+            <FixedSizeTree
+              treeWalker={treeWalker}
+              itemSize={34}
+              height={height}
+              width={width}
+              ref={treeInstance}
+            >
+              {TreeItem}
+            </FixedSizeTree>
+          )
+        }}
+      </AutoSizer>
     ),
-    [treeWalker, size.height, size.width]
+    [treeWalker]
   )
 
   return memoedTree
