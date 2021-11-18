@@ -95,7 +95,7 @@ const TreeItem = ({
     e.stopPropagation()
     setSelectedId(id)
 
-    if (isLeaf) {
+    if (!isLeaf) {
       setOpen(!isOpen)
     }
 
