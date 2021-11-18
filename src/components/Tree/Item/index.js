@@ -9,13 +9,9 @@ import { MODIFIER_KEY_PROPERTY } from 'constants'
 import { openInNewTab } from 'utils/chrome'
 import useContextMenuStore from 'stores/contextMenu'
 import useViewedFilesStore from 'stores/pull'
-import EllipsisBox from 'components/shared/EllipsisBox'
-import Box from '@material-ui/core/Box'
 
 import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
 import useTreeStore from 'stores/tree'
-import useSettingStore from 'stores/setting'
 
 import {
   LabelTextSkeleton,
@@ -37,6 +33,7 @@ const useNodeStyle = makeStyles((theme) => ({
     marginRight: 10,
     marginLeft: 6,
     fontSize: 18,
+    flexShrink: 0,
   },
   itemRoot: {
     userSelect: 'none',
@@ -92,7 +89,6 @@ const TreeItem = ({
   style,
   setOpen,
 }) => {
-  const drawerWidth = useSettingStore((s) => s.drawerWidth)
   const isViewed = useViewedFilesStore((s) => s.viewedFileMap[id])
 
   const isSelected = useTreeStore((s) => s.selectedId === id)
@@ -130,7 +126,9 @@ const TreeItem = ({
     if (onItemClick) onItemClick(meta, e)
   }
 
-  // Don't use Mui's `Box` here, it's way slower than native `div`, IDK why
+  /**
+   * @note Prefer native dom (e.g. div) to Mui's `Box` for better performance.
+   */
   return (
     <ListItem
       disableGutters
@@ -143,15 +141,15 @@ const TreeItem = ({
         width: `calc(100% - ${
           nestingLevel * LEVEL_ADDITIONAL_PADDING + BASE_PADDING * 2
         }px)`,
-        ...(isViewed && { opacity: 0.5 }),
+        opacity: isViewed ? 0.5 : 1,
       }}
       onClick={handleClick}
       onContextMenu={handleContextMenu}
       classes={{ root: classes.itemRoot, selected: classes.itemSelected }}
     >
-      <ListItemIcon classes={{ root: classes.iconRoot }}>
+      <div className={classes.iconRoot}>
         <NodeIcon isOpen={isOpen} isLeaf={isLeaf} status={meta?.status} />
-      </ListItemIcon>
+      </div>
       <div className={classes.itemText} title={name}>
         {name}
       </div>
@@ -177,9 +175,9 @@ export const TreeItemPlaceholder = ({ data: { nestingLevel }, style }) => {
         opacity: 1,
       }}
     >
-      <ListItemIcon classes={{ root: classes.iconRoot }}>
+      <div className={classes.iconRoot}>
         <IconSkeleton />
-      </ListItemIcon>
+      </div>
       <LabelTextSkeleton />
     </ListItem>
   )

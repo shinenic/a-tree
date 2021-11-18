@@ -13,7 +13,6 @@ const useQueryTree = (pageInfo, enabled = true) => {
     { owner, pull, repo },
     { enabled: enabled && PAGES_WITH_FULL_PULL_TREE.includes(pageType) }
   )
-  console.log(queryPull)
 
   const queryCommit = useQueryCommit(
     { owner, commit, repo },
