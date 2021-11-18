@@ -1,7 +1,6 @@
-import { useMemo, useEffect, useCallback, useRef } from 'react'
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react'
 import { sortBy, isEmpty, compact, get, set } from 'lodash'
 import { FixedSizeTree } from 'react-vtree'
-import usePrevious from 'hooks/usePrevious'
 import AutoSizer from 'react-virtualized-auto-sizer'
 
 import TreeItem, { TreeItemPlaceholder } from './Item'
@@ -106,8 +105,8 @@ export default function CustomizedTreeView({
   currentFilePath,
   getNodeHref,
 }) {
-  const treeInstance = useRef(null)
-  const prevCurrentFilePath = usePrevious(currentFilePath)
+  const lastProcessedPath = useRef(null) // To handle automatic expanding / collapsing
+  const [treeInstance, setTreeInstance] = useState(null)
 
   const [objTree, folderNodeIds] = useMemo(() => generateTree(tree), [tree])
 
@@ -157,32 +156,52 @@ export default function CustomizedTreeView({
     [objTree, isExpandedAll, onItemClick, getNodeHref]
   )
 
+  // treeInstance will be set asynchronously, so store it in a state instead of ref
   useEffect(() => {
+    if (!treeInstance) return
     if (isExpandedAll) return
+    if (currentFilePath === lastProcessedPath.current) return
+    if (!currentFilePath && !lastProcessedPath.current) return
 
-    if (!currentFilePath && !prevCurrentFilePath) return
-
-    if (!currentFilePath && prevCurrentFilePath) {
-      const allClosedTreeMap = folderNodeIds.reduce((result, key) => {
-        result[key] = { open: false }
+    // Back to the root
+    if (!currentFilePath && lastProcessedPath.current) {
+      const allClosedTreeMap = folderNodeIds.reduce((result, id) => {
+        result[id] = { open: false }
         return result
       }, {})
 
-      treeInstance.current.recomputeTree(allClosedTreeMap)
+      treeInstance.recomputeTree(allClosedTreeMap)
+      lastProcessedPath.current = currentFilePath
       return
     }
 
-    treeInstance.current.recomputeTree({
-      [currentFilePath]: {
-        open: true,
-        subtreeCallback(node, ownerNode) {
-          if (node !== ownerNode) {
-            node.isOpen = false
-          }
-        },
-      },
-    })
-  }, [currentFilePath, isExpandedAll]) // eslint-disable-line
+    const targetPaths = currentFilePath.split('/')
+    const targetIds = targetPaths.map((_, index) =>
+      targetPaths.slice(0, index + 1).join('/')
+    )
+
+    const treeMap = targetIds.reduce((result, id, index) => {
+      if (index === targetIds.length - 1) {
+        return {
+          ...result,
+          [id]: {
+            open: true,
+            subtreeCallback(node, ownerNode) {
+              if (node !== ownerNode) {
+                node.isOpen = false
+              }
+            },
+          },
+        }
+      }
+
+      return { ...result, [id]: { open: true } }
+    }, {})
+
+    treeInstance.recomputeTree(treeMap)
+
+    lastProcessedPath.current = currentFilePath
+  }, [currentFilePath, treeInstance]) // eslint-disable-line
 
   const memoedTree = useMemo(
     () => (
@@ -194,7 +213,7 @@ export default function CustomizedTreeView({
               itemSize={34}
               height={height}
               width={width}
-              ref={treeInstance}
+              ref={setTreeInstance}
             >
               {isLoading ? TreeItemPlaceholder : TreeItem}
             </FixedSizeTree>
