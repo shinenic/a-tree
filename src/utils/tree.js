@@ -69,7 +69,6 @@ const setNodeIds = (tree, parentNodeId = '', folderNodeIds, mergeProxyNode) => {
 
     if (hasChildren) {
       while (isProxyNode(node) && mergeProxyNode) {
-        console.log(node)
         const childKey = Object.keys(node.children)[0]
         const child = node.children[childKey]
 

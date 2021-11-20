@@ -31,10 +31,6 @@ const useStyles = ({ drawerPinned }) =>
     },
   }))
 
-/**
- * @TODO Check do we need to hide the floating button and drawer at the same time?
- *       Or close drawer automatically on specific page types
- */
 const FloatingButton = () => {
   const drawerPinned = useSettingStore((s) => s.drawerPinned)
 
