@@ -42,6 +42,7 @@ function LargeTree({ onItemClick, getNodeHref, owner, repo, branch }) {
     branch,
   })
 
+  // Disable auto merge proxy node to keep the order of the tree
   const [objTree] = useMemo(() => generateTree(files, false), [files])
 
   // ref: https://github.com/Lodin/react-vtree#usage
