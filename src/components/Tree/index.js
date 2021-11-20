@@ -1,76 +1,10 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react'
-import { sortBy, isEmpty, compact, get, set } from 'lodash'
+import { sortBy, isEmpty } from 'lodash'
 import { FixedSizeTree } from 'react-vtree'
 import AutoSizer from 'react-virtualized-auto-sizer'
+import { generateTree } from 'utils/tree'
 
 import TreeItem, { TreeItemPlaceholder } from './Item'
-
-export const DRAWER_CONTENT_ID = 'a-tree-tab-content'
-
-const generateTree = (tree) => {
-  const objTree = tree.reduce((result, node) => {
-    const originalPath = node.path || node.filename
-    const pathArray = originalPath.split('/')
-    const path = pathArray.join('/children/').split('/')
-
-    if (!get(result, path)) {
-      return set(result, path, node)
-    }
-
-    return result
-  }, {})
-
-  const folderNodeIds = []
-  setNodeIds(objTree, null, folderNodeIds)
-
-  return [objTree, folderNodeIds]
-}
-
-const isProxyNode = (node) => {
-  const hasChildNoSiblings = Object.keys(node.children).length === 1
-
-  if (!hasChildNoSiblings) return false
-
-  const childKey = Object.keys(node.children)[0]
-  const child = node.children[childKey]
-  const isChildLeaf = isEmpty(child.children)
-
-  return !isChildLeaf
-}
-
-const setNodeIds = (tree, parentNodeId = '', folderNodeIds) => {
-  return Object.keys(tree).map((key) => {
-    let node = tree[key]
-    let label = key
-
-    const hasChildren = !isEmpty(node.children)
-    let id = compact([parentNodeId, key]).join('/')
-
-    node.id = id
-
-    if (hasChildren) {
-      while (isProxyNode(node)) {
-        const childKey = Object.keys(node.children)[0]
-        const child = node.children[childKey]
-
-        delete tree[label]
-
-        label = `${label}/${childKey}`
-
-        tree[label] = child
-        node = tree[label]
-
-        id = compact([parentNodeId, label]).join('/')
-        node.id = id
-      }
-
-      folderNodeIds.push(id)
-      return setNodeIds(node.children, id, folderNodeIds)
-    }
-
-    return id
-  })
-}
 
 const getNodeData = ({
   name,
@@ -97,7 +31,7 @@ const getNodeData = ({
   }
 }
 
-export default function CustomizedTreeView({
+function Tree({
   tree,
   isExpandedAll = false,
   onItemClick,
@@ -226,3 +160,5 @@ export default function CustomizedTreeView({
 
   return memoedTree
 }
+
+export default Tree

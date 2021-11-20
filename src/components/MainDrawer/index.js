@@ -13,7 +13,6 @@ import { getHeaderHeight } from 'utils/style'
 import Breadcrumb from 'components/Breadcrumb'
 import SearchBar from 'components/SearchBar'
 import usePopperStore from 'stores/popper'
-import { DRAWER_CONTENT_ID } from 'components/Tree'
 
 import Error from './Tabs/Error'
 import TreeTab from './Tabs'
@@ -91,7 +90,7 @@ const MainDrawer = ({ pageInfo, error }) => {
           pageType={pageType}
         />
         <PullMenu owner={owner} repo={repo} pull={pull} />
-        <Style.DrawerContent id={DRAWER_CONTENT_ID}>
+        <Style.DrawerContent>
           {renderContent()}
         </Style.DrawerContent>
         <Style.DrawerFooter>
