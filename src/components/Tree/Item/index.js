@@ -9,6 +9,8 @@ import { MODIFIER_KEY_PROPERTY } from 'constants'
 import { openInNewTab } from 'utils/chrome'
 import useContextMenuStore from 'stores/contextMenu'
 import useViewedFilesStore from 'stores/pull'
+import { isEmpty } from 'lodash'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import ListItem from '@material-ui/core/ListItem'
 import useTreeStore from 'stores/tree'
@@ -34,6 +36,8 @@ const useNodeStyle = makeStyles((theme) => ({
     marginLeft: 6,
     fontSize: 18,
     flexShrink: 0,
+    display: 'flex',
+    alignItems: 'center',
   },
   itemRoot: {
     userSelect: 'none',
@@ -69,7 +73,7 @@ const useNodeStyle = makeStyles((theme) => ({
   },
 }))
 
-const NodeIcon = ({ isOpen, isLeaf, status }) => {
+const NodeIcon = ({ isOpen, isLeaf, status, isLoading }) => {
   const theme = useTheme()
 
   const color =
@@ -77,6 +81,7 @@ const NodeIcon = ({ isOpen, isLeaf, status }) => {
       ? tinycolor(MAIN_COLOR).brighten(60).toHexString()
       : MAIN_COLOR
 
+  if (isLoading) return <CircularProgress size={18} />
   if (status) return <LabelIcon status={status} />
   if (isLeaf) return <AiOutlineFileText color={color} />
   if (isOpen) return <AiFillFolderOpen color={color} />
@@ -84,13 +89,23 @@ const NodeIcon = ({ isOpen, isLeaf, status }) => {
 }
 
 const TreeItem = ({
-  data: { isLeaf, name, nestingLevel, id, meta, onItemClick, getNodeHref },
+  data: {
+    isLeaf,
+    name,
+    nestingLevel,
+    id,
+    meta,
+    onItemClick,
+    getNodeHref,
+    queryBySha,
+  },
   isOpen,
   style,
   setOpen,
 }) => {
   const isViewed = useViewedFilesStore((s) => s.viewedFileMap[id])
 
+  const isLoading = !isLeaf && isOpen && isEmpty(meta.children)
   const isSelected = useTreeStore((s) => s.selectedId === id)
   const setSelectedId = useTreeStore((s) => s.setSelectedId)
 
@@ -109,12 +124,16 @@ const TreeItem = ({
     openContextMenu(e, meta)
   }
 
-  const handleClick = (e) => {
+  const handleClick = async (e) => {
     e.stopPropagation()
     setSelectedId(id)
 
     if (!isLeaf) {
       setOpen(!isOpen)
+
+      if (!isLoading && queryBySha) {
+        queryBySha(meta.sha)
+      }
     }
 
     // Perform open link in new tab
@@ -124,6 +143,13 @@ const TreeItem = ({
     }
 
     if (onItemClick) onItemClick(meta, e)
+  }
+
+  const mouseDownHandler = (e) => {
+    if (e.button === 1) {
+      openInNewTab(getNodeHref(meta))
+      e.preventDefault()
+    }
   }
 
   /**
@@ -144,11 +170,17 @@ const TreeItem = ({
         opacity: isViewed ? 0.5 : 1,
       }}
       onClick={handleClick}
+      onMouseDown={mouseDownHandler}
       onContextMenu={handleContextMenu}
       classes={{ root: classes.itemRoot, selected: classes.itemSelected }}
     >
       <div className={classes.iconRoot}>
-        <NodeIcon isOpen={isOpen} isLeaf={isLeaf} status={meta?.status} />
+        <NodeIcon
+          isOpen={isOpen}
+          isLeaf={isLeaf}
+          status={meta?.status}
+          isLoading={isLoading}
+        />
       </div>
       <div className={classes.itemText} title={name}>
         {name}

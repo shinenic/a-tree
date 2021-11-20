@@ -93,3 +93,18 @@ export const useQueryFiles = (
     useQueryOptions
   )
 }
+
+export const useQuerySingleLevelFiles = (
+  { owner, repo, sha },
+  options = {}
+) => {
+  return useGithubQuery(
+    ['single-level-files', { owner, repo, sha }],
+    {
+      url: '/repos/{owner}/{repo}/git/trees/{sha}',
+      placeholders: { owner, repo, sha },
+    },
+    options
+  )
+}
+

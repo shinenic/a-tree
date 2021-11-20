@@ -4,7 +4,12 @@ import {
   useQueryCommit,
 } from 'hooks/api/useGithubQueries'
 import { useMemo } from 'react'
-import { PAGE_TYPE, PULL_PAGE_TYPE, PAGES_WITH_FULL_PULL_TREE } from 'constants'
+import {
+  PAGE_TYPE,
+  PAGES_WITH_BRANCH_TREE,
+  PULL_PAGE_TYPE,
+  PAGES_WITH_FULL_PULL_TREE,
+} from 'constants'
 
 const useQueryTree = (pageInfo, enabled = true) => {
   const { pageType, owner, repo, commit, pull, branch } = pageInfo
@@ -29,7 +34,7 @@ const useQueryTree = (pageInfo, enabled = true) => {
 
   const queryFiles = useQueryFiles(
     { owner, branch, repo },
-    { enabled: enabled && !PULL_PAGE_TYPE[pageType] }
+    { enabled: enabled && PAGES_WITH_BRANCH_TREE.includes(pageType) }
   )
 
   const queryMap = {
@@ -55,7 +60,12 @@ const useQueryTree = (pageInfo, enabled = true) => {
     [pageType, owner, repo, commit, pull, branch, hasData] // eslint-disable-line
   )
 
-  return { files, isLoading, error }
+  return {
+    files,
+    isLoading,
+    error,
+    isLargeRepoTree: data?.truncated && !PULL_PAGE_TYPE[pageType],
+  }
 }
 
 export default useQueryTree
