@@ -4,7 +4,8 @@ import { noop, isEmpty } from 'lodash'
 /**
  * @typedef FileSearchModalState
  * @type {object}
- * @property {boolean} isOpened is modal opened
+ * @property {function} onOpen
+ * @property {function} onClose
  * @property {object[]} files source of all files
  * @property {object[]} result result after filtered
  * @property {number} selectedIndex current selected index of result
@@ -15,7 +16,8 @@ import { noop, isEmpty } from 'lodash'
 
 /** @type {FileSearchModalState} */
 export const initialState = {
-  isOpened: false,
+  onOpen: () => {},
+  onClose: () => {},
   files: [],
   maxResultCount: 20,
   result: [],
@@ -55,18 +57,16 @@ const {
 export const reducer = (state, action) => {
   switch (action.type) {
     case OPEN:
+      state.onOpen()
       return {
         ...state,
-        isOpened: true,
         result: state.files.slice(0, state.maxResultCount),
         keyword: '',
         selectedIndex: 0,
       }
     case CLOSE:
-      return {
-        ...state,
-        isOpened: false,
-      }
+      state.onClose()
+      return state
     case UPDATE_SELECT_CALLBACK: {
       const { selectCallback } = action.payload
       return { ...state, selectCallback }
@@ -128,10 +128,9 @@ export const reducer = (state, action) => {
         selectCallback(result[action.payload?.selectedIndex ?? selectedIndex])
       }
 
-      return {
-        ...state,
-        isOpened: false,
-      }
+      state.onClose()
+
+      return state
     }
     default:
       throw new Error(`Unknown Type: ${action.type}`)

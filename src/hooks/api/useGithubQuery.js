@@ -3,6 +3,8 @@ import { isValidQuery, createGithubQuery } from 'utils/api'
 import useSettingStore from 'stores/setting'
 import parseLink from 'parse-link-header'
 
+const DEFAULT_STALE_TIME = Number.MAX_SAFE_INTEGER
+
 const queryFullPageData = async (variables, token, baseUrl) => {
   let fullData = []
   let page = 1
@@ -56,7 +58,7 @@ function useGithubQuery(
     {
       enabled: isValidQuery(url, placeholders) && enabled,
       refetchOnWindowFocus: false,
-      staleTime: 10000,
+      staleTime: DEFAULT_STALE_TIME,
       ...restOptions,
     }
   )
