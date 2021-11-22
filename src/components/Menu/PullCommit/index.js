@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { animated } from 'react-spring'
 
 import { PJAX_ID } from 'constants/github'
@@ -7,6 +6,7 @@ import usePullCommitMenu from 'hooks/usePullCommitMenu'
 
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import useMenuPosition from 'hooks/menu/useMenuPosition'
 
 import CopyIcon from './CopyIcon'
 import * as Style from './style'
@@ -53,30 +53,25 @@ export default function PullCommitMenu({
   repo,
   pull,
   commit: currentCommit,
+  anchorElement,
+  followCursor,
 }) {
-  const [menuPositionStyle, setMenuPositionStyle] = useState({})
   const { data, handleClose, error, menuStyles, menuOpened } =
     usePullCommitMenu({ owner, repo, pull, commit: currentCommit })
 
   const menuRef = useClickOutside(handleClose)
-
-  // Calculate the fixed position of commits menu based on button's position
-  useEffect(() => {
-    if (!menuRef.current) return
-
-    const buttonRect = menuRef.current.getBoundingClientRect()
-    setMenuPositionStyle({
-      top: buttonRect.bottom,
-      left: buttonRect.left + 20,
-    })
-  }, [data, pull, menuOpened])
+  const menuPosition = useMenuPosition({
+    isMenuOpen: menuOpened,
+    anchorElement,
+    followCursor,
+  })
 
   if (!pull || error) return null
 
   return (
     <div ref={menuRef}>
       <AnimatedMenuContainer
-        style={{ ...menuStyles, ...menuPositionStyle }}
+        style={{ ...menuStyles, top: menuPosition.y, left: menuPosition.x }}
         onContextMenu={(e) => e.stopPropagation()}
       >
         <BaseStyle.StyledGithubLink
