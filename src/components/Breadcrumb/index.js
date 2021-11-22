@@ -150,9 +150,20 @@ const Breadcrumb = ({
                   display: 'flex',
                   alignItems: 'center',
                   margin: '0 5px',
+                  position: 'relative',
+                  '&:after': {
+                    position: 'absolute',
+                    left: 0,
+                    bottom: 0,
+                    content: '""',
+                    width: '0',
+                    height: '1px',
+                    background: 'white',
+                    transition: 'width .3s',
+                  },
                   ...(isClickable && {
-                    '&:hover': {
-                      borderBottom: '1px solid white',
+                    '&:hover::after': {
+                      width: '100%',
                     },
                   }),
                 }}
