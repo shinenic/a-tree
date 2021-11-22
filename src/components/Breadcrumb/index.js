@@ -20,6 +20,7 @@ import {
   getBranchLink,
 } from 'utils/link'
 import EllipsisBox from 'components/shared/EllipsisBox'
+import { take } from 'lodash'
 import { useQueryCommits } from 'hooks/api/useGithubQueries'
 import useSettingStore from 'stores/setting'
 
@@ -100,7 +101,7 @@ const Breadcrumb = ({
             owner,
             repo,
             branch,
-            filePath: file,
+            filePath: take(files, index + 1).join('/'),
             type: isTreeLeaf ? 'blob' : 'tree',
           })
 
@@ -176,9 +177,20 @@ const Breadcrumb = ({
                   display: 'flex',
                   alignItems: 'center',
                   margin: '0 5px',
+                  position: 'relative',
+                  '&:after': {
+                    position: 'absolute',
+                    left: 0,
+                    bottom: 0,
+                    content: '""',
+                    width: '0',
+                    height: '1px',
+                    background: 'white',
+                    transition: 'width .3s',
+                  },
                   ...(isClickable && {
-                    '&:hover': {
-                      borderBottom: '1px solid white',
+                    '&:hover::after': {
+                      width: '100%',
                     },
                   }),
                 }}
