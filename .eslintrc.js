@@ -26,6 +26,7 @@ module.exports = {
   plugins: ['react', 'simple-import-sort'],
   rules: {
     semi: [2, 'never'],
+    'linebreak-style': 'off',
     'function-paren-newline': 'off',
     'no-use-before-define': 'off',
     'operator-linebreak': 'off',
