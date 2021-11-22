@@ -20,6 +20,7 @@ import {
   getBranchLink,
 } from 'utils/link'
 import EllipsisBox from 'components/shared/EllipsisBox'
+import { take } from 'lodash'
 
 const Breadcrumb = ({
   pageType,
@@ -73,7 +74,7 @@ const Breadcrumb = ({
             owner,
             repo,
             branch,
-            filePath: file,
+            filePath: take(files, index + 1).join('/'),
             type: isTreeLeaf ? 'blob' : 'tree',
           })
 
