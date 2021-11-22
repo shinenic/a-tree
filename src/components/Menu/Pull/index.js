@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
 
 import { PJAX_ID } from 'constants/github'
@@ -12,6 +11,8 @@ import { useQueryPulls } from 'hooks/api/useGithubQueries'
 import Chip from '@material-ui/core/Chip'
 import tinycolor from 'tinycolor2'
 import usePopperStore from 'stores/popper'
+import useMenuPosition from 'hooks/menu/useMenuPosition'
+
 import Loading from './Loading'
 
 import * as Style from './style'
@@ -98,10 +99,15 @@ function Label({ name, color }) {
  * @TODO Disable query when drawer unpinned
  * @TODO Lazy load the rest pulls
  */
-export default function PullMenu({ owner, repo, pull }) {
+export default function PullMenu({
+  owner,
+  repo,
+  pull,
+  anchorElement,
+  followCursor,
+}) {
   const isPullOn = usePopperStore((s) => s.isPullOn)
   const togglePull = usePopperStore((s) => s.togglePull)
-  const [menuPositionStyle, setMenuPositionStyle] = useState({})
   const menuProps = useSpring({
     transform: isPullOn ? 'scale(1)' : 'scale(0.9)',
     transformOrigin: 'top',
@@ -123,24 +129,20 @@ export default function PullMenu({ owner, repo, pull }) {
   )
 
   const closeMenu = () => togglePull(false)
+
   const menuRef = useClickOutside(closeMenu)
-
-  useEffect(() => {
-    if (!menuRef.current) return
-
-    const buttonRect = menuRef.current.getBoundingClientRect()
-    setMenuPositionStyle({
-      top: buttonRect.bottom,
-      left: buttonRect.left + 20,
-    })
-  }, [data, pull, isPullOn])
+  const menuPosition = useMenuPosition({
+    isMenuOpen: isPullOn,
+    anchorElement,
+    followCursor,
+  })
 
   if (error) return null
 
   return (
     <div ref={menuRef}>
       <AnimatedMenuContainer
-        style={{ ...menuStyles, ...menuPositionStyle }}
+        style={{ ...menuStyles, top: menuPosition.y, left: menuPosition.x }}
         onContextMenu={(e) => e.stopPropagation()}
       >
         {isLoading ? (

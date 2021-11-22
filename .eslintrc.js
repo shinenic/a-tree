@@ -27,6 +27,7 @@ module.exports = {
   rules: {
     'linebreak-style': ['error', 'windows'],
     semi: [2, 'never'],
+    'linebreak-style': 'off',
     'function-paren-newline': 'off',
     'no-use-before-define': 'off',
     'operator-linebreak': 'off',
