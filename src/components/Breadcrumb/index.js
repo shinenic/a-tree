@@ -24,6 +24,9 @@ import { take } from 'lodash'
 import { useQueryCommits } from 'hooks/api/useGithubQueries'
 import useSettingStore from 'stores/setting'
 
+export const COMMIT_BTN_ID = 'commit-menu-btn'
+export const PULL_BTN_ID = 'pull-menu-btn'
+
 const Breadcrumb = ({
   pageType,
   owner,
@@ -83,11 +86,13 @@ const Breadcrumb = ({
     text: getCommitText(),
     icon: AiOutlineFieldNumber,
     onClick: () => togglePullCommit(),
+    id: COMMIT_BTN_ID,
   }
   const pullItem = {
     text: pull,
     icon: AiOutlinePullRequest,
     onClick: () => togglePull(),
+    id: PULL_BTN_ID,
   }
 
   switch (pageType) {
@@ -120,6 +125,7 @@ const Breadcrumb = ({
         text: 'All Pull Requests',
         onClick: () => togglePull(),
         icon: AiOutlinePullRequest,
+        id: PULL_BTN_ID,
       })
       break
 
@@ -134,6 +140,7 @@ const Breadcrumb = ({
       items.push({
         text: 'All Changes',
         onClick: () => togglePullCommit(),
+        id: COMMIT_BTN_ID,
       })
       break
 
@@ -157,7 +164,7 @@ const Breadcrumb = ({
         flexWrap: 'wrap',
       }}
     >
-      {items.map(({ text, icon: Icon, onClick }, index) => {
+      {items.map(({ text, icon: Icon, onClick, ...rest }, index) => {
         const isClickable = !!onClick
 
         return (
@@ -171,6 +178,7 @@ const Breadcrumb = ({
                 whiteSpace: 'nowrap',
               }}
               onClick={onClick}
+              {...rest}
             >
               <Box
                 sx={{

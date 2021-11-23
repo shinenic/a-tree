@@ -1,7 +1,12 @@
 import useMousePosition from 'hooks/useMousePosition'
 import { useState, useEffect } from 'react'
 
-const useMenuPosition = ({ isMenuOpen, anchorElement, followCursor }) => {
+const useMenuPosition = ({
+  isMenuOpen,
+  anchorElement,
+  followCursor = true,
+  offset = 20,
+}) => {
   const [menuPosition, setMenuPosition] = useState({})
 
   const mousePosition = useMousePosition({ event: 'click', capture: true })
@@ -10,7 +15,7 @@ const useMenuPosition = ({ isMenuOpen, anchorElement, followCursor }) => {
     if (!isMenuOpen) return
 
     if (followCursor || !anchorElement) {
-      setMenuPosition(mousePosition)
+      setMenuPosition({ x: mousePosition.x + offset, y: mousePosition.y + offset })
       return
     }
 

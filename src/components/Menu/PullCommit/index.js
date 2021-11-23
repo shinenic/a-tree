@@ -5,6 +5,7 @@ import useClickOutside from 'hooks/useClickOutside'
 import usePullCommitMenu from 'hooks/usePullCommitMenu'
 import useSwitchCommit from 'hooks/useSwitchCommit'
 import { getPullCommitLink } from 'utils/link'
+import { COMMIT_BTN_ID } from 'components/Breadcrumb'
 
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -63,7 +64,12 @@ export default function PullCommitMenu({
 
   useSwitchCommit({ owner, repo, pull, currentCommit, pageType })
 
-  const menuRef = useClickOutside(handleClose)
+
+  const menuRef = useClickOutside(
+    handleClose,
+    menuOpened,
+    [COMMIT_BTN_ID],
+  )
   const menuPosition = useMenuPosition({
     isMenuOpen: menuOpened,
     anchorElement,
