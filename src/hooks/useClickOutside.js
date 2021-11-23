@@ -32,7 +32,7 @@ const useClickOutside = (onClickAway, enabled = true, exceptIds = []) => {
     return () => {
       document.removeEventListener('mousedown', handler, { capture: false })
     }
-  }, [containerRef, enabled])
+  }, [containerRef, enabled, exceptIds])
 
   return containerRef
 }

@@ -9,6 +9,23 @@ import { getCommonScrollbarStyle } from 'utils/style'
 
 const BUTTON_HEIGHT = 40
 
+export const useVizListContainerStyle = makeStyles((theme) => ({
+  root: {
+    border:
+      theme.palette.type === 'dark'
+        ? `1px solid ${theme.palette.text.secondary}`
+        : 'none',
+    backgroundColor: theme.palette.background.paper,
+    zIndex: 10,
+    position: 'fixed',
+    boxShadow: theme.shadows[3],
+
+    '& > div': {
+      ...getCommonScrollbarStyle(theme),
+    },
+  },
+}))
+
 export const MenuContainer = muiStyled(Box)(({ theme }) => ({
   border:
     theme.palette.type === 'dark'
@@ -60,9 +77,9 @@ const useStyledGithubLinkStyle = makeStyles((theme) => ({
   },
 }))
 
-export const StyledGithubLink = ({ selected, height, ...props }) => {
-  const classes = useStyledGithubLinkStyle({ selected, height })
-  return <GithubLink className={classes.root} color="inherit" {...props} />
+export const StyledGithubLink = ({ selected, ...props }) => {
+  const classes = useStyledGithubLinkStyle({ selected })
+  return <GithubLink className={classes.root} {...props} />
 }
 
 export const SmallAvatar = muiStyled(Avatar)(({ theme }) => ({

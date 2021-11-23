@@ -68,7 +68,7 @@ const getTooltip = (status) => {
 const CopyIcon = ({ targetText }) => {
   const [status, setStatus] = useState(STATUS.IDLE)
   const transitions = useTransition(status, {
-    from: { opacity: 0 },
+    from: { opacity: 1 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
   })

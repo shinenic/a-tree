@@ -7,7 +7,7 @@ const useMenuPosition = ({
   followCursor = true,
   offset = 20,
 }) => {
-  const [menuPosition, setMenuPosition] = useState({})
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 })
 
   const mousePosition = useMousePosition({ event: 'click', capture: true })
 
@@ -15,7 +15,10 @@ const useMenuPosition = ({
     if (!isMenuOpen) return
 
     if (followCursor || !anchorElement) {
-      setMenuPosition({ x: mousePosition.x + offset, y: mousePosition.y + offset })
+      setMenuPosition({
+        x: mousePosition.x + offset,
+        y: mousePosition.y + offset,
+      })
       return
     }
 
