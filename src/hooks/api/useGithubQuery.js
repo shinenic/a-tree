@@ -1,29 +1,38 @@
 import { useQuery } from 'react-query'
 import { isValidQuery, createGithubQuery } from 'utils/api'
 import useSettingStore from 'stores/setting'
-import parseLink from 'parse-link-header'
 
 const DEFAULT_STALE_TIME = Number.MAX_SAFE_INTEGER
 
 const queryFullPageData = async (variables, token, baseUrl) => {
+  const perPage = variables.params.per_page
+
   let fullData = []
-  let page = 1
-  let link
+  let page = 0
+  let res
 
   do {
+    page += 1
+
     const params = { ...variables.params, page }
-    const res = await createGithubQuery({
-      ...variables,
-      params,
-      token,
-      baseUrl,
-      page,
-    })
+    try {
+      res = await createGithubQuery({
+        ...variables,
+        params,
+        token,
+        baseUrl,
+        page,
+      })
+    } catch {
+      res = null
+    }
+
+    if (!res?.data || res.data.length === 0) break
 
     fullData = [...fullData, ...res.data]
-    link = parseLink(res.headers.link)
-    page += 1
-  } while (link && link.last)
+
+    if (res.data.length < perPage) break
+  } while (res?.data?.length === perPage)
 
   return fullData
 }

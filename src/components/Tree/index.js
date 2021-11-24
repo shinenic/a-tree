@@ -1,206 +1,37 @@
-import { useMemo, useEffect, useState } from 'react'
-import TreeView from '@material-ui/lab/TreeView'
-import { get, set, isEmpty, sortBy, compact } from 'lodash'
-import {
-  AiFillFolder,
-  AiFillFolderOpen,
-  AiOutlineFileText,
-} from 'react-icons/ai'
-import { makeStyles, useTheme } from '@material-ui/core/styles'
-import {
-  LabelTextSkeleton,
-  IconSkeleton,
-} from 'components/MainDrawer/Tabs/Loading/placeholder'
-import tinycolor from 'tinycolor2'
-import { MODIFIER_KEY_PROPERTY } from 'constants'
-import { openInNewTab } from 'utils/chrome'
-import useContextMenuStore from 'stores/contextMenu'
-import EllipsisBox from 'components/shared/EllipsisBox'
-import TreeItem from './Item'
-import { MAIN_COLOR } from './constants'
-import LabelIcon from './LabelIcon'
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react'
+import { sortBy, isEmpty } from 'lodash'
+import { FixedSizeTree } from 'react-vtree'
+import AutoSizer from 'react-virtualized-auto-sizer'
+import { generateTree } from 'utils/tree'
 
-const isTreeContent = (e) => {
-  return [
-    '[class*="MuiTreeItem-content"]',
-    '[class*="MuiTreeItem-label"]',
-    '[class*="MuiBox-root"]',
-    'path',
-  ].some((selector) => e.target.matches(selector))
-}
+import TreeItem, { TreeItemPlaceholder } from './Item'
 
-const useStyles = makeStyles({
-  root: {
-    height: 264,
-    flexGrow: 1,
-    maxWidth: 400,
-  },
-})
-
-const getDefaultIcon = (isDarkTheme) => {
-  const getIconColor = (color) => {
-    return isDarkTheme ? tinycolor(color).brighten(60).toHexString() : color
-  }
-
-  return {
-    defaultCollapseIcon: <AiFillFolderOpen color={getIconColor(MAIN_COLOR)} />,
-    defaultExpandIcon: <AiFillFolder color={getIconColor(MAIN_COLOR)} />,
-    defaultEndIcon: <AiOutlineFileText color={getIconColor(MAIN_COLOR)} />,
-  }
-}
-
-const generateTree = (tree) => {
-  const objTree = tree.reduce((result, node) => {
-    const originalPath = node.path || node.filename
-    const pathArray = originalPath.split('/')
-    const path = pathArray.join('/children/').split('/')
-
-    if (!get(result, path)) {
-      return set(result, path, node)
-    }
-
-    return result
-  }, {})
-
-  const folderNodeIds = []
-  setNodeIds(objTree, null, folderNodeIds)
-
-  return [objTree, folderNodeIds]
-}
-
-const isProxyNode = (node) => {
-  const hasChildNoSiblings = Object.keys(node.children).length === 1
-
-  if (!hasChildNoSiblings) return false
-
-  const childKey = Object.keys(node.children)[0]
-  const child = node.children[childKey]
-  const isChildLeaf = isEmpty(child.children)
-
-  return !isChildLeaf
-}
-
-const setNodeIds = (tree, parentNodeId = '', folderNodeIds) => {
-  return Object.keys(tree).map((key) => {
-    let node = tree[key]
-    let label = key
-
-    const hasChildren = !isEmpty(node.children)
-    let nodeId = compact([parentNodeId, key]).join('/')
-
-    node.nodeId = nodeId
-
-    if (hasChildren) {
-      while (isProxyNode(node)) {
-        const childKey = Object.keys(node.children)[0]
-        const child = node.children[childKey]
-
-        delete tree[label]
-
-        label = `${label}/${childKey}`
-
-        tree[label] = child
-        node = tree[label]
-
-        nodeId = compact([parentNodeId, label]).join('/')
-        node.nodeId = nodeId
-      }
-
-      folderNodeIds.push(nodeId)
-      return setNodeIds(node.children, nodeId, folderNodeIds)
-    }
-
-    return nodeId
-  })
-}
-
-const Tree = ({
-  tree,
+const getNodeData = ({
+  name,
+  node,
+  nestingLevel,
+  defaultOpen,
   onItemClick,
-  isLoading,
-  handleNodeClick,
   getNodeHref,
 }) => {
-  const openContextMenu = useContextMenuStore((s) => s.openContextMenu)
-
-  if (isEmpty(tree)) return null
-
-  return sortBy(Object.keys(tree), [
-    (key) => {
-      if (tree[key].children) return 0
-      return 1
+  const { id, children } = node
+  return {
+    data: {
+      id,
+      isLeaf: !children || isEmpty(children),
+      isOpenByDefault: defaultOpen,
+      name,
+      nestingLevel,
+      onItemClick,
+      getNodeHref,
+      meta: node,
     },
-  ]).map((key) => {
-    const node = tree[key]
-    const label = key
-    const hasChildren = !isEmpty(node.children)
-    const status = node.status || 'normal'
-
-    /**
-     * Tree view has no official api to set `onContextMenu` for `tree item content` directly,
-     * so in order to limit the clickable area,
-     * detect only tree item content or it will won't stop propagation
-     */
-    const handleContextMenu = (e) => {
-      if (!isTreeContent(e)) return
-
-      e.preventDefault()
-      e.stopPropagation()
-
-      if (isLoading) return
-      openContextMenu(e, node)
-    }
-
-    const Text = () => {
-      return <EllipsisBox maxWidth="100%" text={label} withTooltip />
-    }
-
-    if (hasChildren) {
-      return (
-        <div key={node.nodeId}>
-          <TreeItem
-            nodeId={node.nodeId}
-            onContextMenu={handleContextMenu}
-            label={isLoading ? <LabelTextSkeleton /> : <Text />}
-            onIconClick={handleNodeClick}
-            onLabelClick={handleNodeClick}
-          >
-            <Tree
-              tree={node.children}
-              onItemClick={onItemClick}
-              isLoading={isLoading}
-              getNodeHref={getNodeHref}
-            />
-          </TreeItem>
-        </div>
-      )
-    }
-
-    const handleClick = (e) => {
-      e.stopPropagation()
-
-      if (e[MODIFIER_KEY_PROPERTY]) {
-        openInNewTab(getNodeHref(node))
-        return
-      }
-
-      if (onItemClick) onItemClick(node, e)
-    }
-
-    return (
-      <div key={node.nodeId} onClick={handleClick}>
-        <TreeItem
-          onContextMenu={handleContextMenu}
-          nodeId={node.nodeId}
-          label={isLoading ? <LabelTextSkeleton /> : <Text />}
-          icon={isLoading ? <IconSkeleton /> : <LabelIcon status={status} />}
-        />
-      </div>
-    )
-  })
+    nestingLevel,
+    node,
+  }
 }
 
-export default function CustomizedTreeView({
+function Tree({
   tree,
   isExpandedAll = false,
   onItemClick,
@@ -208,97 +39,126 @@ export default function CustomizedTreeView({
   currentFilePath,
   getNodeHref,
 }) {
-  const clickedTreeNode = useContextMenuStore((s) => s.clickedTreeNode)
-  const [selectedId, setSelectedId] = useState(null)
-  const [expandedIds, setExpandedIds] = useState([])
-  const theme = useTheme()
-  const isDarkTheme = theme.palette.type === 'dark'
-  const classes = useStyles()
+  const lastProcessedPath = useRef(null) // To handle automatic expanding / collapsing
+  const [treeInstance, setTreeInstance] = useState(null)
 
-  const [objectTree, folderNodeIds] = useMemo(() => generateTree(tree), [tree])
+  const [objTree, folderNodeIds] = useMemo(() => generateTree(tree), [tree])
 
+  // ref: https://github.com/Lodin/react-vtree#usage
+  const treeWalker = useCallback(
+    function* treeWalker() {
+      const rootEntries = sortBy(Object.entries(objTree), [
+        ([, node]) => isEmpty(node?.children),
+      ])
+
+      for (let i = 0; i < rootEntries.length; i += 1) {
+        const [name, node] = rootEntries[i]
+
+        yield getNodeData({
+          name,
+          node,
+          nestingLevel: 0,
+          defaultOpen: isExpandedAll,
+          onItemClick,
+          getNodeHref,
+        })
+      }
+
+      while (true) {
+        const parent = yield
+
+        const childrenEntries = parent.node.children
+          ? sortBy(Object.entries(parent.node.children), [
+              ([, node]) => isEmpty(node?.children),
+            ])
+          : []
+
+        for (let i = 0; i < childrenEntries.length; i += 1) {
+          const [name, node] = childrenEntries[i]
+
+          yield getNodeData({
+            name,
+            node,
+            nestingLevel: parent.nestingLevel + 1,
+            defaultOpen: isExpandedAll,
+            onItemClick,
+            getNodeHref,
+          })
+        }
+      }
+    },
+    [objTree, isExpandedAll, onItemClick, getNodeHref]
+  )
+
+  // treeInstance will be set asynchronously, so store it in a state instead of ref
   useEffect(() => {
-    if (clickedTreeNode && clickedTreeNode.nodeId) {
-      setSelectedId(clickedTreeNode.nodeId)
-    }
-  }, [clickedTreeNode])
-
-  useEffect(() => {
-    setExpandedIds(isExpandedAll ? [...folderNodeIds] : [])
-  }, [folderNodeIds, isExpandedAll])
-
-  useEffect(() => {
+    if (!treeInstance) return
     if (isExpandedAll) return
+    if (currentFilePath === lastProcessedPath.current) return
+    if (!currentFilePath && !lastProcessedPath.current) return
 
-    if (!currentFilePath) {
-      setExpandedIds([])
+    // Back to the root
+    if (!currentFilePath && lastProcessedPath.current) {
+      const allClosedTreeMap = folderNodeIds.reduce((result, id) => {
+        result[id] = { open: false }
+        return result
+      }, {})
+
+      treeInstance.recomputeTree(allClosedTreeMap)
+      lastProcessedPath.current = currentFilePath
       return
     }
 
-    setExpandedIds((prevIds) => {
-      const targetPaths = currentFilePath.split('/')
-      const targetIds = targetPaths.map((_, index) =>
-        targetPaths.slice(0, index + 1).join('/')
-      )
+    const targetPaths = currentFilePath.split('/')
+    const targetIds = targetPaths.map((_, index) =>
+      targetPaths.slice(0, index + 1).join('/')
+    )
 
-      return (
-        targetIds
-          // Add the nodes which are necessary to reach to the currentFilePath
-          .reduce(
-            (result, id) => (result.includes(id) ? result : [...result, id]),
-            prevIds
+    const treeMap = targetIds.reduce((result, id, index) => {
+      if (index === targetIds.length - 1) {
+        return {
+          ...result,
+          [id]: {
+            open: true,
+            subtreeCallback(node, ownerNode) {
+              if (node !== ownerNode) {
+                node.isOpen = false
+              }
+            },
+          },
+        }
+      }
+
+      return { ...result, [id]: { open: true } }
+    }, {})
+
+    treeInstance.recomputeTree(treeMap)
+
+    lastProcessedPath.current = currentFilePath
+  }, [currentFilePath, treeInstance]) // eslint-disable-line
+
+  const memoedTree = useMemo(
+    () => (
+      <AutoSizer>
+        {({ height, width }) => {
+          return (
+            <FixedSizeTree
+              treeWalker={treeWalker}
+              itemSize={34}
+              height={height}
+              width={width}
+              ref={setTreeInstance}
+            >
+              {isLoading ? TreeItemPlaceholder : TreeItem}
+            </FixedSizeTree>
           )
-          // Remove the deeper nodes beyond the currentFilePath
-          .filter((id) => id.indexOf(`${currentFilePath}/`) !== 0)
-      )
-    })
-  }, [currentFilePath, isExpandedAll])
+        }}
+      </AutoSizer>
+    ),
+    [treeWalker, isLoading]
+  )
 
-  const loadingTreeView = useMemo(() => {
-    const onNodeToggle = (e) => e.stopPropagation()
-
-    return (
-      <TreeView
-        className={classes.root}
-        defaultExpanded={expandedIds ? folderNodeIds : []}
-        selected={null}
-        onNodeToggle={onNodeToggle}
-        defaultCollapseIcon={<IconSkeleton />}
-        defaultExpandIcon={<IconSkeleton />}
-        defaultEndIcon={<IconSkeleton />}
-      >
-        <Tree tree={objectTree} isLoading />
-      </TreeView>
-    )
-  }, [objectTree, folderNodeIds]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  const treeView = useMemo(() => {
-    const onNodeToggle = (_, nodeIds) => setExpandedIds(nodeIds)
-    const onNodeSelect = (_, value) => setSelectedId(value)
-
-    return (
-      <TreeView
-        className={classes.root}
-        expanded={expandedIds}
-        selected={selectedId}
-        onNodeToggle={onNodeToggle}
-        onNodeSelect={onNodeSelect}
-        {...getDefaultIcon(isDarkTheme)}
-      >
-        <Tree
-          tree={objectTree}
-          onItemClick={onItemClick}
-          getNodeHref={getNodeHref}
-        />
-      </TreeView>
-    )
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [objectTree, onItemClick, expandedIds, selectedId, isDarkTheme])
-
-  /**
-   * intentionally render two trees to reset the `defaultExpanded` state
-   * when finish / start loading
-   */
-  return isLoading ? loadingTreeView : treeView
+  return memoedTree
 }
+
+export default Tree

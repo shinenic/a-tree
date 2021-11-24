@@ -35,7 +35,7 @@ export const PAGE_TYPE = {
   OTHERS: 'OTHERS',
 }
 
-export const PAGES_WITH_CODE_TREE = [
+export const PAGES_WITH_BRANCH_TREE = [
   CODE_PAGE_TYPE.CODE,
   PAGE_TYPE.PULLS,
   PAGE_TYPE.ISSUES,

@@ -60,6 +60,7 @@ const EllipsisBox = ({
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
         width,
+        ...sx,
       }}
       ref={ref}
       {...boxProps}

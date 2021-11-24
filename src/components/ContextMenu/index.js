@@ -105,6 +105,7 @@ export default function ContextMenu({ ...pageInfo }) {
   }
 
   const isFileNode = checkIsFileNode(clickedTreeNode)
+  const fullPath = clickedTreeNode?.id
 
   /**
    * @TODO Handle `no-token` warning via a toast
@@ -112,7 +113,7 @@ export default function ContextMenu({ ...pageInfo }) {
   const items = [
     {
       key: CONTEXT_ITEM.PATHNAME,
-      text: clickedTreeNode?.nodeId,
+      text: fullPath,
       insertDivider: true,
       disableRipple: true,
       classes: { root: classes.staticMenuItem },
@@ -136,7 +137,7 @@ export default function ContextMenu({ ...pageInfo }) {
         addItemLoading(CONTEXT_ITEM.DOWNLOAD_FILE)
         try {
           const text = await getRawContent(clickedTreeNode, token)
-          const fileName = last(clickedTreeNode.nodeId.split('/'))
+          const fileName = last(fullPath.split('/'))
           closeContextMenu()
 
           setTimeout(() => {
@@ -155,7 +156,7 @@ export default function ContextMenu({ ...pageInfo }) {
       key: CONTEXT_ITEM.COPY_PATHNAME,
       text: 'Copy Path',
       onClick: async () => {
-        await copyToClipboard(clickedTreeNode.nodeId)
+        await copyToClipboard(fullPath)
         closeContextMenu()
       },
       isVisible: clickedTreeNode,

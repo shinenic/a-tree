@@ -6,6 +6,7 @@ import { useTheme } from '@material-ui/core/styles'
 
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import { PULL_BTN_ID } from 'components/Breadcrumb'
 
 import { useQueryPulls } from 'hooks/api/useGithubQueries'
 import Chip from '@material-ui/core/Chip'
@@ -130,7 +131,7 @@ export default function PullMenu({
 
   const closeMenu = () => togglePull(false)
 
-  const menuRef = useClickOutside(closeMenu)
+  const menuRef = useClickOutside(closeMenu, isPullOn, [PULL_BTN_ID])
   const menuPosition = useMenuPosition({
     isMenuOpen: isPullOn,
     anchorElement,

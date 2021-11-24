@@ -27,7 +27,7 @@ const useGetFloatingButtonProps = ({
   )
 
   const topBound = useMemo(() => {
-    const heightNumber = Number(getHeaderHeight().replace(/\D+/g, ''))
+    const heightNumber = Number(getHeaderHeight().slice(0, -2))
     return Number.isNaN(heightNumber) || heightNumber === 0
       ? DEFAULT_HEADER_HEIGHT
       : heightNumber

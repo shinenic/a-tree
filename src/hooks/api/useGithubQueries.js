@@ -1,7 +1,7 @@
 import useGithubQuery from './useGithubQuery'
 
 export const useQueryCommits = (
-  { owner, repo, pull, perPage = 50, ...rest },
+  { owner, repo, pull, perPage = 100, ...rest },
   useQueryOptions = {}
 ) => {
   return useGithubQuery(
@@ -91,5 +91,19 @@ export const useQueryFiles = (
       ...rest,
     },
     useQueryOptions
+  )
+}
+
+export const useQuerySingleLevelFiles = (
+  { owner, repo, sha },
+  options = {}
+) => {
+  return useGithubQuery(
+    ['single-level-files', { owner, repo, sha }],
+    {
+      url: '/repos/{owner}/{repo}/git/trees/{sha}',
+      placeholders: { owner, repo, sha },
+    },
+    options
   )
 }

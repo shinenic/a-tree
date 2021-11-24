@@ -50,7 +50,9 @@ module.exports = (_, { mode }) => {
       new webpack.ProvidePlugin({
         process: 'process/browser',
       }),
-      new LodashModuleReplacementPlugin(),
+      // This plugin will block some feature sets, be sure to use specific utils before setting this
+      // ref: https://github.com/lodash/lodash-webpack-plugin#feature-sets
+      new LodashModuleReplacementPlugin({ shorthands: true }),
       ...(process.env.ANALYZER ? [new BundleAnalyzerPlugin()] : []),
       ...(!isDev
         ? [
