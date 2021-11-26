@@ -1,22 +1,52 @@
 # A-Tree - Github review helper
 
-## :rocket: Quick Features
+## 🚀 Quick Features
 - Tree view for both Github files and pull requests
 - Some handy tools for code review (collapse/expand files, mark all files as viewed, etc.)
 - Quick search files like VSCode does (*`command + i` or `ctrl + i`*, customizable)
+- Switch commits via hotkeys
 - Support SPA for Github Pages
 - Support private and [Enterprise](https://github.com/shinenic/a-tree#fq) repositories
 
-## :memo: About A-Tree
+## 📝 About A-Tree
 
 ### Screenshots
-| A tree preview | Open context menu to access files & toggle PR files |
+| A-Tree preview | Open context menu to access files & toggle PR files |
 |-------------------------------------------|---------------------------------------------------|
 | <img src="docs/screenshots/f-code.jpg" /> | <img src="docs/screenshots/f-context-menu.jpg" /> |
 
 | Search files in both code & PR pages | Switch PR in a menu quickly |
 |-------------------------------------------|---------------------------------------------------|
-| <img src="docs/screenshots/f-file-search.jpg" /> | <img src="docs/screenshots/f-pull-menu.jpg" /> |                                  
+| <img src="docs/screenshots/f-file-search.jpg" /> | <img src="docs/screenshots/f-pull-menu.jpg" /> |     
+
+### Authentication
+- Private repositories: token required
+- Enterprise Github: token, SSO* required (see F&Q below)
+
+### Code page
+- Tree
+  + SPA browsing
+  + Support large repositories
+- Context Menu
+  + Copy full file content
+  + Copy path
+  + Download file
+- File search
+
+### Pull request page
+- Tree
+  + Full difference files
+- Context menu
+  + Mark all files as viewed
+  + Mark all files as not viewed
+  + Expand all viewed files
+  + Collapse all viewed files
+- Menus
+  + Pull request list
+  + Commit list
+- Hotkey
+  + Switch next / previous commit
+
 
 ### Permission requirements
 - contextMenus
@@ -62,7 +92,7 @@
 
 
 
-## :computer: Development
+## 💻 Development
 
 ### Setup
 ```shell=
