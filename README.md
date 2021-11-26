@@ -1,4 +1,4 @@
-# A Tree - Github review helper
+# A-Tree - Github review helper
 
 ## :rocket: Quick Features
 - Tree view for both Github files and pull requests
