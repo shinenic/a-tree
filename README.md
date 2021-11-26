@@ -59,6 +59,7 @@
 - How to enable extension for **Github Enterprise** pages
 
   After you install the extension, right-click on any Github Enterprise pages, then click the `Enable a-tree in this domain`.
+
   <img src="docs/screenshots/context-menu-enable-guide.jpg" width="450" />
   
 
@@ -69,7 +70,7 @@
 
 - How to create personal access token
   
-  1. Follow this [offcial guide](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+  1. Follow this [official guide](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
   2. Select `repo` checkbox
      ![](https://i.imgur.com/T1NqD4u.png)
   3. Copy the token into the extension `SETTING`
