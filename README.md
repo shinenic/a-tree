@@ -23,29 +23,26 @@
 - Private repositories: token required
 - Enterprise Github: token, SSO* required (see F&Q below)
 
-### Code page
+### Feature list
 - Tree
   + SPA browsing
-  + Support large repositories
+  + Support large repositories / PRs
 - Context Menu
   + Copy full file content
   + Copy path
   + Download file
-- File search
-
-### Pull request page
-- Tree
-  + Full difference files
-- Context menu
-  + Mark all files as viewed
-  + Mark all files as not viewed
-  + Expand all viewed files
-  + Collapse all viewed files
+  + Mark all files as viewed (PR)
+  + Mark all files as not viewed (PR)
+  + Expand all viewed files (PR)
+  + Collapse all viewed files (PR)
+- File search in both code & PR pages
 - Menus
   + Pull request list
   + Commit list
 - Hotkey
   + Switch next / previous commit
+  + Open file search modal
+
 
 
 ### Permission requirements
@@ -61,6 +58,8 @@
   After you install the extension, right-click on any Github Enterprise pages, then click the `Enable a-tree in this domain`.
 
   <img src="docs/screenshots/context-menu-enable-guide.jpg" width="450" />
+
+  For some Enterprise users, you may need to **enable SSO**, check the [official documentation](https://docs.github.com/en/authentication/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on).
   
 
 - Why the extension shows in some unexpected pages
