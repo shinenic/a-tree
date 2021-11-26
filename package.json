@@ -1,7 +1,7 @@
 {
   "name": "a-tree",
   "version": "0.1.0",
-  "description": "A Tree - Github review helper",
+  "description": "A-Tree - Github review helper (Code browsing & Pull requests reviewing)",
   "homepage": "https://github.com/shinenic/a-tree",
   "repository": "https://github.com/shinenic/a-tree",
   "private": true,

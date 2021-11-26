@@ -1,22 +1,49 @@
-# A Tree - Github review helper
+# A-Tree - Github review helper
 
-## :rocket: Quick Features
+## 🚀 Quick Features
 - Tree view for both Github files and pull requests
 - Some handy tools for code review (collapse/expand files, mark all files as viewed, etc.)
 - Quick search files like VSCode does (*`command + i` or `ctrl + i`*, customizable)
+- Switch commits via hotkeys
 - Support SPA for Github Pages
 - Support private and [Enterprise](https://github.com/shinenic/a-tree#fq) repositories
 
-## :memo: About A-Tree
+## 📝 About A-Tree
 
 ### Screenshots
-| A tree preview | Open context menu to access files & toggle PR files |
+| A-Tree preview | Open context menu to access files & toggle PR files |
 |-------------------------------------------|---------------------------------------------------|
 | <img src="docs/screenshots/f-code.jpg" /> | <img src="docs/screenshots/f-context-menu.jpg" /> |
 
 | Search files in both code & PR pages | Switch PR in a menu quickly |
 |-------------------------------------------|---------------------------------------------------|
-| <img src="docs/screenshots/f-file-search.jpg" /> | <img src="docs/screenshots/f-pull-menu.jpg" /> |                                  
+| <img src="docs/screenshots/f-file-search.jpg" /> | <img src="docs/screenshots/f-pull-menu.jpg" /> |     
+
+### Authentication
+- Private repositories: token required
+- Enterprise Github: token, SSO* required (see F&Q below)
+
+### Feature list
+- Tree
+  + SPA browsing
+  + Support large repositories / PRs
+- Context Menu
+  + Copy full file content
+  + Copy path
+  + Download file
+  + Mark all files as viewed (PR)
+  + Mark all files as not viewed (PR)
+  + Expand all viewed files (PR)
+  + Collapse all viewed files (PR)
+- File search in both code & PR pages
+- Menus
+  + Pull request list
+  + Commit list
+- Hotkey
+  + Switch next / previous commit
+  + Open file search modal
+
+
 
 ### Permission requirements
 - contextMenus
@@ -29,7 +56,10 @@
 - How to enable extension for **Github Enterprise** pages
 
   After you install the extension, right-click on any Github Enterprise pages, then click the `Enable a-tree in this domain`.
+
   <img src="docs/screenshots/context-menu-enable-guide.jpg" width="450" />
+
+  For some Enterprise users, you may need to **enable SSO**, check the [official documentation](https://docs.github.com/en/authentication/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on).
   
 
 - Why the extension shows in some unexpected pages
@@ -39,7 +69,7 @@
 
 - How to create personal access token
   
-  1. Follow this [offcial guide](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+  1. Follow this [official guide](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
   2. Select `repo` checkbox
      ![](https://i.imgur.com/T1NqD4u.png)
   3. Copy the token into the extension `SETTING`
@@ -62,7 +92,7 @@
 
 
 
-## :computer: Development
+## 💻 Development
 
 ### Setup
 ```shell=

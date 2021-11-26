@@ -3,8 +3,8 @@ const path = require('path')
 const PACKAGE = require('../package.json')
 
 const output = {
-  name: 'A Tree - Github review helper',
-  short_name: 'A Tree',
+  name: 'A-Tree - Github review helper',
+  short_name: 'A-Tree',
   version: PACKAGE.version,
   description: PACKAGE.description,
   homepage_url: PACKAGE.homepage,
