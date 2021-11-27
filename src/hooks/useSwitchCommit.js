@@ -5,6 +5,14 @@ import { getPullCommitLink, linkGithubPage } from 'utils/link'
 import useSettingStore from 'stores/setting'
 import { invert } from 'lodash'
 
+// iterate all textarea elements and check if any of them are focused
+const checkIfEnteringText = () => {
+  const elements = document.querySelectorAll('textarea')
+  if (elements.length === 0) return false
+
+  return Array.from(elements).some((el) => el.matches(':focus'))
+}
+
 export default function useSwitchCommit({
   owner,
   repo,
@@ -28,7 +36,10 @@ export default function useSwitchCommit({
     }
 
     const keydownHandler = (e) => {
+      // Skip if no hotkeys matched
       if (!['ArrowLeft', 'ArrowRight'].includes(e.key) || !e.shiftKey) return
+      // Skip if user is entering text
+      if (checkIfEnteringText()) return
 
       const isNextHotkey = e.key === 'ArrowRight'
       e.preventDefault()
