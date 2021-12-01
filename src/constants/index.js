@@ -64,6 +64,12 @@ export const DRAWER_POSITION = {
   RIGHT: 'Right',
 }
 
+export const FILE_ICON_STYLE = {
+  DEFAULT: 'default',
+  VARIANT: 'variant',
+  COLORFUL: 'colorful',
+}
+
 export const ERROR_MESSAGE = {
   NOT_FOUND_PAGE: 'NOT_FOUND_PAGE',
   TOKEN_INVALID: 'TOKEN_INVALID',

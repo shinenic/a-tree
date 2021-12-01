@@ -50,7 +50,7 @@ const Hotkeys = () => {
             ))}
           </Select>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={9}>
           <Typography variant="body1">Open file search modal</Typography>
         </Grid>
       </Grid>

@@ -20,6 +20,7 @@ const { LEFT, RIGHT } = DRAWER_POSITION
  * @property {boolean} isTokenHintShowed
  * @property {string} fileSearchHotkey single character(^[a-z0-9]$) with meta key
  * @property {boolean} disableCommitSwitchHotkey used in pull pages
+ * @property {'default'|'variant'|'colorful'} fileIconStyle
  */
 
 /** @type {SettingState} */
@@ -36,6 +37,7 @@ export const initialState = {
   isTokenHintShowed: false,
   fileSearchHotkey: 'i',
   disableCommitSwitchHotkey: false,
+  fileIconStyle: 'default',
 }
 
 /**
@@ -71,6 +73,8 @@ export const reducer = (state, { type, payload }) => {
         ...state,
         disableCommitSwitchHotkey: !state.disableCommitSwitchHotkey,
       }
+    case 'UPDATE_FILE_ICON_STYLE':
+      return { ...state, fileIconStyle: payload }
     default:
       throw new Error(`Unknown Type: ${type}`)
   }

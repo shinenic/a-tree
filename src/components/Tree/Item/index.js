@@ -5,15 +5,20 @@ import {
 } from 'react-icons/ai'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import tinycolor from 'tinycolor2'
-import { MODIFIER_KEY_PROPERTY } from 'constants'
+import { MODIFIER_KEY_PROPERTY, FILE_ICON_STYLE } from 'constants'
 import { openInNewTab } from 'utils/chrome'
 import useContextMenuStore from 'stores/contextMenu'
 import useViewedFilesStore from 'stores/pull'
 import { isEmpty } from 'lodash'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import useSettingStore from 'stores/setting'
 
 import ListItem from '@material-ui/core/ListItem'
 import useTreeStore from 'stores/tree'
+import {
+  getClassWithColor as getFileIconClassesWithColor,
+  getClass as getFileIconClasses,
+} from 'file-icons-js'
 
 import {
   LabelTextSkeleton,
@@ -21,7 +26,7 @@ import {
 } from 'components/MainDrawer/Tabs/Loading/placeholder'
 
 import { MAIN_COLOR } from './constants'
-import LabelIcon from './LabelIcon'
+import DiffLabelIcon from './LabelIcon'
 
 const HOVER_BG = '#eff2f4'
 const SELECT_BG = '#d6e7fd'
@@ -32,12 +37,21 @@ const LEVEL_ADDITIONAL_PADDING = 20
 const useNodeStyle = makeStyles((theme) => ({
   iconRoot: {
     minWidth: 'auto',
-    marginRight: 10,
-    marginLeft: 6,
+    boxSizing: 'border-box',
+    width: 34,
+    paddingRight: 10,
+    paddingLeft: 6,
     fontSize: 18,
     flexShrink: 0,
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center',
+    '& > i': {
+      transform: 'translateX(1px)'
+    },
+    '& > i:before': {
+      fontSize: 16,
+    },
   },
   itemRoot: {
     userSelect: 'none',
@@ -73,8 +87,9 @@ const useNodeStyle = makeStyles((theme) => ({
   },
 }))
 
-const NodeIcon = ({ isOpen, isLeaf, status, isLoading }) => {
+const NodeIcon = ({ isOpen, isLeaf, status, isLoading, name }) => {
   const theme = useTheme()
+  const fileIconStyle = useSettingStore((s) => s.fileIconStyle)
 
   const color =
     theme.palette.type === 'dark'
@@ -82,10 +97,34 @@ const NodeIcon = ({ isOpen, isLeaf, status, isLoading }) => {
       : MAIN_COLOR
 
   if (isLoading) return <CircularProgress size={18} />
-  if (status) return <LabelIcon status={status} />
-  if (isLeaf) return <AiOutlineFileText color={color} />
-  if (isOpen) return <AiFillFolderOpen color={color} />
-  return <AiFillFolder color={color} />
+  if (status) return <DiffLabelIcon status={status} />
+  if (!isLeaf) {
+    return isOpen ? (
+      <AiFillFolderOpen color={color} />
+    ) : (
+      <AiFillFolder color={color} />
+    )
+  }
+
+  if (
+    fileIconStyle === FILE_ICON_STYLE.COLORFUL &&
+    getFileIconClassesWithColor(name)
+  ) {
+    return (
+      <i
+        className={getFileIconClassesWithColor(name)}
+        style={{ fontStyle: 'normal' }}
+      />
+    )
+  }
+
+  if (fileIconStyle === FILE_ICON_STYLE.VARIANT && getFileIconClasses(name)) {
+    return (
+      <i className={getFileIconClasses(name)} style={{ fontStyle: 'normal' }} />
+    )
+  }
+
+  return <AiOutlineFileText color={color} />
 }
 
 const TreeItem = ({
@@ -180,6 +219,7 @@ const TreeItem = ({
           isLeaf={isLeaf}
           status={meta?.status}
           isLoading={isLoading}
+          name={name}
         />
       </div>
       <div className={classes.itemText} title={name}>
