@@ -16,6 +16,7 @@
     "@testing-library/user-event": "^12.8.3",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.10.7",
+    "file-icons-js": "websemantics/file-icons-js",
     "github-reserved-names": "^2.0.4",
     "jquery": "^3.6.0",
     "lodash": "4.17.16",
@@ -36,9 +37,11 @@
     "zustand": "^3.5.10"
   },
   "scripts": {
-    "build:manifest": "node ./script/manifest.js",
-    "build:dev": "yarn build:manifest && webpack --config=webpack/webpack.common.js --mode=development",
-    "build:prod": "yarn build:manifest && webpack --config=webpack/webpack.common.js --mode=production",
+    "make:manifest": "node ./script/manifest.js",
+    "make:fileIcons": "node ./script/fileIcons",
+    "make:all": "yarn make:manifest && yarn make:fileIcons",
+    "build:dev": "yarn make:all && webpack --config=webpack/webpack.common.js --mode=development",
+    "build:prod": "yarn make:all && webpack --config=webpack/webpack.common.js --mode=production",
     "dev": "cross-env LOCAL_MODE=false yarn build:dev --watch",
     "analyzer": "cross-env LOCAL_MODE=false ANALYZER=true yarn build:dev",
     "analyzer:prod": "cross-env LOCAL_MODE=false ANALYZER=true yarn build:prod",

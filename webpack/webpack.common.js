@@ -44,6 +44,8 @@ module.exports = (_, { mode }) => {
       new CopyPlugin({
         patterns: [
           { from: './public/icon192.png', to: '.' },
+          { from: './public/icon128.png', to: '.' },
+          { from: './public/fileIcons', to: './fileIcons' },
           { from: './manifest.json', to: '.' },
         ],
       }),
