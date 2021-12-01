@@ -9,6 +9,8 @@ import FloatingButton from 'components/FloatingButton'
 import FileSearch from 'components/FileSearchModal'
 import ContextMenu from 'components/ContextMenu'
 
+import FileIcons from 'components/FileIcons'
+
 function App() {
   const { error, isLoading, pageInfo } = usePageInfo()
   const { pageType } = pageInfo || {}
@@ -28,6 +30,7 @@ function App() {
 
   return (
     <>
+      <FileIcons />
       <GlobalStyle />
       <FloatingButton pageType={pageType} />
       <ContextMenu {...pageInfo} />
