@@ -1,6 +1,6 @@
 # A-Tree - Github review helper
 
-[Chrome web store](https://chrome.google.com/webstore/detail/a-tree-github-review-help/niogapfhnkbjmpnnobldcekclbgkbiah?fbclid=IwAR3MS27N-3lDAlAGmN1XyRy0WAKS18fQhEr3Xa8PlT3-up1CJfVNSGfSkzE)
+[Chrome web store](https://chrome.google.com/webstore/detail/a-tree-github-review-help/niogapfhnkbjmpnnobldcekclbgkbiah)
 
 ## 🚀 Quick Features
 - Tree view for both Github files and pull requests
