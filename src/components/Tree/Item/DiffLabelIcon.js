@@ -22,7 +22,7 @@ const getIconColor = (color, theme) => {
     : color
 }
 
-const LabelIcon = ({ status }) => {
+const DiffLabelIcon = ({ status }) => {
   const theme = useTheme()
 
   switch (status) {
@@ -39,8 +39,8 @@ const LabelIcon = ({ status }) => {
   }
 }
 
-LabelIcon.propTypes = {
+DiffLabelIcon.propTypes = {
   status: PropTypes.oneOf(Object.values(STATUS)).isRequired,
 }
 
-export default LabelIcon
+export default DiffLabelIcon

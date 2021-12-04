@@ -2,7 +2,7 @@ import { useMemo, useCallback, useEffect, useRef, useState } from 'react'
 import useSettingStore from 'stores/setting'
 import useWindowSize from 'hooks/useWindowSize'
 import { getHeaderHeight } from 'utils/style'
-import { DEFAULT_HEADER_HEIGHT } from 'constants'
+import { DEFAULT_HEADER_HEIGHT } from 'constants/base'
 
 const BOX_SIZE = 40
 const TOGGLE_THRESHOLD = 3

@@ -9,7 +9,7 @@ import {
   PAGES_WITH_BRANCH_TREE,
   PULL_PAGE_TYPE,
   PAGES_WITH_FULL_PULL_TREE,
-} from 'constants'
+} from 'constants/base'
 
 const useQueryTree = (pageInfo, enabled = true) => {
   const { pageType, owner, repo, commit, pull, branch } = pageInfo

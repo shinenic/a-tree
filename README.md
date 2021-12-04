@@ -1,6 +1,6 @@
 # A-Tree - Github review helper
 
-[Chrome web store](https://chrome.google.com/webstore/detail/a-tree-github-review-help/niogapfhnkbjmpnnobldcekclbgkbiah?fbclid=IwAR3MS27N-3lDAlAGmN1XyRy0WAKS18fQhEr3Xa8PlT3-up1CJfVNSGfSkzE)
+[Chrome web store](https://chrome.google.com/webstore/detail/a-tree-github-review-help/niogapfhnkbjmpnnobldcekclbgkbiah)
 
 ## 🚀 Quick Features
 - Tree view for both Github files and pull requests
@@ -8,6 +8,7 @@
 - Quick search files like VSCode does (*`command + i` or `ctrl + i`*, customizable)
 - Switch commits via hotkeys
 - Support SPA for Github Pages
+- Support Dark theme
 - Support private and [Enterprise](https://github.com/shinenic/a-tree#fq) repositories
 
 ## 📝 About A-Tree
@@ -28,6 +29,7 @@
 ### Feature list
 - Tree
   + SPA browsing
+  + Support Dark theme
   + Support large repositories / PRs
 - Context Menu
   + Copy full file content
@@ -104,13 +106,15 @@ yarn
 ```
 
 ### Develop with real online Github pages
+> Useful when you want to test the interaction between extension and Github pages, but have to update the extension manually.
 ```shell=
 yarn dev
 ```
-After the build finished, install the `/build` folder
+After the build finished, install the `/dist` folder
 
 
 ### Develop in the local and dummy pages
+> Useful when you want to develop the pure UI without navigation and DOM mutation, support React hot-reload.
 1. Start mock API server via `Mockoon`
 
     a. With GUI
@@ -138,8 +142,9 @@ After the build finished, install the `/build` folder
 ```shell=
 yarn build:prod
 ```
+The path of extension will be `/build`
 
 ### Helper
 
 Quick extension reload for development: [Extensions Reloader](https://chrome.google.com/webstore/detail/extensions-reloader/fimgfedafeadlieiabdeeaodndnlbhid)
-> Note. Still need to reinstall the unpacked folder manually if `manifest.json` changed
+> Note. Still need to reinstall the unpacked folder manually if `manifest.json` or `background.js` changed

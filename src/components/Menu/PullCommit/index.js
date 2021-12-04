@@ -143,6 +143,8 @@ export default function PullCommitMenu({
     )
   }, [data])
 
+  const shouldApplyViz = (listItemData?.length ?? 0) > 30
+
   // @TODO handle loading status
   if (!pull || error || isLoading) return null
 
@@ -159,7 +161,9 @@ export default function PullCommitMenu({
     onContextMenu: (e) => e.stopPropagation(),
   }
 
-  if (listItemData.length > 30) {
+  // @TODO Scroll to current commit when opened
+  // https://react-window.vercel.app/#/api/FixedSizeList #scrollToItem
+  if (shouldApplyViz) {
     return (
       <animated.div className={classes.root} {...containerProps}>
         <List

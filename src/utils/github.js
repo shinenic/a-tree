@@ -1,4 +1,4 @@
-import { DEFAULT_PAGE_INFO, PAGE_TYPE } from 'constants'
+import { DEFAULT_PAGE_INFO, PAGE_TYPE } from 'constants/base'
 import { TITLE_MATCHER } from 'constants/github'
 import isReserved from 'github-reserved-names'
 import { isEmpty } from 'lodash'

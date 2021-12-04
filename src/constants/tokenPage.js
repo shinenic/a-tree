@@ -1,4 +1,4 @@
-import { LOCAL_STORAGE_KEY_PREFIX } from 'constants'
+import { LOCAL_STORAGE_KEY_PREFIX } from 'constants/base'
 
 export const NEW_TOKEN_PATHNAME = '/settings/tokens/new'
 

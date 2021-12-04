@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { isLocalMode } from 'constants'
+import { isLocalMode } from 'constants/base'
 import { listenPjaxEvent } from 'utils/pjax'
 
 const listenLocation = (callback) => {
@@ -38,7 +38,7 @@ const useDummyListenLocation = () => {
     origin: 'https://github.com',
     host: 'github.com',
     hostname: 'github.com',
-    pathname: '/shinenic/a-tree/pull/123',
+    pathname: '/shinenic/a-tree'
   }
 }
 

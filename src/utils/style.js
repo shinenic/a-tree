@@ -1,4 +1,4 @@
-import { DEFAULT_HEADER_HEIGHT } from 'constants'
+import { DEFAULT_HEADER_HEIGHT } from 'constants/base'
 
 export const getNativeBodyStyles = () => {
   return window.getComputedStyle(document.body)

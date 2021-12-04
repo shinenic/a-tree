@@ -1,6 +1,6 @@
 import usePageInfo from 'hooks/pageInfo/usePageInfo'
 
-import { ERROR_MESSAGE } from 'constants'
+import { ERROR_MESSAGE } from 'constants/base'
 import useSettingStore from 'stores/setting'
 
 import MainDrawer from 'components/MainDrawer'
@@ -8,6 +8,8 @@ import GlobalStyle from 'GlobalStyle'
 import FloatingButton from 'components/FloatingButton'
 import FileSearch from 'components/FileSearchModal'
 import ContextMenu from 'components/ContextMenu'
+
+import FileIcons from 'components/FileIcons'
 
 function App() {
   const { error, isLoading, pageInfo } = usePageInfo()
@@ -28,6 +30,7 @@ function App() {
 
   return (
     <>
+      <FileIcons />
       <GlobalStyle />
       <FloatingButton pageType={pageType} />
       <ContextMenu {...pageInfo} />

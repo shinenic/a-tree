@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { getPageInfo, isGithubReservedUsername } from 'utils/github'
 import useSettingStore from 'stores/setting'
 import { createGithubQuery } from 'utils/api'
-import { ERROR_MESSAGE } from 'constants'
+import { ERROR_MESSAGE } from 'constants/base'
 
 import useListenLocation from 'hooks/pageInfo/useListenLocation'
 import useListenTitle from 'hooks/pageInfo/useListenTitle'

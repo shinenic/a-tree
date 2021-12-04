@@ -12,7 +12,7 @@ const output = {
   minimum_chrome_version: '88',
   permissions: ['contextMenus'],
   icons: {
-    192: './icon192.png',
+    128: './icon128.png',
   },
   background: {
     service_worker: 'background.js',

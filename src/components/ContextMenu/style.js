@@ -11,7 +11,7 @@ import { FiDownload } from 'react-icons/fi'
 import { BsArrowsExpand, BsArrowsCollapse } from 'react-icons/bs'
 import { BiCopy, BiCopyAlt } from 'react-icons/bi'
 
-import { CONTEXT_ITEM } from 'constants'
+import { CONTEXT_ITEM } from 'constants/base'
 
 export const useStyles = makeStyles((theme) => ({
   root: {

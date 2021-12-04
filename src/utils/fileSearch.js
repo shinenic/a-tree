@@ -1,5 +1,5 @@
 import { ACTION_TYPE } from 'components/FileSearchModal/reducer'
-import { IS_MAC } from 'constants'
+import { IS_MAC } from 'constants/base'
 
 const { OPEN, CLOSE, SELECT_PREV, SELECT_NEXT, SELECT_INDEX } = ACTION_TYPE
 

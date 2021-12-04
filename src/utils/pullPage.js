@@ -1,7 +1,7 @@
 import { listenPjaxEvent } from 'utils/pjax'
 import { scrollTo } from 'utils/scroll'
 import { GITHUB_PAGE_CONTAINER_ID } from 'constants/github'
-import { GITHUB_NAV_BAR_HEIGHT } from 'constants'
+import { GITHUB_NAV_BAR_HEIGHT } from 'constants/base'
 import { noop, throttle, chunk } from 'lodash'
 import sha256 from 'crypto-js/sha256'
 

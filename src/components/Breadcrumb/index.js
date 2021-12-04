@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { PAGE_TYPE } from 'constants'
+import { PAGE_TYPE } from 'constants/base'
 import usePopperStore from 'stores/popper'
 import Box from '@material-ui/core/Box'
 import {

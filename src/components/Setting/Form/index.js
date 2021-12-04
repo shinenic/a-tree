@@ -2,12 +2,13 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import Paper from '@material-ui/core/Paper'
 
-import { REPO_URL } from 'constants'
+import { REPO_URL } from 'constants/base'
 import Link from '@material-ui/core/Link'
 import GithubIcon from '../GithubIcon'
 
 import TokenField from './TokenField'
 import VisibilityCheckBoxes from './VisibilityCheckBoxes'
+import FileIconRadios from './FileIconRadios'
 import OptionBoxes from './OptionBoxes'
 import Hotkeys from './Hotkeys'
 
@@ -15,7 +16,8 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(3),
     position: 'relative',
-    overflow: 'hidden',
+    overflowX: 'hidden',
+    overflowY: 'auto',
     border: 'none',
   },
   link: {
@@ -72,6 +74,7 @@ export default function SettingForm() {
       <OptionBoxes />
       <Hotkeys />
       <TokenField />
+      <FileIconRadios />
     </Paper>
   )
 }
