@@ -106,13 +106,15 @@ yarn
 ```
 
 ### Develop with real online Github pages
+> Useful when you want to test the interaction between extension and Github pages, but have to update the extension manually.
 ```shell=
 yarn dev
 ```
-After the build finished, install the `/build` folder
+After the build finished, install the `/dist` folder
 
 
 ### Develop in the local and dummy pages
+> Useful when you want to develop the pure UI without navigation and DOM mutation, support React hot-reload.
 1. Start mock API server via `Mockoon`
 
     a. With GUI
@@ -140,8 +142,9 @@ After the build finished, install the `/build` folder
 ```shell=
 yarn build:prod
 ```
+The path of extension will be `/build`
 
 ### Helper
 
 Quick extension reload for development: [Extensions Reloader](https://chrome.google.com/webstore/detail/extensions-reloader/fimgfedafeadlieiabdeeaodndnlbhid)
-> Note. Still need to reinstall the unpacked folder manually if `manifest.json` changed
+> Note. Still need to reinstall the unpacked folder manually if `manifest.json` or `background.js` changed
