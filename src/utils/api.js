@@ -1,5 +1,5 @@
 import { request } from '@octokit/request'
-import { isLocalMode, localAPIPort } from 'constants'
+import { isLocalMode, localAPIPort } from 'constants/base'
 
 export const isValidQuery = (url, placeholders) => {
   if (!url || url.length === 0) return false

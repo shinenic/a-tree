@@ -4,7 +4,7 @@ import Radio from '@material-ui/core/Radio'
 import RadioGroup from '@material-ui/core/RadioGroup'
 
 import useSettingStore from 'stores/setting'
-import { FILE_ICON_STYLE } from 'constants'
+import { FILE_ICON_STYLE } from 'constants/base'
 
 import BlockTitle from './BlockTitle'
 

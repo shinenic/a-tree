@@ -1,4 +1,4 @@
-import { PAGE_TYPE } from 'constants'
+import { PAGE_TYPE } from 'constants/base'
 import { useMemo } from 'react'
 import { getFileHashId } from 'utils/pullPage'
 

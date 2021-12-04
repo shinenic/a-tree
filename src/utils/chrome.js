@@ -1,4 +1,4 @@
-import { isLocalMode } from 'constants'
+import { isLocalMode } from 'constants/base'
 import { GLOBAL_MESSAGE_TYPE } from 'constants/background'
 
 export const getURL = (url) => {

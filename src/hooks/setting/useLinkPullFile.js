@@ -11,7 +11,7 @@ import {
 } from 'utils/pullPage'
 import useUpdateEffect from 'hooks/useUpdateEffect'
 
-import { PAGE_TYPE, isGithubHost } from 'constants'
+import { PAGE_TYPE, isGithubHost } from 'constants/base'
 import { scrollToTabsNav } from 'utils/scroll'
 import { linkGithubPage } from 'utils/link'
 

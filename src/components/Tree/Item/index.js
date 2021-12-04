@@ -5,7 +5,7 @@ import {
 } from 'react-icons/ai'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import tinycolor from 'tinycolor2'
-import { MODIFIER_KEY_PROPERTY, FILE_ICON_STYLE } from 'constants'
+import { MODIFIER_KEY_PROPERTY, FILE_ICON_STYLE } from 'constants/base'
 import { openInNewTab } from 'utils/chrome'
 import useContextMenuStore from 'stores/contextMenu'
 import useViewedFilesStore from 'stores/pull'

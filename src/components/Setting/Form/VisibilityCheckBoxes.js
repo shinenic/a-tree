@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import { isEmpty, intersection } from 'lodash'
-import { PAGE_TYPE } from 'constants'
+import { PAGE_TYPE } from 'constants/base'
 import useSettingStore from 'stores/setting'
 
 import BlockTitle from './BlockTitle'

@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import Paper from '@material-ui/core/Paper'
 
-import { REPO_URL } from 'constants'
+import { REPO_URL } from 'constants/base'
 import Link from '@material-ui/core/Link'
 import GithubIcon from '../GithubIcon'
 

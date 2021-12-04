@@ -1,6 +1,6 @@
 import usePageInfo from 'hooks/pageInfo/usePageInfo'
 
-import { ERROR_MESSAGE } from 'constants'
+import { ERROR_MESSAGE } from 'constants/base'
 import useSettingStore from 'stores/setting'
 
 import MainDrawer from 'components/MainDrawer'

@@ -1,4 +1,4 @@
-import { DEFAULT_HEADER_HEIGHT } from 'constants'
+import { DEFAULT_HEADER_HEIGHT } from 'constants/base'
 import { getCommonScrollbarStyle } from 'utils/style'
 import { styled as muiStyled } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'

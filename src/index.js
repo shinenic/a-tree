@@ -1,5 +1,5 @@
 import TokenPageGuides from 'components/Guide/TokenPage'
-import { CONTAINER_ID, isLocalMode } from 'constants'
+import { CONTAINER_ID, isLocalMode } from 'constants/base'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { QueryClient, QueryClientProvider } from 'react-query'

@@ -4,7 +4,7 @@ import Box from '@material-ui/core/Box'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import { AiOutlineSearch } from 'react-icons/ai'
 import useSettingStore from 'stores/setting'
-import { HOTKEY_ADORNMENT } from 'constants'
+import { HOTKEY_ADORNMENT } from 'constants/base'
 
 const useStyles = makeStyles((theme) => ({
   inputRoot: {

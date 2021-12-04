@@ -1,4 +1,4 @@
-import { ERROR_MESSAGE, isGithubHost } from 'constants'
+import { ERROR_MESSAGE, isGithubHost } from 'constants/base'
 import useSettingStore from 'stores/setting'
 import { startTokenGuide } from 'utils/tokenGuide'
 import Typography from '@material-ui/core/Typography'

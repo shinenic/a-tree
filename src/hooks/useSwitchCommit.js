@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useQueryCommits } from 'hooks/api/useGithubQueries'
-import { PULL_PAGE_TYPE } from 'constants'
+import { PULL_PAGE_TYPE } from 'constants/base'
 import { getPullCommitLink, linkGithubPage } from 'utils/link'
 import useSettingStore from 'stores/setting'
 import { invert } from 'lodash'

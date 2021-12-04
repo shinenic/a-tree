@@ -1,4 +1,4 @@
-import { DRAWER_POSITION, SETTING_KEY } from 'constants'
+import { DRAWER_POSITION, SETTING_KEY } from 'constants/base'
 
 import create from 'zustand'
 import { persist } from 'zustand/middleware'

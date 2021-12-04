@@ -8,7 +8,7 @@ import useGetNodeHref from 'hooks/tree/useGetNodeHref'
 import useClickOutside from 'hooks/useClickOutside'
 import useQueryTree from 'hooks/tree/useQueryTree'
 import { last, omit } from 'lodash'
-import { PULL_PAGE_TYPE, CONTEXT_ITEM } from 'constants'
+import { PULL_PAGE_TYPE, CONTEXT_ITEM } from 'constants/base'
 import useUpdateEffect from 'hooks/useUpdateEffect'
 import { download, copyToClipboard } from 'utils'
 import {

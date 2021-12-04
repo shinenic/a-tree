@@ -1,7 +1,7 @@
 import Tree from 'components/Tree'
 import LargeTree from 'components/Tree/LargeTree'
 
-import { PULL_PAGE_TYPE, CODE_PAGE_TYPE } from 'constants'
+import { PULL_PAGE_TYPE, CODE_PAGE_TYPE } from 'constants/base'
 import useTreeItemClick from 'hooks/tree/useTreeItemClick'
 import useGetNodeHref from 'hooks/tree/useGetNodeHref'
 import useQueryTree from 'hooks/tree/useQueryTree'

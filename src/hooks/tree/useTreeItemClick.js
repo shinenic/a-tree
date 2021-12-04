@@ -1,4 +1,4 @@
-import { PAGE_TYPE } from 'constants'
+import { PAGE_TYPE } from 'constants/base'
 import { useCallback } from 'react'
 import { linkGithubPage, getFileLink } from 'utils/link'
 import useLinkPullFile from 'hooks/setting/useLinkPullFile'

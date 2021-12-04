@@ -1,6 +1,6 @@
 import Grid from '@material-ui/core/Grid'
 import useSettingStore from 'stores/setting'
-import { HOTKEY_ADORNMENT } from 'constants'
+import { HOTKEY_ADORNMENT } from 'constants/base'
 import Typography from '@material-ui/core/Typography'
 import Chip from '@material-ui/core/Chip'
 

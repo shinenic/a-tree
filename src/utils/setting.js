@@ -1,5 +1,5 @@
 import { initialState } from 'stores/setting'
-import { SETTING_KEY } from 'constants'
+import { SETTING_KEY } from 'constants/base'
 
 /**
  * @Note The data structure of zustand's persistent object will be
