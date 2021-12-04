@@ -22,7 +22,6 @@ const getIconColor = (color, theme) => {
     : color
 }
 
-// Rename File?
 const DiffLabelIcon = ({ status }) => {
   const theme = useTheme()
 

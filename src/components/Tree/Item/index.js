@@ -26,7 +26,7 @@ import {
 } from 'components/MainDrawer/Tabs/Loading/placeholder'
 
 import { MAIN_COLOR } from './constants'
-import DiffLabelIcon from './LabelIcon'
+import DiffLabelIcon from './DiffLabelIcon'
 
 const HOVER_BG = '#eff2f4'
 const SELECT_BG = '#d6e7fd'
