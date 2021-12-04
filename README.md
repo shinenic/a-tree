@@ -8,6 +8,7 @@
 - Quick search files like VSCode does (*`command + i` or `ctrl + i`*, customizable)
 - Switch commits via hotkeys
 - Support SPA for Github Pages
+- Support Dark theme
 - Support private and [Enterprise](https://github.com/shinenic/a-tree#fq) repositories
 
 ## 📝 About A-Tree
@@ -28,6 +29,7 @@
 ### Feature list
 - Tree
   + SPA browsing
+  + Support Dark theme
   + Support large repositories / PRs
 - Context Menu
   + Copy full file content
