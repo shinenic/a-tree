@@ -38,7 +38,7 @@ const useDummyListenLocation = () => {
     origin: 'https://github.com',
     host: 'github.com',
     hostname: 'github.com',
-    pathname: '/shinenic/a-tree/pull/123',
+    pathname: '/shinenic/a-tree'
   }
 }
 

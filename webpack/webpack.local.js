@@ -43,7 +43,7 @@ module.exports = {
   plugins: [
     new ReactRefreshWebpackPlugin({ overlay: false }),
     new HtmlWebPackPlugin({
-      template: path.resolve(__dirname, '..', 'public/pull-dark/index.html'),
+      template: path.resolve(__dirname, '..', 'public/code-page/index.html'),
     }),
     new webpack.DefinePlugin({
       'process.env.LOCAL_MODE': JSON.stringify(process.env.LOCAL_MODE),
