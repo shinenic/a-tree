@@ -66,7 +66,7 @@ export const DRAWER_POSITION = {
 
 export const FILE_ICON_STYLE = {
   DEFAULT: 'default',
-  VARIANT: 'variant',
+  UNIFIED: 'unified',
   COLORFUL: 'colorful',
 }
 

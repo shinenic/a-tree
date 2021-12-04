@@ -118,7 +118,7 @@ const NodeIcon = ({ isOpen, isLeaf, status, isLoading, name }) => {
     )
   }
 
-  if (fileIconStyle === FILE_ICON_STYLE.VARIANT && getFileIconClasses(name)) {
+  if (fileIconStyle === FILE_ICON_STYLE.DEFAULT && getFileIconClasses(name)) {
     return (
       <i className={getFileIconClasses(name)} style={{ fontStyle: 'normal' }} />
     )
