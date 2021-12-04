@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from 'react'
 import { isEllipsisActive } from 'utils/dom'
 import { makeStyles } from '@material-ui/core/styles'
 
-const useTooltipStyles = makeStyles(() => ({
+export const useTooltipStyles = makeStyles(() => ({
   popper: {
     zIndex: 9999999,
   },

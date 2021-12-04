@@ -1,11 +1,15 @@
+import { useRef, useState, useCallback } from 'react'
 import { MODIFIER_KEY_PROPERTY } from 'constants/base'
 import { openInNewTab } from 'utils/chrome'
 import useContextMenuStore from 'stores/contextMenu'
 import useViewedFilesStore from 'stores/pull'
 import { isEmpty } from 'lodash'
+import { isEllipsisActive } from 'utils/dom'
+import { Tooltip } from '@material-ui/core'
 
 import ListItem from '@material-ui/core/ListItem'
 import useTreeStore from 'stores/tree'
+import { useTooltipStyles } from 'components/shared/EllipsisBox'
 
 import NodeIcon from './Icon'
 import { useNodeStyle, BASE_PADDING, LEVEL_ADDITIONAL_PADDING } from './style'
@@ -25,6 +29,16 @@ const TreeItem = ({
   style,
   setOpen,
 }) => {
+  const tooltipClasses = useTooltipStyles()
+  const ref = useRef()
+  const [isEllipsis, setIsEllipsis] = useState(() =>
+    isEllipsisActive(ref.current)
+  )
+  const onMouseEnter = useCallback(
+    () => !isEllipsis && setIsEllipsis(isEllipsisActive(ref.current)),
+    [isEllipsis]
+  )
+
   const isViewed = useViewedFilesStore((s) => s.viewedFileMap[id])
 
   const isLoading = !isLeaf && isOpen && isEmpty(meta.children)
@@ -105,9 +119,20 @@ const TreeItem = ({
           name={name}
         />
       </div>
-      <div className={classes.itemText} title={name}>
-        {name}
-      </div>
+      {isEllipsis ? (
+        <Tooltip title={name} classes={tooltipClasses}>
+          <div className={classes.itemText}>{name}</div>
+        </Tooltip>
+      ) : (
+        <div
+          className={classes.itemText}
+          title={name}
+          ref={ref}
+          onMouseEnter={onMouseEnter}
+        >
+          {name}
+        </div>
+      )}
     </ListItem>
   )
 }
