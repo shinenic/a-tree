@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { getURL } from 'utils/chrome'
 
-import IconsCssString from '../../../public/fileIcons/fileIconStyles'
+import IconsCssString from 'libs/fileIconStyles'
 
 const FONTS = [
   { name: 'FontAwesome', path: 'fileIcons/fontawesome.woff2' },

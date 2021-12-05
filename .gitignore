@@ -24,6 +24,9 @@
 manifest.json
 /public/fileIcons
 
+# Generated files
+/src/libs
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

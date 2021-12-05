@@ -1,5 +1,5 @@
 import jQuery from 'jquery'
-import 'libs/jquery-pjax'
+import 'libs/jqueryPjax'
 import { GITHUB_PAGE_CONTAINER_ID } from 'constants/github'
 
 export const GH_PJAX_CONTAINERS = [
