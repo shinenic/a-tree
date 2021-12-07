@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useEffect, useRef } from 'react'
 import { animated, useSpring } from 'react-spring'
 import { VariableSizeList as List } from 'react-window'
 
@@ -104,6 +104,8 @@ export default function PullCommitMenu({
     { enabled: isQueryEnable }
   )
 
+
+  const vizListRef = useRef(null)
   const menuRef = useClickOutside(handleClose, isPullCommitOn, [COMMIT_BTN_ID])
   const menuPosition = useMenuPosition({
     isMenuOpen: isPullCommitOn,
@@ -118,6 +120,7 @@ export default function PullCommitMenu({
       (result, { commit, sha, author }) => {
         result.push({
           key: sha,
+          id: `commit-menu-${sha}`,
           Component: Commit,
           commit,
           date: commit?.committer?.date,
@@ -145,6 +148,33 @@ export default function PullCommitMenu({
 
   const shouldApplyViz = (listItemData?.length ?? 0) > 30
 
+  // Scroll to current commit after opened the menu
+  useEffect(() => {
+    if (!data || data.length === 0) return
+
+    if (!isPullCommitOn || !currentCommit) return
+
+    if (shouldApplyViz) {
+      if (!vizListRef.current?.scrollToItem) return
+
+      const index = data.findIndex((commit) =>
+        commit.sha.includes(
+          Array.isArray(currentCommit) ? currentCommit[0] : currentCommit
+        )
+      )
+
+      vizListRef.current.scrollToItem(index + 1, 'center')
+      return
+    }
+
+    const sha = Array.isArray(currentCommit) ? currentCommit[0] : currentCommit
+
+    const target = document.getElementById(`commit-menu-${sha}`)
+    if (target) {
+      target.scrollIntoView()
+    }
+  }, [isPullCommitOn])
+
   // @TODO handle loading status
   if (!pull || error || isLoading) return null
 
@@ -161,13 +191,12 @@ export default function PullCommitMenu({
     onContextMenu: (e) => e.stopPropagation(),
   }
 
-  // @TODO Scroll to current commit when opened
-  // https://react-window.vercel.app/#/api/FixedSizeList #scrollToItem
   if (shouldApplyViz) {
     return (
       <animated.div className={classes.root} {...containerProps}>
         <List
           height={600}
+          ref={vizListRef}
           itemCount={listItemData.length}
           itemData={listItemData}
           itemSize={rowHeight}
