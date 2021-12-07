@@ -97,6 +97,7 @@ function LargeTree({ onItemClick, getNodeHref, owner, repo, branch }) {
   const isDataEmpty = isEmpty(files)
   const memoedTree = useMemo(
     () =>
+      // @note There should be at least one root node
       isDataEmpty ? null : (
         <AutoSizer>
           {({ height, width }) => {
