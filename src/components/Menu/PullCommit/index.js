@@ -72,6 +72,23 @@ const Row = ({ index, style, data }) => {
 
 const AnimatedContainer = animated(BaseStyle.MenuContainer)
 
+const getSelectedCommits = (commitsData, currentCommit) => {
+  if (!commitsData || !currentCommit) return []
+
+  if (!Array.isArray(currentCommit)) {
+    return [currentCommit]
+  }
+
+  const startIndex = commitsData.findIndex((commit) =>
+    commit.sha.includes(currentCommit[0])
+  )
+  const endIndex = commitsData.findIndex((commit) =>
+    commit.sha.includes(currentCommit[1])
+  )
+
+  return commitsData.slice(startIndex, endIndex + 1).map((commit) => commit.sha)
+}
+
 /**
  * @TODO Listen Esc hotkey
  */
@@ -104,6 +121,7 @@ export default function PullCommitMenu({
     { enabled: isQueryEnable }
   )
 
+  const selectedCommits = getSelectedCommits(data, currentCommit)
 
   const vizListRef = useRef(null)
   const menuRef = useClickOutside(handleClose, isPullCommitOn, [COMMIT_BTN_ID])
@@ -128,7 +146,7 @@ export default function PullCommitMenu({
           author,
           link: getPullCommitLink({ owner, repo, pull, sha }),
           handleClose,
-          selected: currentCommit?.includes?.(sha),
+          selected: selectedCommits?.includes?.(sha),
         })
 
         return result

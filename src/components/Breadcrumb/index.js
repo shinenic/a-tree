@@ -59,6 +59,23 @@ const Breadcrumb = ({
   ]
 
   const getCommitText = () => {
+    if (Array.isArray(commit)) {
+      if (!commitsData) {
+        return `${commit[0]?.slice(0, 6)} ↔ ${commit[1]?.slice(0, 6)}`
+      }
+
+      const startIndex = commitsData.findIndex(({ sha }) =>
+        sha.includes(commit[0])
+      )
+      const endIndex = commitsData.findIndex(({ sha }) =>
+        sha.includes(commit[1])
+      )
+
+      return `(${startIndex + 1}/${commitsData.length} ~ ${endIndex + 1}/${
+        commitsData.length
+      }) ${commit[0]?.slice(0, 6)} ↔ ${commit[1]?.slice(0, 6)}`
+    }
+
     const slicedCommitSha = commit?.slice(0, 6)
 
     if (
@@ -87,6 +104,7 @@ const Breadcrumb = ({
     icon: AiOutlineFieldNumber,
     onClick: () => togglePullCommit(),
     id: COMMIT_BTN_ID,
+    maxWidth: Array.isArray(commit) ? 170 : undefined,
   }
   const pullItem = {
     text: pull,
@@ -164,64 +182,66 @@ const Breadcrumb = ({
         flexWrap: 'wrap',
       }}
     >
-      {items.map(({ text, icon: Icon, onClick, ...rest }, index) => {
-        const isClickable = !!onClick
+      {items.map(
+        ({ text, icon: Icon, onClick, maxWidth = 150, ...rest }, index) => {
+          const isClickable = !!onClick
 
-        return (
-          <Fragment key={text}>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                ...(isClickable && { cursor: 'pointer' }),
-                flexWrap: 'nowrap',
-                whiteSpace: 'nowrap',
-              }}
-              onClick={onClick}
-              {...rest}
-            >
+          return (
+            <Fragment key={text}>
               <Box
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
-                  margin: '0 5px',
-                  position: 'relative',
-                  '&:after': {
-                    position: 'absolute',
-                    left: 0,
-                    bottom: 0,
-                    content: '""',
-                    width: '0',
-                    height: '1px',
-                    background: 'white',
-                    transition: 'width .3s',
-                  },
-                  ...(isClickable && {
-                    '&:hover::after': {
-                      width: '100%',
-                    },
-                  }),
+                  ...(isClickable && { cursor: 'pointer' }),
+                  flexWrap: 'nowrap',
+                  whiteSpace: 'nowrap',
                 }}
+                onClick={onClick}
+                {...rest}
               >
-                {Icon && <Icon style={{ marginRight: '3px' }} />}
-                <EllipsisBox
-                  text={text}
-                  maxWidth="150px"
-                  withTooltip
-                  TooltipProps={{
-                    arrow: true,
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    margin: '0 5px',
+                    position: 'relative',
+                    '&:after': {
+                      position: 'absolute',
+                      left: 0,
+                      bottom: 0,
+                      content: '""',
+                      width: '0',
+                      height: '1px',
+                      background: 'white',
+                      transition: 'width .3s',
+                    },
+                    ...(isClickable && {
+                      '&:hover::after': {
+                        width: '100%',
+                      },
+                    }),
                   }}
-                />
+                >
+                  {Icon && <Icon style={{ marginRight: '3px' }} />}
+                  <EllipsisBox
+                    text={text}
+                    maxWidth={maxWidth}
+                    withTooltip
+                    TooltipProps={{
+                      arrow: true,
+                    }}
+                  />
+                </Box>
               </Box>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              {index !== items.length - 1 && (
-                <AiOutlineRight style={{ margin: '0 3px' }} />
-              )}
-            </Box>
-          </Fragment>
-        )
-      })}
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                {index !== items.length - 1 && (
+                  <AiOutlineRight style={{ margin: '0 3px' }} />
+                )}
+              </Box>
+            </Fragment>
+          )
+        }
+      )}
     </Box>
   )
 }

@@ -2,6 +2,7 @@ import {
   useQueryFiles,
   useQueryPull,
   useQueryCommit,
+  useQueryMultiCommits,
 } from 'hooks/api/useGithubQueries'
 import { useMemo } from 'react'
 import {
@@ -24,11 +25,7 @@ const useQueryTree = (pageInfo, enabled = true) => {
     {
       enabled:
         enabled &&
-        [
-          PAGE_TYPE.PULL_COMMIT,
-          PAGE_TYPE.PULL_COMMITS,
-          PAGE_TYPE.CODE_COMMIT,
-        ].includes(pageType),
+        [PAGE_TYPE.PULL_COMMIT, PAGE_TYPE.CODE_COMMIT].includes(pageType),
     }
   )
 
@@ -37,13 +34,21 @@ const useQueryTree = (pageInfo, enabled = true) => {
     { enabled: enabled && PAGES_WITH_BRANCH_TREE.includes(pageType) }
   )
 
+  const queryMultiCommits = useQueryMultiCommits(
+    { owner, repo, baseCommit: commit?.[0], headCommit: commit?.[1] },
+    {
+      enabled: enabled && pageType === PAGE_TYPE.PULL_COMMITS,
+    }
+  )
+
   const queryMap = {
     [PAGE_TYPE.PULL]: queryPull,
     [PAGE_TYPE.PULL_FILES]: queryPull,
 
     [PAGE_TYPE.PULL_COMMIT]: queryCommit,
-    [PAGE_TYPE.PULL_COMMITS]: queryCommit,
     [PAGE_TYPE.CODE_COMMIT]: queryCommit,
+
+    [PAGE_TYPE.PULL_COMMITS]: queryMultiCommits,
   }
 
   const { data, isLoading, error } = queryMap[pageType] ?? queryFiles

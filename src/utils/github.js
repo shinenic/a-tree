@@ -96,7 +96,7 @@ export const getPageInfo = (pathname = '', defaultBranch, title) => {
       ...basicInfo,
       pageType: PULL_COMMITS,
       pull: restPaths[0],
-      commit: restPaths[2].split('..')[1],
+      commit: restPaths[2].split('..'),
     }
   }
 
