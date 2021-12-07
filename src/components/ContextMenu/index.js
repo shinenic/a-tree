@@ -43,7 +43,7 @@ export default function ContextMenu({ ...pageInfo }) {
     useContextMenuStore()
   const getNodeHref = useGetNodeHref(pageInfo)
 
-  const modalRef = useClickOutside(closeContextMenu)
+  const modalRef = useClickOutside(closeContextMenu, isContextMenuOpened)
   const href = clickedTreeNode ? getNodeHref(clickedTreeNode) : null
 
   useEffect(() => {
@@ -85,6 +85,8 @@ export default function ContextMenu({ ...pageInfo }) {
 
     const currentVisibleFileNodes = getFileNodes()
     const isAllNodeLoaded = files?.length === currentVisibleFileNodes.length
+
+    console.log({ isAllNodeLoaded })
 
     /**
      * Toggle lazy load to ensure all files loaded
