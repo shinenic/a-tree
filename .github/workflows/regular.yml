@@ -1,0 +1,48 @@
+name: Node.js CI
+
+on:
+  schedule:
+    - cron: '0 11 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get current date
+        id: currentDate
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
+      - name: Install dependencies
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+        run: yarn
+
+      - name: Test
+        uses: mujo-code/puppeteer-headful@master
+        id: runTest
+        env:
+          CI: 'true'
+        with:
+          args: yarn test:ci
+
+      - name: Send photo message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          photo: github-repo.jpeg
+
+      - name: Send telegram message
+        uses: appleboy/telegram-action@master
+        if: always()
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            Regular testing (${{ steps.currentDate.outputs.date }})
+            Conclusion: ${{ steps.runTest.conclusion }}
+
+            See details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

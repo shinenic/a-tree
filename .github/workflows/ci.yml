@@ -1,0 +1,31 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get current date
+        id: currentDate
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
+      - name: Install dependencies
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+        run: yarn
+
+      - name: Test
+        uses: mujo-code/puppeteer-headful@master
+        id: runTest
+        env:
+          CI: 'true'
+        with:
+          args: yarn test:ci
