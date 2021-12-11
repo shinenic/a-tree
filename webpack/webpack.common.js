@@ -15,7 +15,7 @@ module.exports = (_, { mode }) => {
       background: path.join(__dirname, '..', 'src/background.js'),
     },
     output: {
-      path: path.join(__dirname, '..', isDev ? 'dist' : 'build'),
+      path: path.join(__dirname, '..', process.env.BUILD_PATH || 'dist'),
       filename: '[name].js',
       clean: true,
     },
