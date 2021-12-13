@@ -40,14 +40,16 @@
     "make:manifest": "node ./script/manifest.js",
     "make:fileIcons": "node ./script/fileIcons",
     "make:all": "yarn make:manifest && yarn make:fileIcons",
-    "build:dev": "yarn make:all && webpack --config=webpack/webpack.common.js --mode=development",
-    "build:prod": "yarn make:all && webpack --config=webpack/webpack.common.js --mode=production",
+    "build:dev": "yarn make:all && cross-env BUILD_PATH=dist webpack --config=webpack/webpack.common.js --mode=development",
+    "build:prod": "yarn make:all && cross-env BUILD_PATH=build webpack --config=webpack/webpack.common.js --mode=production",
     "dev": "cross-env LOCAL_MODE=false yarn build:dev --watch",
     "analyzer": "cross-env LOCAL_MODE=false ANALYZER=true yarn build:dev",
     "analyzer:prod": "cross-env LOCAL_MODE=false ANALYZER=true yarn build:prod",
     "dev:local": "cross-env LOCAL_MODE=true PORT=5566 API_PORT=5567 webpack-dev-server --config=webpack/webpack.local.js",
     "mockoon:start": "mockoon-cli start --data ./mockAPI/mockoon.json -i 0",
-    "mockoon:stop": "mockoon-cli stop"
+    "mockoon:stop": "mockoon-cli stop",
+    "test:ci": "yarn build:prod && cross-env BUILD_PATH=build jest",
+    "test": "jest"
   },
   "eslintConfig": {
     "extends": [
@@ -88,8 +90,11 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "html-webpack-plugin": "^5.3.2",
+    "jest": "^27.4.3",
+    "jest-puppeteer": "^6.0.2",
     "lodash-webpack-plugin": "^0.11.6",
     "prettier-eslint": "^13.0.0",
+    "puppeteer": "^13.0.0",
     "react-refresh": "^0.10.0",
     "web-vitals": "^2.1.0",
     "webpack": "^5.44.0",
