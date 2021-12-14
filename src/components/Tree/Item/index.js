@@ -1,10 +1,9 @@
-import { useRef, useState, useCallback } from 'react'
 import { MODIFIER_KEY_PROPERTY } from 'constants/base'
 import { openInNewTab } from 'utils/chrome'
 import useContextMenuStore from 'stores/contextMenu'
 import useViewedFilesStore from 'stores/pull'
 import { isEmpty } from 'lodash'
-import { isEllipsisActive } from 'utils/dom'
+import useEllipsis from 'hooks/useEllipsis'
 import { Tooltip } from '@material-ui/core'
 
 import ListItem from '@material-ui/core/ListItem'
@@ -30,14 +29,7 @@ const TreeItem = ({
   setOpen,
 }) => {
   const tooltipClasses = useTooltipStyles()
-  const ref = useRef()
-  const [isEllipsis, setIsEllipsis] = useState(() =>
-    isEllipsisActive(ref.current)
-  )
-  const onMouseEnter = useCallback(
-    () => !isEllipsis && setIsEllipsis(isEllipsisActive(ref.current)),
-    [isEllipsis]
-  )
+  const [titleRef, isEllipsis] = useEllipsis()
 
   const isViewed = useViewedFilesStore((s) => s.viewedFileMap[id])
 
@@ -89,7 +81,8 @@ const TreeItem = ({
   }
 
   /**
-   * @note Prefer native dom (e.g. div) to Mui's `Box` for better performance.
+   * @note Use native dom (e.g. div) instead of Mui's `Box` for better performance,
+   *       also it's better to simply the dom structure to keep good performance.
    */
   return (
     <ListItem
@@ -124,12 +117,7 @@ const TreeItem = ({
           <div className={classes.itemText}>{name}</div>
         </Tooltip>
       ) : (
-        <div
-          className={classes.itemText}
-          title={name}
-          ref={ref}
-          onMouseEnter={onMouseEnter}
-        >
+        <div className={classes.itemText} title={name} ref={titleRef}>
           {name}
         </div>
       )}
