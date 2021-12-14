@@ -15,6 +15,7 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'airbnb',
+    'prettier'
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -25,7 +26,6 @@ module.exports = {
   },
   plugins: ['react', 'simple-import-sort'],
   rules: {
-    'linebreak-style': ['error', 'windows'],
     semi: [2, 'never'],
     'linebreak-style': 'off',
     'function-paren-newline': 'off',

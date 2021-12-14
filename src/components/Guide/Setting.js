@@ -98,6 +98,7 @@ const SettingTourGuide = ({ anchorRef }) => {
           variant="contained"
           onClick={goTokenPage}
           style={{ marginRight: 10, textTransform: 'none', fontSize: 15 }}
+          data-attr="token-guide-button"
         >
           Guide me
         </Button>
@@ -107,6 +108,7 @@ const SettingTourGuide = ({ anchorRef }) => {
           color="primary"
           onClick={handleClose}
           style={{ textTransform: 'none', fontSize: 15 }}
+          data-attr="token-guide-close-button"
         >
           Got it
         </Button>
