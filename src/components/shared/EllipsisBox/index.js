@@ -1,9 +1,8 @@
 import { Box, Tooltip } from '@material-ui/core'
-import { useRef, useState, useEffect } from 'react'
-import { isEllipsisActive } from 'utils/dom'
 import { makeStyles } from '@material-ui/core/styles'
+import useEllipsis from 'hooks/useEllipsis'
 
-const useTooltipStyles = makeStyles(() => ({
+export const useTooltipStyles = makeStyles(() => ({
   popper: {
     zIndex: 9999999,
   },
@@ -21,16 +20,9 @@ const EllipsisBox = ({
   sx,
   ...boxProps
 }) => {
-  const ref = useRef()
+  const [ref, isEllipsis] = useEllipsis()
+
   const classes = useTooltipStyles()
-  const [isEllipsis, setIsEllipsis] = useState(() =>
-    isEllipsisActive(ref.current)
-  )
-
-  useEffect(() => {
-    setIsEllipsis(isEllipsisActive(ref.current))
-  }, [ref])
-
   const enableTooltip = isEllipsis && withTooltip
 
   if (enableTooltip) {

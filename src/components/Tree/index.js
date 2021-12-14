@@ -4,7 +4,8 @@ import { FixedSizeTree } from 'react-vtree'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { generateTree } from 'utils/tree'
 
-import TreeItem, { TreeItemPlaceholder } from './Item'
+import TreeItem from './Item'
+import TreeItemPlaceholder from './Item/Placeholder'
 
 const getNodeData = ({
   name,
