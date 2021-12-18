@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useRef } from 'react'
+import { useMemo, useEffect, useRef, useCallback } from 'react'
 import { animated, useSpring } from 'react-spring'
 import { VariableSizeList as List } from 'react-window'
 
@@ -105,7 +105,10 @@ export default function PullCommitMenu({
   const isPullCommitOn = usePopperStore((s) => s.isPullCommitOn)
   const togglePullCommit = usePopperStore((s) => s.togglePullCommit)
   const isQueryEnable = useSettingStore((s) => s.drawerPinned)
-  const handleClose = () => togglePullCommit(false)
+  const handleClose = useCallback(
+    () => togglePullCommit(false),
+    [togglePullCommit]
+  )
 
   useSwitchCommit({ owner, repo, pull, currentCommit, pageType })
 
@@ -162,7 +165,7 @@ export default function PullCommitMenu({
         },
       ]
     )
-  }, [data])
+  }, [data, handleClose, owner, pull, repo, selectedCommits])
 
   const shouldApplyViz = (listItemData?.length ?? 0) > 30
 
@@ -191,7 +194,7 @@ export default function PullCommitMenu({
     if (target) {
       target.scrollIntoView()
     }
-  }, [isPullCommitOn])
+  }, [currentCommit, data, isPullCommitOn, shouldApplyViz])
 
   // @TODO handle loading status
   if (!pull || error || isLoading) return null
