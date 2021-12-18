@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useEffect, useRef, useCallback } from 'react'
 import { animated, useSpring } from 'react-spring'
 import { VariableSizeList as List } from 'react-window'
 
@@ -72,6 +72,23 @@ const Row = ({ index, style, data }) => {
 
 const AnimatedContainer = animated(BaseStyle.MenuContainer)
 
+const getSelectedCommits = (commitsData, currentCommit) => {
+  if (!commitsData || !currentCommit) return []
+
+  if (!Array.isArray(currentCommit)) {
+    return [currentCommit]
+  }
+
+  const startIndex = commitsData.findIndex((commit) =>
+    commit.sha.includes(currentCommit[0])
+  )
+  const endIndex = commitsData.findIndex((commit) =>
+    commit.sha.includes(currentCommit[1])
+  )
+
+  return commitsData.slice(startIndex, endIndex + 1).map((commit) => commit.sha)
+}
+
 /**
  * @TODO Listen Esc hotkey
  */
@@ -88,7 +105,10 @@ export default function PullCommitMenu({
   const isPullCommitOn = usePopperStore((s) => s.isPullCommitOn)
   const togglePullCommit = usePopperStore((s) => s.togglePullCommit)
   const isQueryEnable = useSettingStore((s) => s.drawerPinned)
-  const handleClose = () => togglePullCommit(false)
+  const handleClose = useCallback(
+    () => togglePullCommit(false),
+    [togglePullCommit]
+  )
 
   useSwitchCommit({ owner, repo, pull, currentCommit, pageType })
 
@@ -104,6 +124,9 @@ export default function PullCommitMenu({
     { enabled: isQueryEnable }
   )
 
+  const selectedCommits = getSelectedCommits(data, currentCommit)
+
+  const vizListRef = useRef(null)
   const menuRef = useClickOutside(handleClose, isPullCommitOn, [COMMIT_BTN_ID])
   const menuPosition = useMenuPosition({
     isMenuOpen: isPullCommitOn,
@@ -118,6 +141,7 @@ export default function PullCommitMenu({
       (result, { commit, sha, author }) => {
         result.push({
           key: sha,
+          id: `commit-menu-${sha}`,
           Component: Commit,
           commit,
           date: commit?.committer?.date,
@@ -125,7 +149,7 @@ export default function PullCommitMenu({
           author,
           link: getPullCommitLink({ owner, repo, pull, sha }),
           handleClose,
-          selected: currentCommit?.includes?.(sha),
+          selected: selectedCommits?.includes?.(sha),
         })
 
         return result
@@ -141,9 +165,36 @@ export default function PullCommitMenu({
         },
       ]
     )
-  }, [data])
+  }, [data, handleClose, owner, pull, repo, selectedCommits])
 
   const shouldApplyViz = (listItemData?.length ?? 0) > 30
+
+  // Scroll to current commit after opened the menu
+  useEffect(() => {
+    if (!data || data.length === 0) return
+
+    if (!isPullCommitOn || !currentCommit) return
+
+    if (shouldApplyViz) {
+      if (!vizListRef.current?.scrollToItem) return
+
+      const index = data.findIndex((commit) =>
+        commit.sha.includes(
+          Array.isArray(currentCommit) ? currentCommit[0] : currentCommit
+        )
+      )
+
+      vizListRef.current.scrollToItem(index + 1, 'center')
+      return
+    }
+
+    const sha = Array.isArray(currentCommit) ? currentCommit[0] : currentCommit
+
+    const target = document.getElementById(`commit-menu-${sha}`)
+    if (target) {
+      target.scrollIntoView()
+    }
+  }, [currentCommit, data, isPullCommitOn, shouldApplyViz])
 
   // @TODO handle loading status
   if (!pull || error || isLoading) return null
@@ -161,13 +212,12 @@ export default function PullCommitMenu({
     onContextMenu: (e) => e.stopPropagation(),
   }
 
-  // @TODO Scroll to current commit when opened
-  // https://react-window.vercel.app/#/api/FixedSizeList #scrollToItem
   if (shouldApplyViz) {
     return (
       <animated.div className={classes.root} {...containerProps}>
         <List
           height={600}
+          ref={vizListRef}
           itemCount={listItemData.length}
           itemData={listItemData}
           itemSize={rowHeight}

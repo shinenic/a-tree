@@ -54,7 +54,7 @@ export const CustomModal = ({
     enter: to,
     leave: from,
   })
-  const modalRef = useClickOutside(onClose)
+  const modalRef = useClickOutside(onClose, isOpened)
   useLockBodyScroll(isOpened)
 
   return ReactDOM.createPortal(

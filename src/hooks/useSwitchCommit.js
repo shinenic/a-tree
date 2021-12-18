@@ -7,10 +7,15 @@ import { invert } from 'lodash'
 
 // iterate all textarea elements and check if any of them are focused
 const checkIfEnteringText = () => {
-  const elements = document.querySelectorAll('textarea')
-  if (elements.length === 0) return false
+  const textAreas = document.querySelectorAll('textarea')
+  const inputs = document.querySelectorAll('input[type="text"]')
 
-  return Array.from(elements).some((el) => el.matches(':focus'))
+  if (textAreas.length === 0 && inputs.length === 0) return false
+
+  return (
+    Array.from(textAreas).some((el) => el.matches(':focus')) ||
+    Array.from(inputs).some((el) => el.matches(':focus'))
+  )
 }
 
 export default function useSwitchCommit({

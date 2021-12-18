@@ -1,3 +1,7 @@
+/**
+ * Generator static files into `libs` folder to ensure the css and fonts won't
+ * be injected into the websites that aren't Github pages
+ */
 const fs = require('fs')
 const path = require('path')
 
@@ -23,7 +27,7 @@ function generateMinifiedFileIconsCss() {
   )}'; export default css`
 
   fs.writeFileSync(
-    path.join(__dirname, '../public/fileIcons/fileIconStyles.js'),
+    path.join(__dirname, '../src/libs/fileIconStyles.js'),
     cssExportFileContent
   )
 }
@@ -40,8 +44,16 @@ function copyFontFiles() {
   })
 }
 
-if (!fs.existsSync(path.join(__dirname, '../public/fileIcons'))) {
-  fs.mkdirSync(path.join(__dirname, '../public/fileIcons'))
+function checkTargetFolders() {
+  if (!fs.existsSync(path.join(__dirname, '../public/fileIcons'))) {
+    fs.mkdirSync(path.join(__dirname, '../public/fileIcons'))
+  }
+
+  if (!fs.existsSync(path.join(__dirname, '../src/libs'))) {
+    fs.mkdirSync(path.join(__dirname, '../src/libs'))
+  }
 }
+
+checkTargetFolders()
 generateMinifiedFileIconsCss()
 copyFontFiles()

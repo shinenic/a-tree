@@ -59,13 +59,13 @@ const useStyledGithubLinkStyle = makeStyles((theme) => ({
 
     backgroundColor: ({ selected }) =>
       selected
-        ? theme.palette.background.default
+        ? tinycolor
+            .mix(theme.palette.text.primary, theme.palette.background.paper, 90)
+            .toHexString()
         : theme.palette.background.paper,
 
     '&:hover': {
-      backgroundColor: tinycolor
-        .mix(theme.palette.text.primary, theme.palette.background.paper, 90)
-        .toHexString(),
+      backgroundColor: theme.palette.background.default,
       textDecoration: 'none',
     },
 

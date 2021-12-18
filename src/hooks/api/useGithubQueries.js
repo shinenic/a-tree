@@ -1,3 +1,5 @@
+import { getBasehead } from 'utils/multiCommits'
+
 import useGithubQuery from './useGithubQuery'
 
 export const useQueryCommits = (
@@ -96,7 +98,7 @@ export const useQueryFiles = (
 
 export const useQuerySingleLevelFiles = (
   { owner, repo, sha },
-  options = {}
+  useQueryOptions = {}
 ) => {
   return useGithubQuery(
     ['single-level-files', { owner, repo, sha }],
@@ -104,6 +106,24 @@ export const useQuerySingleLevelFiles = (
       url: '/repos/{owner}/{repo}/git/trees/{sha}',
       placeholders: { owner, repo, sha },
     },
-    options
+    useQueryOptions
+  )
+}
+
+// @FIXME Support large file list...
+export const useQueryMultiCommits = (
+  { owner, repo, baseCommit, headCommit, perPage = 100, ...rest },
+  useQueryOptions = {}
+) => {
+  const basehead = getBasehead(baseCommit, headCommit)
+  return useGithubQuery(
+    ['multi-commits', { owner, repo, basehead, perPage }],
+    {
+      url: '/repos/{owner}/{repo}/compare/{basehead}',
+      placeholders: { owner, repo, basehead },
+      params: { per_page: perPage },
+      ...rest,
+    },
+    useQueryOptions
   )
 }
