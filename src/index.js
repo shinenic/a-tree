@@ -11,6 +11,25 @@ import MainThemeProvider from 'styles/Provider'
 
 import App from './App'
 
+/**
+ * @FIXME
+ * If we want to use `cypress` to test the extension,
+ * need to notice that cypress test the target window in a `iframe`,
+ * so all of the dom operations & queries have to be done in the `iframe`.
+ *
+ * (This is a sample solution)
+ */
+const handleCypressTesting = () => {
+  const iframeWindow = window.document
+    .querySelector('iframe')
+    .contentWindow.document.createElement('div')
+
+  // eslint-disable-next-line
+  window._window = iframeWindow
+  // eslint-disable-next-line
+  window._document = iframeWindow.document
+}
+
 const checkDomainMatched = (domains) => {
   const { host } = window.location
 
