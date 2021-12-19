@@ -23,8 +23,8 @@ export const useNodeStyle = makeStyles((theme) => ({
       transform: 'translateX(1px)'
     },
     '& > i:before': {
-      fontSize: 16,
-    },
+      fontSize: 16
+    }
   },
   itemRoot: {
     userSelect: 'none',
@@ -34,28 +34,24 @@ export const useNodeStyle = makeStyles((theme) => ({
       backgroundColor:
         theme.palette.type === 'light'
           ? HOVER_BG
-          : tinycolor
-              .mix(HOVER_BG, theme.palette.background.paper, 80)
-              .toHexString(),
-    },
+          : tinycolor.mix(HOVER_BG, theme.palette.background.paper, 80).toHexString()
+    }
   },
   itemSelected: {
     backgroundColor:
       theme.palette.type === 'light'
         ? SELECT_BG
-        : tinycolor
-            .mix(SELECT_BG, theme.palette.background.paper, 80)
-            .toHexString(),
+        : tinycolor.mix(SELECT_BG, theme.palette.background.paper, 80).toHexString()
   },
   itemContent: {
     maxWidth: '100%',
-    fontSize: '16px',
+    fontSize: '16px'
   },
   itemText: {
     fontSize: '16px',
     maxWidth: '100%',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-  },
+    textOverflow: 'ellipsis'
+  }
 }))

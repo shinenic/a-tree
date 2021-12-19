@@ -10,9 +10,7 @@ import BlockTitle from './BlockTitle'
 const OptionBoxes = () => {
   const dispatch = useSettingStore((s) => s.dispatch)
   const isFocusMode = useSettingStore((s) => s.isFocusMode)
-  const disableCommitSwitchHotkey = useSettingStore(
-    (s) => s.disableCommitSwitchHotkey
-  )
+  const disableCommitSwitchHotkey = useSettingStore((s) => s.disableCommitSwitchHotkey)
 
   const handleFocusOptionChange = () => {
     dispatch({ type: 'TOGGLE_FOCUS_MODE' })
@@ -36,9 +34,7 @@ const OptionBoxes = () => {
         </Grid>
         <Grid item xs={12}>
           <FormControlLabel
-            control={
-              <Checkbox color="primary" name="CommitSwitchHotkey" value="yes" />
-            }
+            control={<Checkbox color="primary" name="CommitSwitchHotkey" value="yes" />}
             label={
               <>
                 Enable switch commit in one pull via

@@ -9,11 +9,11 @@ import { HOTKEY_ADORNMENT } from 'constants/base'
 const useStyles = makeStyles((theme) => ({
   inputRoot: {
     color: theme.palette.primary,
-    width: '100%',
+    width: '100%'
   },
   inputInput: {
-    fontWeight: '300',
-  },
+    fontWeight: '300'
+  }
 }))
 
 const SearchBar = ({
@@ -22,7 +22,7 @@ const SearchBar = ({
   withBorder = true,
   showHints = true,
   inputRef,
-  placeholder = 'Search...',
+  placeholder = 'Search...'
 }) => {
   const fileSearchHotkey = useSettingStore((s) => s.fileSearchHotkey)
   const classes = useStyles()
@@ -32,12 +32,12 @@ const SearchBar = ({
     {
       dark: {
         border: `1px solid ${theme.palette.grey[700]}`,
-        borderRadius: '5px',
+        borderRadius: '5px'
       },
       light: {
         border: `1px solid ${theme.palette.grey[200]}`,
-        borderRadius: '5px',
-      },
+        borderRadius: '5px'
+      }
     }[theme.palette.type]
 
   return (
@@ -51,25 +51,19 @@ const SearchBar = ({
       onChange={onChange}
       height="100%"
     >
-      <AiOutlineSearch
-        size="1.5rem"
-        style={{ marginRight: '8px' }}
-        color="#aab2bd"
-      />
+      <AiOutlineSearch size="1.5rem" style={{ marginRight: '8px' }} color="#aab2bd" />
       <InputBase
         placeholder={placeholder}
         inputRef={inputRef}
         classes={{
           root: classes.inputRoot,
-          input: classes.inputInput,
+          input: classes.inputInput
         }}
         inputProps={{ 'aria-label': 'search' }}
       />
       {showHints && (
-        <Box
-          style={{ whiteSpace: 'nowrap' }}
-          fontWeight="300"
-        >{`${HOTKEY_ADORNMENT}${fileSearchHotkey.toUpperCase()}`}
+        <Box style={{ whiteSpace: 'nowrap' }} fontWeight="300">
+          {`${HOTKEY_ADORNMENT}${fileSearchHotkey.toUpperCase()}`}
         </Box>
       )}
     </Box>

@@ -7,14 +7,14 @@ const Handler = styled('div')({
   height: '100%',
 
   '&:hover': {
-    borderLeft: '1px solid #8a8a8a',
-  },
+    borderLeft: '1px solid #8a8a8a'
+  }
 })
 
 const resizableProps = {
   style: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   enable: {
     top: false,
@@ -24,31 +24,27 @@ const resizableProps = {
     topRight: false,
     bottomRight: false,
     bottomLeft: false,
-    topLeft: false,
+    topLeft: false
   },
   maxWidth: '40vw',
   minWidth: 200,
   handleStyles: {
     right: {
       width: '8px',
-      right: '-7px',
-    },
+      right: '-7px'
+    }
   },
   handleComponent: {
-    right: <Handler />,
-  },
+    right: <Handler />
+  }
 }
 
-const ResizableWrapper = ({
-  drawerWidth,
-  handleOnResize,
-  ...props
-}) => {
+const ResizableWrapper = ({ drawerWidth, handleOnResize, ...props }) => {
   return (
     <Resizable
       size={{
         width: drawerWidth,
-        height: '100%',
+        height: '100%'
       }}
       onResize={handleOnResize}
       {...resizableProps}
