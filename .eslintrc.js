@@ -2,6 +2,14 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
+    jest: true,
+  },
+  // puppeteer variables
+  globals: {
+    page: true,
+    browser: true,
+    context: true,
+    jestPuppeteer: true,
   },
   settings: {
     'import/resolver': {

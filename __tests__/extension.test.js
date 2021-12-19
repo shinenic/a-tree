@@ -7,14 +7,14 @@ const hasElement = async (page, selector, timeout) => {
   }
 }
 
-describe(`Extension visibility`, () => {
+describe('Extension visibility', () => {
   it('should render A-Tree on Code page', async () => {
     await page.goto('https://github.com/shinenic/a-tree')
 
     await page.setViewport({ width: 1440, height: 1080 })
     await page.waitForTimeout(3000)
 
-    await page.screenshot({ path: `github-repo.jpeg` })
+    await page.screenshot({ path: 'github-repo.jpeg' })
 
     await expect(hasElement(page, '#a-tree', 2000)).resolves.toBeTruthy()
   })
@@ -25,7 +25,7 @@ describe(`Extension visibility`, () => {
   })
 })
 
-describe(`Code page SPA (without refresh)`, () => {
+describe('Code page SPA (without refresh)', () => {
   it('should not refresh when click the tree node', async () => {
     await page.goto('https://github.com/shinenic/a-tree')
 
@@ -37,8 +37,6 @@ describe(`Code page SPA (without refresh)`, () => {
     await page.waitForTimeout(100)
 
     // @TODO Check if the page is refreshed in a better approach
-    await expect(
-      hasElement(page, 'div[title=".gitignore"]', 0)
-    ).resolves.toBeTruthy()
+    await expect(hasElement(page, 'div[title=".gitignore"]', 0)).resolves.toBeTruthy()
   })
 })
