@@ -11,16 +11,17 @@ export const ErrorContainer = muiStyled(Paper)({
   alignItems: 'center',
   flexDirection: 'column',
   border: 'none',
-  boxShadow: 'none',
+  boxShadow: 'none'
 })
 
-export const HintContent = (props) => {
+export const HintContent = ({ style, ...props }) => {
   return (
     <Button
       color="primary"
       style={{
         marginTop: 40,
         textTransform: 'none',
+        ...style
       }}
       {...props}
     />
