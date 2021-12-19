@@ -38,12 +38,17 @@ const useTreeItemClick = (pageInfo) => {
     pageType: PAGE_TYPE.PULL_COMMIT,
   })
 
+  const onPullCommitsTreeItemClick = useLinkPullFile({
+    basePathname: `/${owner}/${repo}/pull/${pull}/commits/${commit?.[0]}..${commit?.[1]}`,
+    pageType,
+  })
+
   const queryMap = {
     [PAGE_TYPE.PULL]: onPullTreeItemClick,
     [PAGE_TYPE.PULL_FILES]: onPullTreeItemClick,
 
     [PAGE_TYPE.PULL_COMMIT]: onPullCommitTreeItemClick,
-    [PAGE_TYPE.PULL_COMMITS]: onPullCommitTreeItemClick,
+    [PAGE_TYPE.PULL_COMMITS]: onPullCommitsTreeItemClick,
 
     [PAGE_TYPE.CODE_COMMIT]: onCommitTreeItemClick,
   }

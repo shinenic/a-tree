@@ -14,6 +14,11 @@ const useGetNodeHref = (pageInfo) => {
         filename
       )}`
 
+    const getPullCommitsNodeHref = ({ filename }) =>
+      `/${owner}/${repo}/pull/${pull}/commits/${commit?.[0]}..${
+        commit?.[1]
+      }#${getFileHashId(filename)}`
+
     const getCodeNodeHref = ({ path }) =>
       `/${owner}/${repo}/blob/${branch}/${path}`
 
@@ -25,7 +30,7 @@ const useGetNodeHref = (pageInfo) => {
       [PAGE_TYPE.PULL_FILES]: getPullNodeHref,
 
       [PAGE_TYPE.PULL_COMMIT]: getPullCommitNodeHref,
-      [PAGE_TYPE.PULL_COMMITS]: getPullCommitNodeHref,
+      [PAGE_TYPE.PULL_COMMITS]: getPullCommitsNodeHref,
 
       [PAGE_TYPE.CODE_COMMIT]: getCodeCommitNodeHref,
     }
