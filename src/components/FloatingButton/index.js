@@ -2,7 +2,7 @@ import Box from '@material-ui/core/Box'
 import useSettingStore from 'stores/setting'
 import { makeStyles } from '@material-ui/core/styles'
 import { getURL } from 'utils/chrome'
-import useGetFloatingButtonProps from 'hooks/useGetFloatingButtonProps'
+import useGetFloatingButtonProps from 'hooks/headless/useGetFloatingButtonProps'
 
 const BOX_SIZE = 40
 const IMG_WIDTH = 30
@@ -26,9 +26,9 @@ const useStyles = ({ drawerPinned }) =>
       transition: 'opacity 0.1s',
 
       '&:hover': {
-        opacity: drawerPinned ? 0.7 : 0.9,
-      },
-    },
+        opacity: drawerPinned ? 0.7 : 0.9
+      }
+    }
   }))
 
 const FloatingButton = () => {
@@ -36,7 +36,7 @@ const FloatingButton = () => {
 
   const containerClasses = useStyles({ drawerPinned })()
   const getFloatingButtonProps = useGetFloatingButtonProps({
-    boxSize: BOX_SIZE,
+    boxSize: BOX_SIZE
   })
 
   return (
@@ -48,7 +48,7 @@ const FloatingButton = () => {
         height={IMG_WIDTH}
         style={{
           userSelect: 'none',
-          userDrag: 'none',
+          userDrag: 'none'
         }}
       />
       <Box
@@ -59,7 +59,7 @@ const FloatingButton = () => {
         left={0}
         component="span"
         style={{
-          cursor: 'move',
+          cursor: 'move'
         }}
       />
     </Box>

@@ -4,7 +4,7 @@ import { VariableSizeList as List } from 'react-window'
 
 import { PJAX_ID } from 'constants/github'
 import useClickOutside from 'hooks/useClickOutside'
-import useSwitchCommit from 'hooks/useSwitchCommit'
+import useSwitchCommit from 'hooks/pull/useSwitchCommit'
 import { getPullCommitLink } from 'utils/link'
 import { useQueryCommits } from 'hooks/api/useGithubQueries'
 import { COMMIT_BTN_ID } from 'components/Breadcrumb'
@@ -24,16 +24,7 @@ const { useVizListContainerStyle } = BaseStyle
 
 dayjs.extend(relativeTime)
 
-const Commit = ({
-  commit,
-  sha,
-  author,
-  date,
-  link,
-  selected,
-  handleClose,
-  ...rest
-}) => {
+const Commit = ({ commit, sha, author, date, link, selected, handleClose, ...rest }) => {
   const authorName = commit.author?.name ?? ''
   const loginName = author?.login ?? ''
   const message = commit.message.split('\n')[0]
@@ -49,10 +40,7 @@ const Commit = ({
     >
       <Style.TitleBox>{message}</Style.TitleBox>
       <Style.CommitDetail>
-        <BaseStyle.SmallAvatar
-          src={author?.avatar_url ?? ''}
-          alt={authorName}
-        />
+        <BaseStyle.SmallAvatar src={author?.avatar_url ?? ''} alt={authorName} />
         <Style.Sha>{shortedSha}</Style.Sha>
         <div>{`${authorName} (${loginName})`}</div>
         <div>{dayjs(date).fromNow()}</div>
@@ -79,12 +67,8 @@ const getSelectedCommits = (commitsData, currentCommit) => {
     return [currentCommit]
   }
 
-  const startIndex = commitsData.findIndex((commit) =>
-    commit.sha.includes(currentCommit[0])
-  )
-  const endIndex = commitsData.findIndex((commit) =>
-    commit.sha.includes(currentCommit[1])
-  )
+  const startIndex = commitsData.findIndex((commit) => commit.sha.includes(currentCommit[0]))
+  const endIndex = commitsData.findIndex((commit) => commit.sha.includes(currentCommit[1]))
 
   return commitsData.slice(startIndex, endIndex + 1).map((commit) => commit.sha)
 }
@@ -99,16 +83,13 @@ export default function PullCommitMenu({
   commit: currentCommit,
   pageType,
   anchorElement,
-  followCursor,
+  followCursor
 }) {
   const classes = useVizListContainerStyle()
   const isPullCommitOn = usePopperStore((s) => s.isPullCommitOn)
   const togglePullCommit = usePopperStore((s) => s.togglePullCommit)
   const isQueryEnable = useSettingStore((s) => s.drawerPinned)
-  const handleClose = useCallback(
-    () => togglePullCommit(false),
-    [togglePullCommit]
-  )
+  const handleClose = useCallback(() => togglePullCommit(false), [togglePullCommit])
 
   useSwitchCommit({ owner, repo, pull, currentCommit, pageType })
 
@@ -116,7 +97,7 @@ export default function PullCommitMenu({
     transform: isPullCommitOn ? 'scale(1)' : 'scale(0.9)',
     transformOrigin: 'top',
     opacity: isPullCommitOn ? 1 : 0,
-    reset: true,
+    reset: true
   })
 
   const { data, isLoading, error } = useQueryCommits(
@@ -131,7 +112,7 @@ export default function PullCommitMenu({
   const menuPosition = useMenuPosition({
     isMenuOpen: isPullCommitOn,
     anchorElement,
-    followCursor,
+    followCursor
   })
 
   const listItemData = useMemo(() => {
@@ -149,7 +130,7 @@ export default function PullCommitMenu({
           author,
           link: getPullCommitLink({ owner, repo, pull, sha }),
           handleClose,
-          selected: selectedCommits?.includes?.(sha),
+          selected: selectedCommits?.includes?.(sha)
         })
 
         return result
@@ -161,8 +142,8 @@ export default function PullCommitMenu({
           onClick: handleClose,
           href: `/${owner}/${repo}/pull/${pull}/files`,
           pjaxId: PJAX_ID.CONTENT,
-          children: `Show all changes (${data?.length ?? 0})`,
-        },
+          children: `Show all changes (${data?.length ?? 0})`
+        }
       ]
     )
   }, [data, handleClose, owner, pull, repo, selectedCommits])
@@ -179,9 +160,7 @@ export default function PullCommitMenu({
       if (!vizListRef.current?.scrollToItem) return
 
       const index = data.findIndex((commit) =>
-        commit.sha.includes(
-          Array.isArray(currentCommit) ? currentCommit[0] : currentCommit
-        )
+        commit.sha.includes(Array.isArray(currentCommit) ? currentCommit[0] : currentCommit)
       )
 
       vizListRef.current.scrollToItem(index + 1, 'center')
@@ -203,13 +182,13 @@ export default function PullCommitMenu({
     ...menuProps,
     top: menuPosition.y,
     left: menuPosition.x,
-    visibility: menuProps.opacity.to((v) => (v === 0 ? 'hidden' : 'visible')),
+    visibility: menuProps.opacity.to((v) => (v === 0 ? 'hidden' : 'visible'))
   }
 
   const containerProps = {
     style: containerStyle,
     ref: menuRef,
-    onContextMenu: (e) => e.stopPropagation(),
+    onContextMenu: (e) => e.stopPropagation()
   }
 
   if (shouldApplyViz) {
