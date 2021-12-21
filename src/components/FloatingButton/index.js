@@ -25,9 +25,7 @@ const useStyles = ({ drawerPinned }) =>
       opacity: drawerPinned ? 0.8 : 1,
       transition: 'opacity 0.1s',
 
-      '&:hover': {
-        opacity: drawerPinned ? 0.7 : 0.9
-      }
+      '&:hover': { opacity: drawerPinned ? 0.7 : 0.9 }
     }
   }))
 
@@ -35,9 +33,7 @@ const FloatingButton = () => {
   const drawerPinned = useSettingStore((s) => s.drawerPinned)
 
   const containerClasses = useStyles({ drawerPinned })()
-  const getFloatingButtonProps = useGetFloatingButtonProps({
-    boxSize: BOX_SIZE
-  })
+  const getFloatingButtonProps = useGetFloatingButtonProps({ boxSize: BOX_SIZE })
 
   return (
     <Box {...getFloatingButtonProps()} classes={containerClasses}>
@@ -46,10 +42,7 @@ const FloatingButton = () => {
         src={iconUrl}
         width={IMG_WIDTH}
         height={IMG_WIDTH}
-        style={{
-          userSelect: 'none',
-          userDrag: 'none'
-        }}
+        style={{ userSelect: 'none', userDrag: 'none' }}
       />
       <Box
         position="absolute"
@@ -58,9 +51,7 @@ const FloatingButton = () => {
         top={0}
         left={0}
         component="span"
-        style={{
-          cursor: 'move'
-        }}
+        style={{ cursor: 'move' }}
       />
     </Box>
   )
