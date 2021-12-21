@@ -1,27 +1,30 @@
 module.exports = {
   env: {
     browser: true,
-    es2021: true,
+    jest: true
+  },
+  // https://github.com/smooth-code/jest-puppeteer#configure-eslint
+  globals: {
+    page: true,
+    browser: true,
+    context: true,
+    jestPuppeteer: true
   },
   settings: {
     'import/resolver': {
       node: {
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
-        moduleDirectory: ['node_modules', 'src/'],
-      },
-    },
+        moduleDirectory: ['node_modules', 'src/']
+      }
+    }
   },
-  extends: [
-    'plugin:react/recommended',
-    'plugin:react-hooks/recommended',
-    'airbnb',
-  ],
+  extends: ['plugin:react/recommended', 'plugin:react-hooks/recommended', 'airbnb'],
   parserOptions: {
     ecmaFeatures: {
-      jsx: true,
+      jsx: true
     },
     ecmaVersion: 12,
-    sourceType: 'module',
+    sourceType: 'module'
   },
   plugins: ['react', 'simple-import-sort'],
   rules: {
@@ -54,6 +57,6 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'react/jsx-wrap-multilines': 'off',
     'simple-import-sort/exports': 'error',
-    'react/jsx-one-expression-per-line': 'off',
-  },
+    'react/jsx-one-expression-per-line': 'off'
+  }
 }
