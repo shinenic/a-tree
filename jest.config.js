@@ -2,11 +2,11 @@
 // https://jestjs.io/docs/en/configuration.html
 
 module.exports = {
-  preset: "jest-puppeteer",
+  preset: 'jest-puppeteer',
 
-  testMatch: ["**/?(*.)+(spec|test).js?(x)"],
+  testMatch: ['**/?(*.)+(spec|test).js?(x)'],
 
-  testPathIgnorePatterns: ["/node_modules/"],
+  testPathIgnorePatterns: ['/node_modules/'],
 
-  testTimeout: 20000
-};
+  testTimeout: 200000
+}
