@@ -1,11 +1,4 @@
-const hasElement = async (page, selector, timeout) => {
-  try {
-    const element = await page.waitForSelector(selector, { timeout })
-    return Boolean(element)
-  } catch (error) {
-    return false
-  }
-}
+import { hasElement, clickWelcomeDialog, getTimestamp, waitAndClick } from './utils/base'
 
 describe('Extension visibility', () => {
   it('should render A-Tree on Code page', async () => {
@@ -25,18 +18,54 @@ describe('Extension visibility', () => {
   })
 })
 
-describe('Code page SPA (without refresh)', () => {
-  it('should not refresh when click the tree node', async () => {
+describe('Extension Links (SPA)', () => {
+  it('should not refresh when browser between code files', async () => {
     await page.goto('https://github.com/shinenic/a-tree')
 
-    await page.waitForSelector('[data-attr="token-guide-close-button"]')
-    await page.click('[data-attr="token-guide-close-button"]')
+    await clickWelcomeDialog()
+    const timestamp1 = await getTimestamp()
+
+    await waitAndClick('div[title=".gitignore"]')
+    await page.waitForTimeout(800)
+
+    const timestamp2 = await getTimestamp()
+    expect(timestamp1 === timestamp2).toBeTruthy()
+
+    await waitAndClick('div[title=".gitattributes"]')
+    await page.waitForTimeout(800)
+
+    await page.waitForSelector('div[title=".gitattributes"]')
+    const timestamp3 = await getTimestamp()
+    expect(timestamp2 === timestamp3).toBeTruthy()
+  })
+
+  it('should not refresh when browser a pull request', async () => {
+    await page.goto('https://github.com/shinenic/a-tree/pull/20')
+    const timestamp1 = await getTimestamp()
+
+    await waitAndClick('div[title=".gitignore"]')
+    await page.waitForTimeout(800)
 
     await page.waitForSelector('div[title=".gitignore"]')
-    await page.click('div[title=".gitignore"]')
-    await page.waitForTimeout(100)
+    const timestamp2 = await getTimestamp()
 
-    // @TODO Check if the page is refreshed in a better approach
-    await expect(hasElement(page, 'div[title=".gitignore"]', 0)).resolves.toBeTruthy()
+    expect(timestamp1 === timestamp2).toBeTruthy()
+  })
+
+  it('should not refresh when browser between commits', async () => {
+    await page.goto('https://github.com/shinenic/a-tree/pull/20')
+    const timestamp1 = await getTimestamp()
+
+    await waitAndClick('#commit-menu-btn')
+    await page.waitForTimeout(800)
+
+    await waitAndClick(
+      '[href="/shinenic/a-tree/pull/20/commits/5221564d3cf92c46c6451dc6a309cf518498f2c2"]'
+    )
+    await page.waitForTimeout(800)
+
+    const timestamp2 = await getTimestamp()
+
+    expect(timestamp1 === timestamp2).toBeTruthy()
   })
 })
