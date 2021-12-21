@@ -31,13 +31,13 @@ const appendGlobalStyle = (drawerPinned, drawerWidth) => {
 
 const createContainer = () => {
   const container = document.createElement('div')
-  container.id = CONTAINER_ID
+  container.setAttribute('id', CONTAINER_ID)
+  container.setAttribute('timestamp', new Date().getTime())
   document.body.appendChild(container)
 }
 
 const renderExtension = () => {
-  const { drawerWidth, domains, disablePageTypeList, drawerPinned } =
-    getSettingFromLocalStorage()
+  const { drawerWidth, domains, disablePageTypeList, drawerPinned } = getSettingFromLocalStorage()
 
   if (!checkDomainMatched(domains) && !isLocalMode) return
 
