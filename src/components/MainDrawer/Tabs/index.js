@@ -16,12 +16,12 @@ const TreeTab = ({ ...pageInfo }) => {
   const drawerPinned = useSettingStore((s) => s.drawerPinned)
   const { pageType, owner, repo, pull, filePath } = pageInfo
 
-  const { files, isLoading, error, refetch, isLargeRepoTree } = useQueryTree(pageInfo, drawerPinned)
+  const { files, isLoading, error, isLargeRepoTree } = useQueryTree(pageInfo, drawerPinned)
   const onItemClick = useTreeItemClick(pageInfo)
   const getNodeHref = useGetNodeHref(pageInfo)
 
   useViewedFiles({ owner, pull, repo })
-  useRefetchPull(pageInfo, refetch)
+  useRefetchPull(pageInfo)
 
   const isExpandedAll = EXPANDED_TREE_TYPES.includes(pageType)
 
