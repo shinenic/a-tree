@@ -16,14 +16,13 @@ const CREATING_STEPS = [
     content: 'Fill in the note for the extension.',
     position: 'right',
     initAction: () => {
-      document.querySelector(NOTE_INPUT_SELECTOR).value =
-        `${DEFAULT_NOTE}-${new Date().getTime()}`
-    },
+      document.querySelector(NOTE_INPUT_SELECTOR).value = `${DEFAULT_NOTE}-${new Date().getTime()}`
+    }
   },
   {
     selector: EXPIRATION_SELECTOR,
     position: 'top',
-    content: 'Set expiration.',
+    content: 'Set expiration.'
   },
   {
     selector: TOKEN_SCOPE_SELECTOR,
@@ -31,7 +30,7 @@ const CREATING_STEPS = [
     position: 'left',
     initAction: () => {
       document.querySelector(TOKEN_SCOPE_SELECTOR).click()
-    },
+    }
   },
   {
     selector: FINISH_BUTTON_SELECTOR,
@@ -42,8 +41,8 @@ const CREATING_STEPS = [
         <br />
         Don't forget to copy and paste the token into extension after generated.
       </span>
-    ),
-  },
+    )
+  }
 ]
 
 function CreatingTokenTourGuide({ prevUrl }) {

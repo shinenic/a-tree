@@ -5,38 +5,28 @@ import { PULL_PAGE_TYPE, CODE_PAGE_TYPE } from 'constants/base'
 import useTreeItemClick from 'hooks/tree/useTreeItemClick'
 import useGetNodeHref from 'hooks/tree/useGetNodeHref'
 import useQueryTree from 'hooks/tree/useQueryTree'
+import useRefetchPull from 'hooks/pull/useRefetchPull'
 import useViewedFiles from 'hooks/api/useViewedFiles'
 import useSettingStore from 'stores/setting'
 import Loading from './Loading'
 
-const EXPANDED_TREE_TYPES = [
-  CODE_PAGE_TYPE.CODE_COMMIT,
-  ...Object.values(PULL_PAGE_TYPE),
-]
+const EXPANDED_TREE_TYPES = [CODE_PAGE_TYPE.CODE_COMMIT, ...Object.values(PULL_PAGE_TYPE)]
 
 const TreeTab = ({ ...pageInfo }) => {
   const drawerPinned = useSettingStore((s) => s.drawerPinned)
   const { pageType, owner, repo, pull, filePath } = pageInfo
 
-  const { files, isLoading, error, isLargeRepoTree } = useQueryTree(
-    pageInfo,
-    drawerPinned
-  )
+  const { files, isLoading, error, isLargeRepoTree } = useQueryTree(pageInfo, drawerPinned)
   const onItemClick = useTreeItemClick(pageInfo)
   const getNodeHref = useGetNodeHref(pageInfo)
 
   useViewedFiles({ owner, pull, repo })
+  useRefetchPull(pageInfo)
 
   const isExpandedAll = EXPANDED_TREE_TYPES.includes(pageType)
 
   if (isLargeRepoTree) {
-    return (
-      <LargeTree
-        onItemClick={onItemClick}
-        currentFilePath={filePath}
-        {...pageInfo}
-      />
-    )
+    return <LargeTree onItemClick={onItemClick} currentFilePath={filePath} {...pageInfo} />
   }
 
   if (error) return null

@@ -22,11 +22,10 @@ import * as Style from './style'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    boxShadow:
-      '0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -2px rgb(0 0 0 / 5%)',
+    boxShadow: '0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -2px rgb(0 0 0 / 5%)',
     borderRight: theme.palette.type === 'dark' ? '1px solid #ffffff40' : 'none',
-    overflowX: 'hidden',
-  },
+    overflowX: 'hidden'
+  }
 }))
 
 const MainDrawer = ({ pageInfo, error }) => {
@@ -54,7 +53,7 @@ const MainDrawer = ({ pageInfo, error }) => {
     throttle((_, __, element) => {
       dispatch({
         type: 'UPDATE_DRAWER_WIDTH',
-        payload: element.clientWidth,
+        payload: element.clientWidth
       })
     }, 100),
     []
@@ -72,27 +71,16 @@ const MainDrawer = ({ pageInfo, error }) => {
         event.stopPropagation()
       }}
     >
-      <ResizableWrapper
-        drawerWidth={drawerWidth}
-        handleOnResize={handleOnResize}
-      >
+      <ResizableWrapper drawerWidth={drawerWidth} handleOnResize={handleOnResize}>
         <Style.DrawerHeader height={getHeaderHeight()}>
           <Breadcrumb {...pageInfo} />
         </Style.DrawerHeader>
         <Box padding="10px" height={55}>
           <SearchBar onClick={() => toggleFileSearch(true)} />
         </Box>
-        <PullCommitMenu
-          owner={owner}
-          repo={repo}
-          pull={pull}
-          commit={commit}
-          pageType={pageType}
-        />
+        <PullCommitMenu owner={owner} repo={repo} pull={pull} commit={commit} pageType={pageType} />
         <PullMenu owner={owner} repo={repo} pull={pull} />
-        <Style.DrawerContent>
-          {renderContent()}
-        </Style.DrawerContent>
+        <Style.DrawerContent>{renderContent()}</Style.DrawerContent>
         <Style.DrawerFooter>
           <SettingButton />
         </Style.DrawerFooter>

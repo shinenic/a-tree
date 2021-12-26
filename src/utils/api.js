@@ -29,9 +29,10 @@ export const createGithubQuery = ({
   params = {},
   options = {},
   method = 'GET',
-  baseUrl,
+  baseUrl
 } = {}) => {
   const controller = new AbortController()
+  const customParams = { ...params, ts: new Date().getTime() }
 
   const promise = request({
     ...(baseUrl && { baseUrl }),
@@ -39,14 +40,14 @@ export const createGithubQuery = ({
     method,
     url,
     ...placeholders,
-    ...params,
+    ...customParams,
     ...options,
     request: {
-      signal: controller.signal,
+      signal: controller.signal
     },
     ...(token && {
-      headers: { authorization: `token ${token}` },
-    }),
+      headers: { authorization: `token ${token}` }
+    })
   })
 
   promise.cancel = () => controller.abort()

@@ -14,7 +14,7 @@ export const getSettingFromLocalStorage = () => {
   try {
     return {
       ...initialState,
-      ...JSON.parse(localStorage.getItem(SETTING_KEY)).state,
+      ...JSON.parse(localStorage.getItem(SETTING_KEY)).state
     }
   } catch {
     return initialState
@@ -31,7 +31,7 @@ export const storeSettingIntoLocalStorage = (state) => {
 
   const zustandPersistentObj = {
     ...originalData,
-    state,
+    state
   }
 
   localStorage.setItem(SETTING_KEY, JSON.stringify(zustandPersistentObj))

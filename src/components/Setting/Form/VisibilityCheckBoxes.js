@@ -12,7 +12,7 @@ const VISIBLE_PAGE_TYPE_OPTIONS = [
   { text: 'Code', disabled: true, checked: true },
   { text: 'Pull requests', disabled: true, checked: true },
   { text: 'Issues', values: [PAGE_TYPE.ISSUES] },
-  { text: 'Others (Discussions, Wiki, ...)', values: [PAGE_TYPE.OTHERS] },
+  { text: 'Others (Discussions, Wiki, ...)', values: [PAGE_TYPE.OTHERS] }
 ]
 
 const VisibilityCheckBoxes = () => {
@@ -23,47 +23,42 @@ const VisibilityCheckBoxes = () => {
     <>
       <BlockTitle>Show A-Tree on</BlockTitle>
       <Grid container alignItems="center">
-        {VISIBLE_PAGE_TYPE_OPTIONS.map(
-          ({ text, disabled, checked, values }) => {
-            const isChecked =
-              checked || isEmpty(intersection(values, disablePageTypeList))
+        {VISIBLE_PAGE_TYPE_OPTIONS.map(({ text, disabled, checked, values }) => {
+          const isChecked = checked || isEmpty(intersection(values, disablePageTypeList))
 
-            const handleChange = () => {
-              values.forEach((pageType) => {
-                if (disablePageTypeList?.includes(pageType)) {
-                  dispatch({
-                    type: 'UPDATE_DISABLE_PAGE_TYPE_LIST',
-                    payload: disablePageTypeList.filter(
-                      (type) => type !== pageType
-                    ),
-                  })
-                } else {
-                  dispatch({
-                    type: 'UPDATE_DISABLE_PAGE_TYPE_LIST',
-                    payload: [...disablePageTypeList, pageType],
-                  })
-                }
-              })
-            }
-
-            return (
-              <Grid item xs={12} key={text}>
-                <FormControlLabel
-                  disabled={Boolean(disabled)}
-                  control={
-                    <Checkbox
-                      name={text}
-                      color="primary"
-                      checked={isChecked}
-                      onChange={handleChange}
-                    />
-                  }
-                  label={text}
-                />
-              </Grid>
-            )
+          const handleChange = () => {
+            values.forEach((pageType) => {
+              if (disablePageTypeList?.includes(pageType)) {
+                dispatch({
+                  type: 'UPDATE_DISABLE_PAGE_TYPE_LIST',
+                  payload: disablePageTypeList.filter((type) => type !== pageType)
+                })
+              } else {
+                dispatch({
+                  type: 'UPDATE_DISABLE_PAGE_TYPE_LIST',
+                  payload: [...disablePageTypeList, pageType]
+                })
+              }
+            })
           }
-        )}
+
+          return (
+            <Grid item xs={12} key={text}>
+              <FormControlLabel
+                disabled={Boolean(disabled)}
+                control={
+                  <Checkbox
+                    name={text}
+                    color="primary"
+                    checked={isChecked}
+                    onChange={handleChange}
+                  />
+                }
+                label={text}
+              />
+            </Grid>
+          )
+        })}
       </Grid>
     </>
   )

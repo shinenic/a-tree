@@ -3,20 +3,23 @@ import useSettingStore from 'stores/setting'
 import { startTokenGuide } from 'utils/tokenGuide'
 import Typography from '@material-ui/core/Typography'
 import Link from '@material-ui/core/Link'
+import { useQueryClient } from 'react-query'
+import { MdOutlineChangeCircle } from 'react-icons/md'
 
 import * as Style from './style'
 
 const Error = ({ errorMessage = ERROR_MESSAGE.API_RATE_LIMIT }) => {
+  const queryClient = useQueryClient()
   const token = useSettingStore((s) => s.token)
+
+  const refetchAll = () => {
+    queryClient.refetchQueries()
+  }
 
   const enterpriseHint = () => {
     if (errorMessage === ERROR_MESSAGE.API_RATE_LIMIT) {
       return (
-        <Typography
-          variant="body2"
-          color="textSecondary"
-          style={{ marginTop: 30 }}
-        >
+        <Typography variant="body2" color="textSecondary" style={{ marginTop: 30 }}>
           If this issue happens on your enterprise account, please try the{' '}
           <Link
             href="https://docs.github.com/en/authentication/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on"
@@ -32,11 +35,7 @@ const Error = ({ errorMessage = ERROR_MESSAGE.API_RATE_LIMIT }) => {
     }
 
     return (
-      <Typography
-        variant="body2"
-        color="textSecondary"
-        style={{ marginTop: 30 }}
-      >
+      <Typography variant="body2" color="textSecondary" style={{ marginTop: 30 }}>
         If it's not a expected domain, please
         <b> right-click</b> to disable it.
       </Typography>
@@ -59,8 +58,9 @@ const Error = ({ errorMessage = ERROR_MESSAGE.API_RATE_LIMIT }) => {
           'It seems that this is an private repository, please create a personal token to access this repository!'}
       </Typography>
       {!isGithubHost && enterpriseHint()}
-      <Style.HintContent onClick={startTokenGuide}>
-        How to create a new token?
+      <Style.HintContent onClick={startTokenGuide}>How to create a new token?</Style.HintContent>
+      <Style.HintContent onClick={refetchAll} endIcon={<MdOutlineChangeCircle />}>
+        Try reloading
       </Style.HintContent>
     </Style.ErrorContainer>
   )

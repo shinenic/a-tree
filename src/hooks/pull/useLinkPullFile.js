@@ -116,7 +116,14 @@ const useLinkPullFile = ({ basePathname, pageType }) => {
         e.stopPropagation()
       }
     },
-    [isFocusMode, pageType, basePathname]
+    [
+      pageType,
+      isFocusMode,
+      basePathname,
+      asyncCheckFileNode,
+      handleFocusFileNode,
+      handleUnFocus,
+    ]
   )
 
   return onItemClick
