@@ -7,14 +7,7 @@ import { generateTree } from 'utils/tree'
 import TreeItem from './Item'
 import TreeItemPlaceholder from './Item/Placeholder'
 
-const getNodeData = ({
-  name,
-  node,
-  nestingLevel,
-  defaultOpen,
-  onItemClick,
-  getNodeHref,
-}) => {
+const getNodeData = ({ name, node, nestingLevel, defaultOpen, onItemClick, getNodeHref }) => {
   const { id, children } = node
   return {
     data: {
@@ -25,10 +18,10 @@ const getNodeData = ({
       nestingLevel,
       onItemClick,
       getNodeHref,
-      meta: node,
+      meta: node
     },
     nestingLevel,
-    node,
+    node
   }
 }
 
@@ -38,19 +31,17 @@ function Tree({
   onItemClick,
   isLoading,
   currentFilePath,
-  getNodeHref,
+  getNodeHref
 }) {
   const lastProcessedPath = useRef(null) // To handle automatic expanding / collapsing
-  const [treeInstance, setTreeInstance] = useState(null)
+  const [treeInstance, setTreeInstance] = useState(/** @type {FixedSizeTree} */ (null))
 
   const [objTree, folderNodeIds] = useMemo(() => generateTree(tree), [tree])
 
   // ref: https://github.com/Lodin/react-vtree#usage
   const treeWalker = useCallback(
     function* treeWalker() {
-      const rootEntries = sortBy(Object.entries(objTree), [
-        ([, node]) => isEmpty(node?.children),
-      ])
+      const rootEntries = sortBy(Object.entries(objTree), [([, node]) => isEmpty(node?.children)])
 
       for (let i = 0; i < rootEntries.length; i += 1) {
         const [name, node] = rootEntries[i]
@@ -61,7 +52,7 @@ function Tree({
           nestingLevel: 0,
           defaultOpen: isExpandedAll,
           onItemClick,
-          getNodeHref,
+          getNodeHref
         })
       }
 
@@ -69,9 +60,7 @@ function Tree({
         const parent = yield
 
         const childrenEntries = parent.node.children
-          ? sortBy(Object.entries(parent.node.children), [
-              ([, node]) => isEmpty(node?.children),
-            ])
+          ? sortBy(Object.entries(parent.node.children), [([, node]) => isEmpty(node?.children)])
           : []
 
         for (let i = 0; i < childrenEntries.length; i += 1) {
@@ -83,7 +72,7 @@ function Tree({
             nestingLevel: parent.nestingLevel + 1,
             defaultOpen: isExpandedAll,
             onItemClick,
-            getNodeHref,
+            getNodeHref
           })
         }
       }
@@ -106,14 +95,13 @@ function Tree({
       }, {})
 
       treeInstance.recomputeTree(allClosedTreeMap)
+
       lastProcessedPath.current = currentFilePath
       return
     }
 
     const targetPaths = currentFilePath.split('/')
-    const targetIds = targetPaths.map((_, index) =>
-      targetPaths.slice(0, index + 1).join('/')
-    )
+    const targetIds = targetPaths.map((_, index) => targetPaths.slice(0, index + 1).join('/'))
 
     const treeMap = targetIds.reduce((result, id, index) => {
       if (index === targetIds.length - 1) {
@@ -125,15 +113,22 @@ function Tree({
               if (node !== ownerNode) {
                 node.isOpen = false
               }
-            },
-          },
+            }
+          }
         }
       }
 
       return { ...result, [id]: { open: true } }
     }, {})
 
-    treeInstance.recomputeTree(treeMap)
+    const scrollItemIntoView = async () => {
+      await treeInstance.recomputeTree(treeMap)
+
+      // @see https://react-window.vercel.app/#/api/FixedSizeList
+      treeInstance.scrollToItem(currentFilePath, 'smart')
+    }
+
+    scrollItemIntoView()
 
     lastProcessedPath.current = currentFilePath
   }, [currentFilePath, treeInstance]) // eslint-disable-line
