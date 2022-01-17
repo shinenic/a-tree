@@ -1,18 +1,12 @@
 import ReactDOM from 'react-dom'
-import { useTransition, a, animated } from 'react-spring'
+import { useTransition, a, animated, config } from 'react-spring'
 import useLockBodyScroll from 'hooks/useLockBodyScroll'
 import useClickOutside from 'hooks/useClickOutside'
 import Box from '@material-ui/core/Box'
 
 import Dialog from '@material-ui/core/Dialog'
 
-export default function NativeDialog({
-  isOpened,
-  onClose,
-  children,
-  overlayClasses,
-  ...rest
-}) {
+export default function NativeDialog({ isOpened, onClose, children, overlayClasses, ...rest }) {
   return (
     <Dialog open={isOpened} onClose={onClose} closeAfterTransition {...rest}>
       {children}
@@ -32,7 +26,7 @@ const AnimatedOverlay = animated((props) => (
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      zIndex: 999999,
+      zIndex: 999999
     }}
     {...props}
   />
@@ -45,7 +39,7 @@ export const CustomModal = ({
   modalStyle = {},
   overLayStyle = {},
   overlayClasses,
-  from = { opacity: 0, transform: 'translateY(-40px)' },
+  from = { opacity: 0, transform: 'translateY(-20px)' },
   to = { opacity: 1, transform: 'translateY(0px)' },
   ...rest
 }) => {
@@ -53,6 +47,7 @@ export const CustomModal = ({
     from,
     enter: to,
     leave: from,
+    config: config.stiff
   })
   const modalRef = useClickOutside(onClose, isOpened)
   useLockBodyScroll(isOpened)
@@ -61,10 +56,7 @@ export const CustomModal = ({
     transition(
       (style, item) =>
         item && (
-          <AnimatedOverlay
-            style={{ opacity: style.opacity, ...overLayStyle }}
-            onClick={onClose}
-          >
+          <AnimatedOverlay style={{ opacity: style.opacity, ...overLayStyle }} onClick={onClose}>
             <a.div
               ref={modalRef}
               onClick={(e) => e.stopPropagation()}

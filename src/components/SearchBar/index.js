@@ -1,10 +1,12 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
 import InputBase from '@material-ui/core/InputBase'
 import Box from '@material-ui/core/Box'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import { AiOutlineSearch } from 'react-icons/ai'
 import useSettingStore from 'stores/setting'
 import { HOTKEY_ADORNMENT } from 'constants/base'
+
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const useStyles = makeStyles((theme) => ({
   inputRoot: {
@@ -21,8 +23,11 @@ const SearchBar = ({
   onChange,
   withBorder = true,
   showHints = true,
+  showLoadingHint,
   inputRef,
-  placeholder = 'Search...'
+  placeholder = 'Search...',
+  isLoading,
+  isDebouncing
 }) => {
   const fileSearchHotkey = useSettingStore((s) => s.fileSearchHotkey)
   const classes = useStyles()
@@ -60,16 +65,40 @@ const SearchBar = ({
           input: classes.inputInput
         }}
         inputProps={{ 'aria-label': 'search' }}
+        disabled={isLoading}
       />
       {showHints && (
         <Box style={{ whiteSpace: 'nowrap' }} fontWeight="300">
           {`${HOTKEY_ADORNMENT}${fileSearchHotkey.toUpperCase()}`}
         </Box>
       )}
+      {showLoadingHint && (
+        <Box style={{ whiteSpace: 'nowrap' }} fontWeight="300">
+          <DebouncingLoadingIcon isLoading={isDebouncing} />
+        </Box>
+      )}
     </Box>
   )
 }
 
-SearchBar.propTypes = {}
+const DebouncingLoadingIcon = ({ isLoading }) => {
+  const [shouldShowCircle, setShouldShowCircle] = useState(() => isLoading)
+
+  useEffect(() => {
+    let timer = null
+
+    if (!isLoading) {
+      timer = setTimeout(() => setShouldShowCircle(false), 500)
+    } else {
+      setShouldShowCircle(true)
+    }
+
+    return () => timer && clearTimeout(timer)
+  }, [isLoading])
+
+  if (!shouldShowCircle) return null
+
+  return <CircularProgress size={18} />
+}
 
 export default SearchBar
