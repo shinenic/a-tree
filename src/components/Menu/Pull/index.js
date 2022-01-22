@@ -12,6 +12,7 @@ import { useQueryPulls } from 'hooks/api/useGithubQueries'
 import Chip from '@material-ui/core/Chip'
 import tinycolor from 'tinycolor2'
 import usePopperStore from 'stores/popper'
+import useSettingStore from 'stores/setting'
 import useMenuPosition from 'hooks/menu/useMenuPosition'
 
 import Loading from './Loading'
@@ -34,7 +35,7 @@ const Pull = ({
   fromBranch,
   toBranch,
   title,
-  labels,
+  labels
 }) => (
   <BaseStyle.StyledGithubLink
     onClick={handleClose}
@@ -47,19 +48,9 @@ const Pull = ({
       <b>{title}</b>
     </div>
     <Style.BranchesBox>
-      <Chip
-        variant="outlined"
-        size="small"
-        label={toBranch}
-        style={{ cursor: 'pointer' }}
-      />
+      <Chip variant="outlined" size="small" label={toBranch} style={{ cursor: 'pointer' }} />
       <div>{' ← '}</div>
-      <Chip
-        variant="outlined"
-        size="small"
-        label={fromBranch}
-        style={{ cursor: 'pointer' }}
-      />
+      <Chip variant="outlined" size="small" label={fromBranch} style={{ cursor: 'pointer' }} />
     </Style.BranchesBox>
     <Style.LabelsBox>
       {labels && labels.map((label) => <Label key={label.id} {...label} />)}
@@ -97,36 +88,27 @@ function Label({ name, color }) {
 }
 
 /**
- * @TODO Disable query when drawer unpinned
  * @TODO Lazy load the rest pulls
  */
-export default function PullMenu({
-  owner,
-  repo,
-  pull,
-  anchorElement,
-  followCursor,
-}) {
+export default function PullMenu({ owner, repo, pull, anchorElement, followCursor }) {
+  const drawerPinned = useSettingStore((s) => s.drawerPinned)
   const isPullOn = usePopperStore((s) => s.isPullOn)
   const togglePull = usePopperStore((s) => s.togglePull)
   const menuProps = useSpring({
     transform: isPullOn ? 'scale(1)' : 'scale(0.9)',
     transformOrigin: 'top',
     opacity: isPullOn ? 1 : 0,
-    reset: true,
+    reset: true
   })
   const menuStyles = {
     ...menuProps,
     // To keep dom alive
-    visibility: menuProps.opacity.to((v) => (v === 0 ? 'hidden' : 'visible')),
+    visibility: menuProps.opacity.to((v) => (v === 0 ? 'hidden' : 'visible'))
   }
 
   const { data, isLoading, error } = useQueryPulls(
-    {
-      owner,
-      repo,
-    },
-    { enabled: isPullOn }
+    { owner, repo },
+    { enabled: isPullOn && drawerPinned }
   )
 
   const closeMenu = () => togglePull(false)
@@ -135,7 +117,7 @@ export default function PullMenu({
   const menuPosition = useMenuPosition({
     isMenuOpen: isPullOn,
     anchorElement,
-    followCursor,
+    followCursor
   })
 
   if (error) return null
@@ -167,7 +149,7 @@ export default function PullMenu({
                   created_at: createAt,
                   labels = [],
                   head,
-                  base,
+                  base
                 }) => {
                   const isFork = head?.repo?.fork
 
