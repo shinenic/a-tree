@@ -124,7 +124,7 @@ function Tree({
     const scrollItemIntoView = async () => {
       await treeInstance.recomputeTree(treeMap)
 
-      // @see https://react-window.vercel.app/#/api/FixedSizeList
+      /** @see https://github.com/Lodin/react-vtree#methods */
       treeInstance.scrollToItem(currentFilePath, 'smart')
     }
 

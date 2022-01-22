@@ -36,7 +36,7 @@ const getNodeData = ({
 }
 
 /**
- * @note Apart from the regular tree, this tree won't handle any of the scroll events,
+ * @note Unlike the regular tree, this tree won't handle any of the scroll events,
  *       neither do the automatic expanding events.
  */
 function LargeTree({ onItemClick, getNodeHref, owner, repo, branch }) {
