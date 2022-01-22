@@ -88,7 +88,6 @@ function Label({ name, color }) {
 }
 
 /**
- * @TODO Disable query when drawer unpinned
  * @TODO Lazy load the rest pulls
  */
 export default function PullMenu({ owner, repo, pull, anchorElement, followCursor }) {
