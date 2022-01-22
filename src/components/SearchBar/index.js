@@ -1,10 +1,12 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
 import InputBase from '@material-ui/core/InputBase'
 import Box from '@material-ui/core/Box'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import { AiOutlineSearch } from 'react-icons/ai'
 import useSettingStore from 'stores/setting'
 import { HOTKEY_ADORNMENT } from 'constants/base'
+
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const useStyles = makeStyles((theme) => ({
   inputRoot: {
@@ -21,8 +23,11 @@ const SearchBar = ({
   onChange,
   withBorder = true,
   showHints = true,
+  showLoadingHint = true,
   inputRef,
-  placeholder = 'Search...'
+  placeholder = 'Search...',
+  isLoading,
+  isDebouncing
 }) => {
   const fileSearchHotkey = useSettingStore((s) => s.fileSearchHotkey)
   const classes = useStyles()
@@ -60,16 +65,41 @@ const SearchBar = ({
           input: classes.inputInput
         }}
         inputProps={{ 'aria-label': 'search' }}
+        disabled={isLoading}
       />
       {showHints && (
         <Box style={{ whiteSpace: 'nowrap' }} fontWeight="300">
           {`${HOTKEY_ADORNMENT}${fileSearchHotkey.toUpperCase()}`}
         </Box>
       )}
+      {showLoadingHint && (
+        <Box style={{ whiteSpace: 'nowrap' }} fontWeight="300">
+          <DebouncingLoadingIcon isLoading={isDebouncing || isLoading} />
+        </Box>
+      )}
     </Box>
   )
 }
 
-SearchBar.propTypes = {}
+const DebouncingLoadingIcon = ({ isLoading }) => {
+  const [shouldShowSpinner, setShouldShowSpinner] = useState(isLoading)
+
+  useEffect(() => {
+    let timer = null
+
+    if (!isLoading) {
+      // Defer hiding the loading spinner
+      timer = setTimeout(() => setShouldShowSpinner(false), 500)
+    } else {
+      setShouldShowSpinner(true)
+    }
+
+    return () => timer && clearTimeout(timer)
+  }, [isLoading])
+
+  if (!shouldShowSpinner) return null
+
+  return <CircularProgress size={18} />
+}
 
 export default SearchBar
