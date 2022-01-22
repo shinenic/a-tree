@@ -13,8 +13,8 @@ const getOpenedHotkeyActions = (customToggleKey = 'i') => [
     key: customToggleKey,
     modifier: IS_MAC ? 'metaKey' : 'ctrlKey',
     preventDefault: true,
-    stopPropagation: true,
-  },
+    stopPropagation: true
+  }
 ]
 
 const getClosedHotkeyActions = (customToggleKey = 'i') => [
@@ -23,8 +23,8 @@ const getClosedHotkeyActions = (customToggleKey = 'i') => [
     key: customToggleKey,
     modifier: IS_MAC ? 'metaKey' : 'ctrlKey',
     preventDefault: true,
-    stopPropagation: true,
-  },
+    stopPropagation: true
+  }
 ]
 
 const isKeyMatched = (event, key, modifier) => {
@@ -39,29 +39,23 @@ const isKeyMatched = (event, key, modifier) => {
   return event.key === key
 }
 
-export const generateHotkeyListener = (
-  dispatch,
-  isModalOpened,
-  customToggleKey
-) => {
+export const generateHotkeyListener = (dispatch, isModalOpened, customToggleKey) => {
   const actions = isModalOpened
     ? getOpenedHotkeyActions(customToggleKey)
     : getClosedHotkeyActions(customToggleKey)
 
   const handler = (event) => {
-    actions.some(
-      ({ action, key, modifier, preventDefault, stopPropagation }) => {
-        if (isKeyMatched(event, key, modifier)) {
-          if (preventDefault) event.preventDefault()
-          if (stopPropagation) event.stopPropagation()
+    actions.some(({ action, key, modifier, preventDefault, stopPropagation }) => {
+      if (isKeyMatched(event, key, modifier)) {
+        if (preventDefault) event.preventDefault()
+        if (stopPropagation) event.stopPropagation()
 
-          dispatch({ type: action })
-          return true
-        }
-
-        return false
+        dispatch({ type: action })
+        return true
       }
-    )
+
+      return false
+    })
   }
 
   /**
@@ -78,7 +72,7 @@ export const generateHotkeyListener = (
 export const buildUsedLetterMap = (keyword) => {
   return [...keyword].reduce(
     (map, letter) =>
-      /[a-zA-Z]/.test(letter)
+      /[a-zA-Z0-9]/.test(letter)
         ? { ...map, [letter.toLowerCase()]: true, [letter.toUpperCase()]: true }
         : map,
     {}
