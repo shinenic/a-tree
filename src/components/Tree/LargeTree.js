@@ -15,7 +15,7 @@ const getNodeData = ({
   nestingLevel,
   defaultOpen,
   onItemClick,
-  getNodeHref,
+  getNodeHref
 }) => {
   const { id } = node
   return {
@@ -28,18 +28,22 @@ const getNodeData = ({
       nestingLevel,
       onItemClick,
       getNodeHref,
-      meta: node,
+      meta: node
     },
     nestingLevel,
-    node,
+    node
   }
 }
 
+/**
+ * @note Unlike the regular tree, this tree won't handle any of the scroll events,
+ *       neither do the automatic expanding events.
+ */
 function LargeTree({ onItemClick, getNodeHref, owner, repo, branch }) {
   const { files, queryBySha } = useQueryLargeTree({
     owner,
     repo,
-    branch,
+    branch
   })
 
   // Disable auto merge proxy node to keep the order of the tree
@@ -49,7 +53,7 @@ function LargeTree({ onItemClick, getNodeHref, owner, repo, branch }) {
   const treeWalker = useCallback(
     function* treeWalker() {
       const rootEntries = sortBy(Object.entries(objTree), [
-        ([, node]) => (node.type === 'tree' || !isEmpty(node.children) ? 0 : 1),
+        ([, node]) => (node.type === 'tree' || !isEmpty(node.children) ? 0 : 1)
       ])
 
       for (let i = 0; i < rootEntries.length; i += 1) {
@@ -62,7 +66,7 @@ function LargeTree({ onItemClick, getNodeHref, owner, repo, branch }) {
           nestingLevel: 0,
           defaultOpen: false,
           onItemClick,
-          getNodeHref,
+          getNodeHref
         })
       }
 
@@ -71,8 +75,7 @@ function LargeTree({ onItemClick, getNodeHref, owner, repo, branch }) {
 
         const childrenEntries = parent.node.children
           ? sortBy(Object.entries(parent.node.children), [
-              ([, node]) =>
-                node.type === 'tree' || !isEmpty(node.children) ? 0 : 1,
+              ([, node]) => (node.type === 'tree' || !isEmpty(node.children) ? 0 : 1)
             ])
           : []
 
@@ -86,7 +89,7 @@ function LargeTree({ onItemClick, getNodeHref, owner, repo, branch }) {
             nestingLevel: parent.nestingLevel + 1,
             defaultOpen: false,
             onItemClick,
-            getNodeHref,
+            getNodeHref
           })
         }
       }
