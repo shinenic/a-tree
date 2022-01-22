@@ -76,7 +76,7 @@ const MainDrawer = ({ pageInfo, error }) => {
           <Breadcrumb {...pageInfo} />
         </Style.DrawerHeader>
         <Box padding="10px" height={55}>
-          <SearchBar onClick={() => toggleFileSearch(true)} />
+          <SearchBar onClick={() => toggleFileSearch(true)} showLoadingHint={false} />
         </Box>
         <PullCommitMenu owner={owner} repo={repo} pull={pull} commit={commit} pageType={pageType} />
         <PullMenu owner={owner} repo={repo} pull={pull} />

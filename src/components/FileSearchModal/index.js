@@ -1,20 +1,9 @@
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useReducer,
-  useMemo,
-  useState,
-} from 'react'
+import { useCallback, useEffect, useRef, useReducer, useMemo, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import useSettingStore from 'stores/setting'
 
-import {
-  buildUsedLetterMap,
-  highlightText,
-  generateHotkeyListener,
-} from 'utils/fileSearch'
-import { isEmpty, throttle } from 'lodash'
+import { buildUsedLetterMap, highlightText, generateHotkeyListener } from 'utils/fileSearch'
+import { isEmpty, debounce } from 'lodash'
 import { CustomModal } from 'components/shared/Modal'
 import useTreeItemClick from 'hooks/tree/useTreeItemClick'
 import useQueryTree from 'hooks/tree/useQueryTree'
@@ -33,8 +22,8 @@ const useStyles = makeStyles((theme) => ({
     padding: '8px 0',
     width: '650px',
     display: 'flex',
-    flexDirection: 'column',
-  },
+    flexDirection: 'column'
+  }
 }))
 
 const FileSearchWrapper = ({ pageInfo }) => {
@@ -59,21 +48,23 @@ const FileSearchWrapper = ({ pageInfo }) => {
  */
 const FileSearchModal = ({ isLoading, selectCallback, files, error }) => {
   const [input, setInput] = useState('')
+  const [isDebouncing, setIsDebouncing] = useState(false)
   const fileSearchHotkey = useSettingStore((s) => s.fileSearchHotkey)
 
   const toggleFileSearch = usePopperStore((s) => s.toggleFileSearch)
   const isOpened = usePopperStore((s) => s.isFileSearchOn)
-  const [{ result = [], keyword = '', selectedIndex = 0 }, dispatch] =
-    useReducer(reducer, {
-      ...initialState,
-      selectCallback,
-      onClose: () => toggleFileSearch(false),
-      onOpen: () => toggleFileSearch(true),
-    })
-  const throttledUpdateKeyword = useCallback(
-    throttle((newKeyword) => {
+  const [{ result = [], keyword = '', selectedIndex = 0 }, dispatch] = useReducer(reducer, {
+    ...initialState,
+    selectCallback,
+    onClose: () => toggleFileSearch(false),
+    onOpen: () => toggleFileSearch(true)
+  })
+
+  const debouncedUpdateKeyword = useCallback(
+    debounce((newKeyword) => {
       dispatch({ type: 'UPDATE_KEYWORD', payload: { keyword: newKeyword } })
-    }, 300),
+      setIsDebouncing(false)
+    }, 180),
     []
   )
 
@@ -84,9 +75,7 @@ const FileSearchModal = ({ isLoading, selectCallback, files, error }) => {
     if (!isLoading && !isEmpty(files)) {
       dispatch({
         type: 'UPDATE_SOURCE_DATA',
-        payload: {
-          files: files?.filter(({ type }) => type !== 'tree') ?? [],
-        },
+        payload: { files: files?.filter(({ type }) => type !== 'tree') ?? [] }
       })
     } else {
       dispatch({ type: 'CLEAR_SOURCE_DATA' })
@@ -104,26 +93,26 @@ const FileSearchModal = ({ isLoading, selectCallback, files, error }) => {
     if (inputRef.current && isOpened) {
       inputRef.current.focus()
     }
-  }, [isOpened])
+  }, [isOpened, isLoading])
 
   /**
    * Handle shortcuts
    */
   useEffect(() => {
-    const unlisten = generateHotkeyListener(
-      dispatch,
-      isOpened,
-      fileSearchHotkey
-    )
+    const unlisten = generateHotkeyListener(dispatch, isOpened, fileSearchHotkey)
 
     return () => unlisten()
   }, [fileSearchHotkey, isOpened])
 
-  const handleInputChange = useCallback((e) => {
-    e.preventDefault()
-    setInput(e.target.value)
-    throttledUpdateKeyword(e.target.value)
-  }, [])
+  const handleInputChange = useCallback(
+    (e) => {
+      setIsDebouncing(true)
+      e.preventDefault()
+      setInput(e.target.value)
+      debouncedUpdateKeyword(e.target.value)
+    },
+    [debouncedUpdateKeyword]
+  )
 
   const handleOptionClick = useCallback(
     (index) => () => {
@@ -150,11 +139,11 @@ const FileSearchModal = ({ isLoading, selectCallback, files, error }) => {
           value={input}
           withoutBorder
           onChange={handleInputChange}
+          isDebouncing={isDebouncing}
+          isLoading={isLoading}
         />
         {result.map((file, index) => {
-          const paths = file.filename
-            ? file.filename.split('/')
-            : file.path.split('/')
+          const paths = file.filename ? file.filename.split('/') : file.path.split('/')
           const path = paths.slice(0, -1).join('/')
           const fileName = paths.slice(-1).join()
           const isSelected = index === selectedIndex
@@ -166,14 +155,10 @@ const FileSearchModal = ({ isLoading, selectCallback, files, error }) => {
               isSelected={isSelected}
             >
               <Style.FileName
-                dangerouslySetInnerHTML={{
-                  __html: highlightText(fileName, highlightMap),
-                }}
+                dangerouslySetInnerHTML={{ __html: highlightText(fileName, highlightMap) }}
               />
               <Style.FilePath
-                dangerouslySetInnerHTML={{
-                  __html: highlightText(path, highlightMap),
-                }}
+                dangerouslySetInnerHTML={{ __html: highlightText(path, highlightMap) }}
                 tooltip={path}
               />
             </Style.FileRow>
