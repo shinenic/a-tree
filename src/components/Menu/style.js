@@ -11,26 +11,20 @@ const BUTTON_HEIGHT = 40
 
 export const useVizListContainerStyle = makeStyles((theme) => ({
   root: {
-    border:
-      theme.palette.type === 'dark'
-        ? `1px solid ${theme.palette.text.secondary}`
-        : 'none',
+    border: theme.palette.type === 'dark' ? `1px solid ${theme.palette.text.secondary}` : 'none',
     backgroundColor: theme.palette.background.paper,
     zIndex: 10,
     position: 'fixed',
     boxShadow: theme.shadows[3],
 
     '& > div': {
-      ...getCommonScrollbarStyle(theme),
-    },
-  },
+      ...getCommonScrollbarStyle(theme)
+    }
+  }
 }))
 
 export const MenuContainer = muiStyled(Box)(({ theme }) => ({
-  border:
-    theme.palette.type === 'dark'
-      ? `1px solid ${theme.palette.text.secondary}`
-      : 'none',
+  border: theme.palette.type === 'dark' ? `1px solid ${theme.palette.text.secondary}` : 'none',
   backgroundColor: theme.palette.background.paper,
   top: `${BUTTON_HEIGHT + 10}px`,
   zIndex: 10,
@@ -43,7 +37,7 @@ export const MenuContainer = muiStyled(Box)(({ theme }) => ({
 
   boxShadow: theme.shadows[3],
 
-  ...getCommonScrollbarStyle(theme),
+  ...getCommonScrollbarStyle(theme)
 }))
 
 const useStyledGithubLinkStyle = makeStyles((theme) => ({
@@ -60,21 +54,24 @@ const useStyledGithubLinkStyle = makeStyles((theme) => ({
     backgroundColor: ({ selected }) =>
       selected
         ? tinycolor
-            .mix(theme.palette.text.primary, theme.palette.background.paper, 90)
+            .mix(theme.palette.text.primary, theme.palette.background.paper, 86)
             .toHexString()
         : theme.palette.background.paper,
 
     '&:hover': {
-      backgroundColor: theme.palette.background.default,
-      textDecoration: 'none',
+      backgroundColor: ({ selected }) =>
+        tinycolor
+          .mix(theme.palette.text.primary, theme.palette.background.paper, selected ? 86 : 93)
+          .toHexString(),
+      textDecoration: 'none'
     },
 
     '&:first-child': {
       borderTop: 'none',
       fontSize: 16,
-      padding: 14,
-    },
-  },
+      padding: 14
+    }
+  }
 }))
 
 export const StyledGithubLink = ({ selected, ...props }) => {
@@ -84,7 +81,7 @@ export const StyledGithubLink = ({ selected, ...props }) => {
 
 export const SmallAvatar = muiStyled(Avatar)(({ theme }) => ({
   width: theme.spacing(3),
-  height: theme.spacing(3),
+  height: theme.spacing(3)
 }))
 
 const useButtonStyle = makeStyles((theme) => ({
@@ -92,16 +89,15 @@ const useButtonStyle = makeStyles((theme) => ({
     display: 'block',
     width: '100%',
     height: '40px',
-    borderBottom:
-      theme.palette.type === 'dark' ? '1px solid #666' : '1px solid #f1f1f1',
+    borderBottom: theme.palette.type === 'dark' ? '1px solid #666' : '1px solid #f1f1f1',
     borderRadius: '0',
-    textTransform: 'none',
+    textTransform: 'none'
   },
   label: {
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-    overflow: 'hidden',
-  },
+    overflow: 'hidden'
+  }
 }))
 
 export const ToggleButton = (props) => {
