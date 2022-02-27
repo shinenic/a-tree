@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import { debounce } from 'lodash'
 import useSettingStore from 'stores/setting'
-
+import { LEVEL_ADDITIONAL_PADDING } from 'components/Tree/Item/style'
 import BlockTitle from './BlockTitle'
 
 const TreeIndentField = () => {
@@ -41,7 +41,7 @@ const TreeIndentField = () => {
           <TextField
             id="TreeIndentTextField"
             name="TreeIndentTextField"
-            label="pixel"
+            label={`pixel (default: ${LEVEL_ADDITIONAL_PADDING})`}
             fullWidth
             value={input}
             onChange={handleInputChange}
