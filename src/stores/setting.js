@@ -2,6 +2,7 @@ import { DRAWER_POSITION, SETTING_KEY } from 'constants/base'
 
 import create from 'zustand'
 import { persist } from 'zustand/middleware'
+import { LEVEL_ADDITIONAL_PADDING } from 'components/Tree/Item/style'
 
 const { LEFT, RIGHT } = DRAWER_POSITION
 
@@ -12,6 +13,7 @@ const { LEFT, RIGHT } = DRAWER_POSITION
  * @property {'left'|'right'} position position of main drawer (not implemented)
  * @property {boolean} isFocusMode repository name
  * @property {number} drawerWidth
+ * @property {number} treeIndent
  * @property {string[]} domains custom Enterprise domains
  * @property {string[]} disablePageTypeList stop drawer on specified page types
  * @property {boolean} drawerPinned
@@ -30,6 +32,7 @@ export const initialState = {
   isFocusMode: false,
   drawerWidth: 300,
   domains: [],
+  treeIndent: LEVEL_ADDITIONAL_PADDING,
   disablePageTypeList: [],
   drawerPinned: true,
   floatingButtonPositionY: 500,
@@ -37,7 +40,7 @@ export const initialState = {
   isTokenHintShowed: false,
   fileSearchHotkey: 'i',
   disableCommitSwitchHotkey: false,
-  fileIconStyle: 'default',
+  fileIconStyle: 'default'
 }
 
 /**
@@ -56,6 +59,8 @@ export const reducer = (state, { type, payload }) => {
       return { ...state, isFocusMode: !state.isFocusMode }
     case 'UPDATE_DRAWER_WIDTH':
       return { ...state, drawerWidth: payload }
+    case 'UPDATE_TREE_INDENT':
+      return { ...state, treeIndent: payload }
     case 'UPDATE_BASE_URL':
       return { ...state, baseUrl: payload }
     case 'UPDATE_DISABLE_PAGE_TYPE_LIST':
@@ -71,7 +76,7 @@ export const reducer = (state, { type, payload }) => {
     case 'TOGGLE_COMMIT_SWITCH_HOTKEY':
       return {
         ...state,
-        disableCommitSwitchHotkey: !state.disableCommitSwitchHotkey,
+        disableCommitSwitchHotkey: !state.disableCommitSwitchHotkey
       }
     case 'UPDATE_FILE_ICON_STYLE':
       return { ...state, fileIconStyle: payload }
@@ -82,8 +87,7 @@ export const reducer = (state, { type, payload }) => {
 
 const states = (set) => ({
   ...initialState,
-  dispatch: ({ type, payload } = {}) =>
-    set((state) => reducer(state, { type, payload })),
+  dispatch: ({ type, payload } = {}) => set((state) => reducer(state, { type, payload }))
 })
 
 const useSettingStore = create(persist(states, { name: SETTING_KEY }))

@@ -8,30 +8,23 @@ import { Tooltip } from '@material-ui/core'
 
 import ListItem from '@material-ui/core/ListItem'
 import useTreeStore from 'stores/tree'
+import useSettingStore from 'stores/setting'
 import { useTooltipStyles } from 'components/shared/EllipsisBox'
 
 import NodeIcon from './Icon'
-import { useNodeStyle, BASE_PADDING, LEVEL_ADDITIONAL_PADDING } from './style'
+import { useNodeStyle, BASE_PADDING } from './style'
 
 const TreeItem = ({
-  data: {
-    isLeaf,
-    name,
-    nestingLevel,
-    id,
-    meta,
-    onItemClick,
-    getNodeHref,
-    queryBySha,
-  },
+  data: { isLeaf, name, nestingLevel, id, meta, onItemClick, getNodeHref, queryBySha },
   isOpen,
   style,
-  setOpen,
+  setOpen
 }) => {
   const tooltipClasses = useTooltipStyles()
   const [titleRef, isEllipsis] = useEllipsis()
 
   const isViewed = useViewedFilesStore((s) => s.viewedFileMap[id])
+  const treeIndent = useSettingStore((s) => s.treeIndent)
 
   const isLoading = !isLeaf && isOpen && isEmpty(meta.children)
   const isSelected = useTreeStore((s) => s.selectedId === id)
@@ -91,12 +84,10 @@ const TreeItem = ({
       selected={isSelected}
       style={{
         ...style,
-        marginLeft: nestingLevel * LEVEL_ADDITIONAL_PADDING + BASE_PADDING,
+        marginLeft: nestingLevel * treeIndent + BASE_PADDING,
         transition: 'opacity 0.4s',
-        width: `calc(100% - ${
-          nestingLevel * LEVEL_ADDITIONAL_PADDING + BASE_PADDING * 2
-        }px)`,
-        opacity: isViewed ? 0.5 : 1,
+        width: `calc(100% - ${nestingLevel * treeIndent + BASE_PADDING * 2}px)`,
+        opacity: isViewed ? 0.5 : 1
       }}
       onClick={handleClick}
       onMouseDown={mouseDownHandler}

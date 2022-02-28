@@ -9,6 +9,7 @@ import GithubIcon from '../GithubIcon'
 import TokenField from './TokenField'
 import VisibilityCheckBoxes from './VisibilityCheckBoxes'
 import FileIconRadios from './FileIconRadios'
+import TreeIndentField from './TreeIndentField'
 import OptionBoxes from './OptionBoxes'
 import Hotkeys from './Hotkeys'
 
@@ -18,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     overflowX: 'hidden',
     overflowY: 'auto',
-    border: 'none',
+    border: 'none'
   },
   link: {
     position: 'absolute',
@@ -26,8 +27,8 @@ const useStyles = makeStyles((theme) => ({
     right: '20px',
     transition: 'opacity 0.1s',
     '&:hover': {
-      opacity: 0.8,
-    },
+      opacity: 0.8
+    }
   },
   linkTextWrapper: {
     position: 'absolute',
@@ -45,9 +46,9 @@ const useStyles = makeStyles((theme) => ({
 
     '&:hover': {
       opacity: 0.9,
-      textDecoration: 'none',
-    },
-  },
+      textDecoration: 'none'
+    }
+  }
 }))
 
 export default function SettingForm() {
@@ -75,6 +76,7 @@ export default function SettingForm() {
       <Hotkeys />
       <TokenField />
       <FileIconRadios />
+      <TreeIndentField />
     </Paper>
   )
 }
