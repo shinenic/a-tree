@@ -9,8 +9,6 @@ import { getSettingFromLocalStorage } from 'utils/setting'
 import { SettingModal } from 'components/Setting'
 import MainThemeProvider from 'styles/Provider'
 
-import App from './App'
-
 const checkDomainMatched = (domains) => {
   const { host } = window.location
 
@@ -52,6 +50,12 @@ const renderExtension = () => {
   }
 
   const onLoad = () => {
+    /**
+     * Load the main App whenever it's target domain
+     * to prevent some conflict with the original web page.
+     */
+    // eslint-disable-next-line global-require
+    const App = require('./App').default
     const queryClient = new QueryClient()
 
     createContainer()
