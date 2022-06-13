@@ -86,8 +86,6 @@ export default function ContextMenu({ ...pageInfo }) {
     const currentVisibleFileNodes = getFileNodes()
     const isAllNodeLoaded = files?.length === currentVisibleFileNodes.length
 
-    console.log({ isAllNodeLoaded })
-
     /**
      * Toggle lazy load to ensure all files loaded
      */

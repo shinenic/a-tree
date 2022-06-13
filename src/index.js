@@ -1,15 +1,9 @@
-import TokenPageGuides from 'components/Guide/TokenPage'
 import { CONTAINER_ID, isLocalMode } from 'constants/base'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { QueryClient, QueryClientProvider } from 'react-query'
 import listenContextMenu from 'utils/contextMenuListener'
 import { getPageInfo } from 'utils/github'
 import { getSettingFromLocalStorage } from 'utils/setting'
-import { SettingModal } from 'components/Setting'
-import MainThemeProvider from 'styles/Provider'
-
-import App from './App'
 
 const checkDomainMatched = (domains) => {
   const { host } = window.location
@@ -52,19 +46,18 @@ const renderExtension = () => {
   }
 
   const onLoad = () => {
-    const queryClient = new QueryClient()
+    /**
+     * Load the main App whenever it's target domain
+     * to prevent some conflict with the original web page.
+     */
+    // eslint-disable-next-line global-require
+    const Main = require('./Main').default
 
     createContainer()
 
     ReactDOM.render(
       <React.StrictMode>
-        <QueryClientProvider client={queryClient}>
-          <MainThemeProvider>
-            <TokenPageGuides />
-            <App />
-            <SettingModal />
-          </MainThemeProvider>
-        </QueryClientProvider>
+        <Main />
       </React.StrictMode>,
       document.getElementById(CONTAINER_ID)
     )

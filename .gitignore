@@ -28,6 +28,7 @@ manifest.json
 
 # Generated files
 /src/libs
+a-tree -*
 
 npm-debug.log*
 yarn-debug.log*
