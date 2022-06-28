@@ -5,6 +5,28 @@ import listenContextMenu from 'utils/contextMenuListener'
 import { getPageInfo } from 'utils/github'
 import { getSettingFromLocalStorage } from 'utils/setting'
 
+import { create } from 'jss'
+import { StylesProvider, jssPreset } from '@material-ui/core/styles'
+
+function listenBodyRefresh(callback) {
+  const observer = new MutationObserver((mutations) => {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const { addedNodes, removedNodes } of mutations) {
+      const [addedBody, removedBody] = [addedNodes, removedNodes].map(findBodyElement)
+      if (addedBody && removedBody) {
+        callback()
+      }
+    }
+
+    function findBodyElement(addedNodes) {
+      return Array.from(addedNodes).find((addedNode) => addedNode instanceof HTMLBodyElement)
+    }
+  })
+  observer.observe(document.documentElement, {
+    childList: true
+  })
+}
+
 const checkDomainMatched = (domains) => {
   const { host } = window.location
 
@@ -26,8 +48,10 @@ const appendGlobalStyle = (drawerPinned, drawerWidth) => {
 const createContainer = () => {
   const container = document.createElement('div')
   container.setAttribute('id', CONTAINER_ID)
+  container.setAttribute('data-turbo-permanent', '')
   container.setAttribute('timestamp', new Date().getTime())
   document.body.appendChild(container)
+  return container
 }
 
 const renderExtension = () => {
@@ -53,14 +77,26 @@ const renderExtension = () => {
     // eslint-disable-next-line global-require
     const Main = require('./Main').default
 
-    createContainer()
+    function initialATree() {
+      const container = createContainer()
 
-    ReactDOM.render(
-      <React.StrictMode>
-        <Main />
-      </React.StrictMode>,
-      document.getElementById(CONTAINER_ID)
-    )
+      ReactDOM.render(
+        <React.StrictMode>
+          <StylesProvider
+            jss={create({
+              ...jssPreset(),
+              insertionPoint: document.getElementById(CONTAINER_ID)
+            })}
+          >
+            <Main />
+          </StylesProvider>
+        </React.StrictMode>,
+        container
+      )
+    }
+
+    listenBodyRefresh(initialATree)
+    initialATree()
   }
 
   window.onload = onLoad

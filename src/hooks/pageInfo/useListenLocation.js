@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { isLocalMode } from 'constants/base'
-import { listenPjaxEvent } from 'utils/pjax'
+import { listenTurboEvent } from 'utils/pjax'
 
 const listenLocation = (callback) => {
   let currentLocation = { ...(window?.location ?? {}) }
@@ -14,7 +14,7 @@ const listenLocation = (callback) => {
     }
   }
 
-  return listenPjaxEvent('start', handleCallback)
+  return listenTurboEvent(handleCallback)
 }
 
 const useListenLocation = () => {

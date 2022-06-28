@@ -101,7 +101,7 @@ export const resetFocusFiles = () => {
 
 export const scrollToFile = (fileHashId) => {
   scrollTo(document.getElementById(fileHashId), {
-    offsetY: GITHUB_NAV_BAR_HEIGHT,
+    offsetY: GITHUB_NAV_BAR_HEIGHT
   })
 }
 
@@ -115,14 +115,10 @@ export const generateReviewCheckListener = (callback = noop) => {
     // eslint-disable-next-line no-restricted-syntax
     for (const node of e.path) {
       if (/^diff-/.test(node.id)) {
-        const link = node.querySelector(
-          'a[href^="#diff"]:not([title*="Expand"])'
-        )
+        const link = node.querySelector('a[href^="#diff"]:not([title*="Expand"])')
 
         if (link) {
-          const filename = link.title.includes(' → ')
-            ? link.title.split(' → ')[1]
-            : link.title
+          const filename = link.title.includes(' → ') ? link.title.split(' → ')[1] : link.title
 
           callback(filename, e.target.checked)
         }
@@ -158,7 +154,7 @@ export const checkFileNodeExisting = (fileHashId, timeout = DEFAULT_TIMEOUT) =>
     observer.observe(document.querySelector('body'), {
       childList: true,
       subtree: true,
-      attributes: true,
+      attributes: true
     })
 
     setTimeout(() => {
@@ -166,6 +162,14 @@ export const checkFileNodeExisting = (fileHashId, timeout = DEFAULT_TIMEOUT) =>
       reject()
     }, timeout)
   })
+
+const listenTurboLoad = (cb) => {
+  window.addEventListener('turbo:load', cb)
+
+  return () => {
+    window.removeEventListener('turbo:load', cb)
+  }
+}
 
 export const checkPjaxEnd = (timeout = DEFAULT_TIMEOUT) =>
   new Promise((resolve, reject) => {
@@ -176,7 +180,7 @@ export const checkPjaxEnd = (timeout = DEFAULT_TIMEOUT) =>
       resolve()
     }
 
-    unlisten = listenPjaxEvent('end', handler)
+    unlisten = listenTurboLoad(handler)
 
     setTimeout(() => {
       unlisten()
@@ -215,15 +219,10 @@ export const markAllFiles = async (isMarkAllViewed = true, chunkSize = 3) => {
   })
 }
 
-export const toggleViewedFilesFolding = async (
-  shouldCollapse = true,
-  chunkSize = 3
-) => {
+export const toggleViewedFilesFolding = async (shouldCollapse = true, chunkSize = 3) => {
   return new Promise((resolve) => {
     const fileNodeChunks = chunk(
-      getFileNodes().filter(
-        (node) => node.querySelector('.js-reviewed-checkbox').checked
-      ),
+      getFileNodes().filter((node) => node.querySelector('.js-reviewed-checkbox').checked),
       chunkSize
     )
 
@@ -266,14 +265,10 @@ export const getCurrentStickyFileNode = (callback) => {
 
     const lastStuckNode = stuckNodes[stuckNodes.length - 1]
 
-    const link = lastStuckNode.querySelector(
-      'a[href^="#diff"]:not([title*="Expand"])'
-    )
+    const link = lastStuckNode.querySelector('a[href^="#diff"]:not([title*="Expand"])')
 
     if (link) {
-      const filename = link.title.includes(' → ')
-        ? link.title.split(' → ')[1]
-        : link.title
+      const filename = link.title.includes(' → ') ? link.title.split(' → ')[1] : link.title
 
       callback(filename)
     }
